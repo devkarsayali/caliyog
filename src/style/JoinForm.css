@@ -1,0 +1,244 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.join-modal {
+  width: 95%;
+  max-width: 760px;
+  background:
+    radial-gradient(circle at top left, rgba(34, 197, 94, 0.12), transparent 35%),
+    linear-gradient(135deg, #f5fff7, #ffffff);
+  border-top: 8px solid #22c55e;
+  border-radius: 28px;
+  padding: 32px;
+  position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow:
+    0 30px 70px rgba(18, 53, 31, 0.35),
+    0 0 0 1px rgba(34, 197, 94, 0.22);
+  transition: 0.3s ease;
+}
+
+.join-modal:hover {
+  box-shadow:
+    0 35px 85px rgba(18, 53, 31, 0.42),
+    0 0 0 1px rgba(34, 197, 94, 0.28);
+}
+
+.close-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #12351f;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  background: #22c55e;
+  transform: rotate(90deg);
+}
+
+/* Logo */
+.join-logo {
+  width: 95px;
+  height: 95px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background: white;
+  padding: 7px;
+  border: 3px solid rgba(34, 197, 94, 0.35);
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.28);
+}
+
+.join-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.join-header::after {
+  content: "";
+  display: block;
+  width: 90px;
+  height: 4px;
+  background: #22c55e;
+  margin: 16px auto 0;
+  border-radius: 20px;
+}
+
+.join-header span {
+  color: #22c55e;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.join-header h2 {
+  color: #12351f;
+  font-size: 36px;
+  font-weight: 900;
+  margin: 10px 0;
+}
+
+.join-header p {
+  color: #555;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 560px;
+  margin: auto;
+}
+
+.join-modal form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #12351f;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 14px 15px;
+  border: 2px solid #d8e6da;
+  outline: none;
+  border-radius: 14px;
+  background: #ffffff !important;
+  color: #12351f !important;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.form-group input::placeholder {
+  color: #777;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #22c55e;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+}
+
+.submit-btn {
+  grid-column: span 2;
+  width: 100%;
+  margin-top: 8px;
+  padding: 16px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 14px 30px rgba(34, 197, 94, 0.35);
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 42px rgba(34, 197, 94, 0.45);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .join-modal {
+    max-width: 96%;
+    padding: 28px 20px;
+  }
+
+  .join-logo {
+    width: 78px;
+    height: 78px;
+  }
+
+  .join-header h2 {
+    font-size: 27px;
+  }
+
+  .join-modal form {
+    grid-template-columns: 1fr;
+  }
+
+  .submit-btn {
+    grid-column: span 1;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .join-modal {
+    width: 100%;
+    max-height: 95vh;
+    overflow-y: auto;
+    padding: 25px 16px;
+    border-radius: 22px;
+  }
+
+  .join-logo {
+    width: 70px;
+    height: 70px;
+  }
+
+  .join-header h2 {
+    font-size: 22px;
+  }
+
+  .join-header p {
+    font-size: 14px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 14px;
+    padding: 12px;
+    background: #ffffff !important;
+    color: #12351f !important;
+  }
+
+  .submit-btn {
+    font-size: 15px;
+    padding: 14px;
+  }
+}

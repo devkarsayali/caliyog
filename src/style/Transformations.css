@@ -1,0 +1,211 @@
+.transform-section {
+  width: 100%;
+  padding: 90px 8%;
+  background: linear-gradient(135deg, #f8fff9, #eef5ef);
+  overflow-x: hidden;
+}
+
+.transform-heading {
+  text-align: center;
+  margin-bottom: 55px;
+}
+
+.transform-heading h2 {
+  font-size: 44px;
+  color: #12351f;
+  font-weight: 900;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.transform-heading p {
+  color: #555;
+  font-size: 18px;
+  max-width: 750px;
+  margin: auto;
+  line-height: 1.7;
+}
+
+.transform-grid {
+  width: 100%;
+  max-width: 1300px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 35px;
+}
+
+.transform-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 60, 25, 0.18);
+  transition: all 0.45s ease;
+  animation: cardFadeUp 0.9s ease forwards;
+}
+
+.transform-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px rgba(0, 60, 25, 0.28);
+}
+
+.transform-card img {
+  width: 100%;
+  height: 390px;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+  transition: 0.5s ease;
+}
+
+.transform-card:hover img {
+  transform: scale(1.04);
+  filter: brightness(0.9);
+}
+
+.transform-content {
+  padding: 22px 18px 26px;
+  text-align: center;
+  background: linear-gradient(135deg, #12351f, #2e7d32);
+}
+
+.transform-content h3 {
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+
+.transform-content::after {
+  content: "Real Results";
+  display: inline-block;
+  padding: 7px 20px;
+  background: white;
+  color: #1f3d2b;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+@keyframes cardFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .transform-section {
+    padding: 75px 30px;
+  }
+
+  .transform-heading h2 {
+    font-size: 38px;
+  }
+
+  .transform-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .transform-card img {
+    height: 340px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .transform-section {
+    padding: 55px 18px;
+  }
+
+  .transform-heading {
+    margin-bottom: 35px;
+  }
+
+  .transform-heading h2 {
+    font-size: 31px;
+    line-height: 1.3;
+  }
+
+  .transform-heading p {
+    font-size: 15px;
+  }
+
+  .transform-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .transform-card {
+    border-radius: 24px;
+  }
+
+  .transform-card img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+    background: #ffffff;
+  }
+
+  .transform-card:hover img {
+    transform: none;
+    filter: none;
+  }
+
+  .transform-content {
+    padding: 24px 14px 28px;
+  }
+
+  .transform-content h3 {
+    font-size: 26px;
+  }
+
+  .transform-content::after {
+    font-size: 16px;
+    padding: 9px 26px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .transform-section {
+    padding: 45px 14px;
+  }
+
+  .transform-heading h2 {
+    font-size: 27px;
+  }
+
+  .transform-heading p {
+    font-size: 14px;
+  }
+
+  .transform-card {
+    border-radius: 22px;
+  }
+
+  .transform-card img {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .transform-content {
+    padding: 22px 12px 26px;
+  }
+
+  .transform-content h3 {
+    font-size: 24px;
+  }
+}

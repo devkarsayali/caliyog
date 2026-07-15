@@ -1,0 +1,39 @@
+{
+  "name": "caliyog-fitness",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@cloudinary/react": "^1.14.1",
+    "@cloudinary/url-gen": "^1.21.0",
+    "@tanstack/react-query": "^5.62.0",
+    "axios": "^1.18.1",
+    "date-fns": "^4.4.0",
+    "firebase": "^12.16.0",
+    "framer-motion": "^11.18.2",
+    "lottie-react": "^2.4.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.6.0",
+    "react-icons": "^5.7.0",
+    "react-intersection-observer": "^9.16.0",
+    "react-router-dom": "^7.18.1",
+    "swiper": "^14.0.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^4.3.2",
+    "vite": "^6.0.0"
+  }
+}

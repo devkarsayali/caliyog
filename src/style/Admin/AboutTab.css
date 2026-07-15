@@ -1,0 +1,454 @@
+.about-tab {
+  min-height: 100vh;
+  padding: 28px;
+  color: #ffffff;
+}
+
+/* ================= HEADER ================= */
+
+.about-tab-header {
+  width: 100%;
+  margin-bottom: 26px;
+  padding: 30px 34px;
+
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 35%),
+    linear-gradient(135deg, #16a34a, #22c55e, #14b8a6);
+
+  color: #ffffff;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-section-label {
+  display: inline-block;
+  padding: 7px 15px;
+  margin-bottom: 12px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.about-tab-header h2 {
+  margin: 0 0 8px;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.about-tab-header p {
+  margin: 0;
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ================= FULL SCREEN FORM ================= */
+
+.about-form {
+  width: 100%;
+  min-height: calc(100vh - 190px);
+
+  padding: 32px;
+  border-radius: 28px;
+
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.08), transparent 35%),
+    linear-gradient(180deg, #ffffff, #f8fffb);
+
+  border: 1px solid rgba(34, 197, 94, 0.22);
+
+  box-shadow:
+    0 22px 55px rgba(15, 23, 42, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/* ================= GRID ================= */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 9px;
+  color: #064e3b;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+/* ================= INPUTS ================= */
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 15px 16px;
+
+  border-radius: 15px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+
+  background: #ffffff;
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  outline: none;
+  transition: 0.25s ease;
+}
+
+.form-group input:hover,
+.form-group textarea:hover {
+  border-color: rgba(34, 197, 94, 0.45);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.7;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #22c55e;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.13);
+}
+
+/* ================= FILE INPUT ================= */
+
+.form-group input[type="file"] {
+  padding: 13px;
+  background: #ecfdf5;
+  border: 1.5px dashed rgba(34, 197, 94, 0.55);
+  color: #065f46;
+  cursor: pointer;
+}
+
+.form-group input[type="file"]::file-selector-button {
+  border: none;
+  margin-right: 12px;
+  padding: 10px 16px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 7px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ================= IMAGE PREVIEW ================= */
+
+.preview-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin: 10px 0 26px;
+}
+
+.preview-box img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+
+  border-radius: 24px;
+  background: #ecfdf5;
+  border: 2px solid rgba(34, 197, 94, 0.45);
+
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+  transition: 0.3s ease;
+}
+
+.preview-box img:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+}
+
+/* ================= BUTTON ================= */
+
+.save-about-btn {
+  width: 100%;
+  border: none;
+  padding: 16px;
+  margin-top: 10px;
+
+  border-radius: 18px;
+  cursor: pointer;
+
+  font-size: 16px;
+  font-weight: 900;
+  color: #ffffff;
+
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  box-shadow: 0 14px 28px rgba(34, 197, 94, 0.32);
+
+  transition: 0.3s ease;
+}
+
+.save-about-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 38px rgba(34, 197, 94, 0.38);
+}
+
+.save-about-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ================= TABLET ================= */
+
+@media (max-width: 900px) {
+  .about-tab {
+    padding: 18px;
+  }
+
+  .about-tab-header {
+    padding: 24px;
+  }
+
+  .about-tab-header h2 {
+    font-size: 28px;
+  }
+
+  .about-form {
+    padding: 22px;
+    min-height: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .preview-box {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-box img {
+    height: 240px;
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+  .about-tab {
+    padding: 14px;
+  }
+
+  .about-tab-header {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .about-tab-header h2 {
+    font-size: 24px;
+  }
+
+  .about-tab-header p {
+    font-size: 13px;
+  }
+
+  .about-form {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 12px 13px;
+    font-size: 14px;
+  }
+
+  .preview-box img {
+    height: 190px;
+  }
+
+  .save-about-btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+}
+
+/* =========================================
+   ENHANCED MOBILE RESPONSIVE
+   ========================================= */
+
+/* Tablet (900px and below) */
+@media (max-width: 900px) {
+  .about-tab {
+    padding: 18px;
+  }
+
+  .about-tab-header {
+    padding: 24px;
+  }
+
+  .about-tab-header h2 {
+    font-size: 28px;
+  }
+
+  .about-form {
+    padding: 22px;
+    min-height: auto;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .preview-box {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-box img {
+    height: 240px;
+  }
+}
+
+/* Mobile (600px and below) */
+@media (max-width: 600px) {
+  .about-tab {
+    padding: 14px;
+  }
+
+  .about-tab-header {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .about-tab-header h2 {
+    font-size: 24px;
+  }
+
+  .about-tab-header p {
+    font-size: 13px;
+  }
+
+  .about-form {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 12px 13px;
+    font-size: 14px;
+  }
+
+  .preview-box img {
+    height: 190px;
+  }
+
+  .save-about-btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+}
+
+/* Small Mobile (480px and below) - additional improvements */
+@media (max-width: 480px) {
+  .about-tab {
+    padding: 10px;
+  }
+
+  .about-tab-header {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .admin-section-label {
+    font-size: 10px;
+    padding: 5px 12px;
+  }
+
+  .about-tab-header h2 {
+    font-size: 20px;
+  }
+
+  .about-tab-header p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .about-form {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 11px 12px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  .form-group textarea {
+    min-height: 100px;
+  }
+
+  .form-group input[type="file"] {
+    padding: 10px;
+  }
+
+  .form-group input[type="file"]::file-selector-button {
+    padding: 8px 12px;
+    font-size: 12px;
+    margin-right: 8px;
+  }
+
+  .form-group small {
+    font-size: 11px;
+  }
+
+  .preview-box {
+    gap: 14px;
+    margin: 8px 0 18px;
+  }
+
+  .preview-box img {
+    height: 160px;
+    border-radius: 16px;
+  }
+
+  .save-about-btn {
+    padding: 12px;
+    font-size: 13px;
+    border-radius: 14px;
+  }
+}

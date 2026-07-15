@@ -1,0 +1,165 @@
+.why-section {
+  width: 100%;
+  padding: 80px 8%;
+  background: #f5f7f4;
+  overflow-x: hidden;
+}
+
+.why-title {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.why-title h2 {
+  font-size: 42px;
+  color: #2e7d32;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.why-title p {
+  color: #555;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.why-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 30px;
+}
+
+.why-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  transition: 0.4s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.18);
+}
+
+.why-image {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.why-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: cover;
+  transition: 0.4s ease;
+}
+
+.why-card:hover .why-image img {
+  transform: scale(1.08);
+}
+
+.why-content {
+  padding: 25px;
+}
+
+.why-content h3 {
+  color: #2e7d32;
+  margin-bottom: 12px;
+  font-size: 24px;
+}
+
+.why-content p {
+  color: #666;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .why-section {
+    padding: 70px 30px;
+  }
+
+  .why-title h2 {
+    font-size: 36px;
+  }
+
+  .why-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .why-section {
+    padding: 60px 20px;
+  }
+
+  .why-title {
+    margin-bottom: 35px;
+  }
+
+  .why-title h2 {
+    font-size: 32px;
+    line-height: 1.3;
+  }
+
+  .why-title p {
+    font-size: 16px;
+  }
+
+  .why-container {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .why-image {
+    height: 220px;
+  }
+
+  .why-content {
+    padding: 22px 18px;
+    text-align: center;
+  }
+
+  .why-content h3 {
+    font-size: 22px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .why-section {
+    padding: 50px 16px;
+  }
+
+  .why-title h2 {
+    font-size: 28px;
+  }
+
+  .why-title p {
+    font-size: 15px;
+  }
+
+  .why-image {
+    height: 200px;
+  }
+
+  .why-content h3 {
+    font-size: 20px;
+  }
+
+  .why-content p {
+    font-size: 14px;
+  }
+} 

@@ -1,0 +1,319 @@
+.membership-section {
+  width: 100%;
+  padding: 75px 5%;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.15), transparent 35%),
+    linear-gradient(135deg, #f5f3ea, #ffffff);
+  overflow-x: hidden;
+}
+
+.membership-header {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.membership-header span {
+  color: #22c55e;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.membership-header h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  color: #2d4739;
+  margin: 12px 0;
+  line-height: 1.2;
+}
+
+.membership-header p {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Membership Cards Grid */
+.membership-grid {
+  width: 100%;
+  max-width: 1180px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 20px;
+}
+
+/* Layout:
+   1   2   3   4
+     5   6   7
+*/
+.plan-card {
+  grid-column: span 2;
+}
+
+/* Center last row */
+.plan-card:nth-child(5) {
+  grid-column: 2 / span 2;
+}
+
+.plan-card:nth-child(6) {
+  grid-column: 4 / span 2;
+}
+
+.plan-card:nth-child(7) {
+  grid-column: 6 / span 2;
+}
+
+.plan-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 2px solid #22c55e;
+  padding: 24px 20px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  transition: 0.35s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(34, 197, 94, 0.22);
+}
+
+.plan-card h3 {
+  color: #2d4739;
+  font-size: 19px;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+.plan-card h1 {
+  color: #22c55e;
+  font-size: 32px;
+  margin: 10px 0 4px;
+  font-weight: 900;
+}
+
+.plan-subtitle {
+  color: #666;
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.plan-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0;
+  flex: 1;
+}
+
+.plan-card li {
+  color: #555;
+  font-size: 13.5px;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+
+.plan-card li::before {
+  content: "✓ ";
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.plan-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  font-size: 14.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+}
+
+.plan-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(34, 197, 94, 0.35);
+}
+
+.featured {
+  background: #12351f !important;
+  border: 2px solid #22c55e !important;
+}
+
+.featured h3,
+.featured .plan-subtitle,
+.featured li {
+  color: white;
+}
+
+.featured h1 {
+  color: #22c55e;
+}
+
+.membership-note {
+  max-width: 820px;
+  margin: 45px auto 0;
+  background: linear-gradient(135deg, #2d4739, #12351f);
+  color: white;
+  padding: 24px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 15px 34px rgba(0, 0, 0, 0.2);
+}
+
+.membership-note h4 {
+  color: #22c55e;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.membership-note p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ---------- Large Laptop ---------- */
+@media (max-width: 1200px) {
+  .membership-grid {
+    max-width: 1000px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .plan-card,
+  .plan-card:nth-child(5),
+  .plan-card:nth-child(6),
+  .plan-card:nth-child(7) {
+    grid-column: auto;
+  }
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 992px) {
+  .membership-section {
+    padding: 65px 30px;
+  }
+
+  .membership-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .membership-header p {
+    font-size: 15px;
+  }
+
+  .plan-card {
+    padding: 22px 18px;
+    min-height: 340px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  .membership-section {
+    padding: 55px 20px;
+  }
+
+  .membership-header {
+    margin-bottom: 35px;
+  }
+
+  .membership-header p {
+    font-size: 15px;
+  }
+
+  .membership-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .plan-card {
+    padding: 22px 18px;
+    min-height: auto;
+  }
+
+  .plan-card h3 {
+    font-size: 20px;
+  }
+
+  .plan-card h1 {
+    font-size: 32px;
+  }
+
+  .plan-card li {
+    font-size: 14px;
+  }
+
+  .plan-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .membership-note {
+    padding: 22px 18px;
+    margin-top: 40px;
+  }
+
+  .membership-note h4 {
+    font-size: 21px;
+  }
+
+  .membership-note p {
+    font-size: 14px;
+  }
+}
+
+/* ---------- Small Mobile ---------- */
+@media (max-width: 480px) {
+  .membership-section {
+    padding: 45px 16px;
+  }
+
+  .membership-header h2 {
+    font-size: 27px;
+  }
+
+  .membership-header p {
+    font-size: 14px;
+  }
+
+  .plan-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .plan-card h3 {
+    font-size: 19px;
+  }
+
+  .plan-card h1 {
+    font-size: 29px;
+  }
+
+  .plan-card li {
+    font-size: 13px;
+  }
+
+  .membership-note {
+    padding: 20px 16px;
+  }
+
+  .membership-note h4 {
+    font-size: 20px;
+  }
+
+  .membership-note p {
+    font-size: 14px;
+  }
+}

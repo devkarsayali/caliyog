@@ -1,0 +1,617 @@
+/* ==========================================================================
+   MEMBERSHIP HEADER & MAIN CONTAINER
+   ========================================================================== */
+.membership-header-box {
+  background: linear-gradient(135deg, #25a14a, #59d4b4, #18d360);
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 16px 35px rgba(15, 23, 42, 0.18);
+}
+
+.membership-label {
+  display: inline-block;
+  background: rgba(34, 197, 94, 0.18);
+  color: #86efac;
+  padding: 7px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.membership-header-box h2 {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.membership-header-box p {
+  color: #d1d5db;
+  line-height: 1.6;
+  max-width: 650px;
+  font-size: 14px;
+}
+
+.membership-add-btn {
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  padding: 13px 18px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   CARDS GRID
+   ========================================================================== */
+.admin-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 26px;
+}
+
+.admin-item-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-item-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.admin-item-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.14);
+}
+
+.admin-item-title {
+  color: #0f172a;
+  font-size: 21px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.membership-price,
+.admin-item-subtitle {
+  color: #16a34a;
+  font-size: 36px;
+  font-weight: 900;
+  margin: 12px 0;
+}
+
+.membership-badge {
+  display: inline-block;
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+  padding: 7px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 14px;
+}
+
+.membership-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.membership-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.membership-feature-list li {
+  color: #334155;
+  font-size: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.membership-feature-list li::before {
+  content: "✓";
+  color: #16a34a;
+  font-weight: 900;
+  margin-right: 8px;
+}
+
+.admin-item-footer {
+  margin-top: 22px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-icon {
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  background: #22c55e;
+  color: white;
+}
+
+.btn-icon-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+.btn-icon-danger:hover {
+  background: #dc2626;
+  color: white;
+}
+
+.admin-empty-box {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
+  grid-column: 1 / -1;
+}
+
+/* ==========================================================================
+   MODAL DIALOG (FIXED & SCROLL OPTIMIZED)
+   ========================================================================== */
+.admin-modal-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-modal {
+  width: 440px;
+  max-width: 100%;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 24px;
+  border-left: 1px solid rgba(34, 197, 94, 0.35);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-modal-header {
+  flex-shrink: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #0f172a, #14532d);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-modal-title {
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.admin-modal-close {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fecaca;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-modal-body {
+  padding: 22px;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+}
+
+/* ==========================================================================
+   MODAL FORM CONTROLS
+   ========================================================================== */
+.admin-form-group {
+  margin-bottom: 16px;
+}
+
+.admin-form-group label {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 900;
+  margin-bottom: 7px;
+  display: block;
+}
+
+.admin-form-control {
+  width: 100%;
+  padding: 12px 13px;
+  border-radius: 13px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #0f172a;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-form-control:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.14);
+}
+
+/* Checkbox alignment patch */
+.admin-form-group-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  cursor: pointer;
+}
+
+.admin-form-group-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #22c55e;
+}
+
+.admin-form-group-checkbox label {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   DYNAMIC FEATURES LIST COMPONENT
+   ========================================================================== */
+.features-input-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.features-input-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.features-input-item input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Delete feature button styling */
+.feature-remove-btn {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.feature-remove-btn:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* "+ Add Plan Feature" Button Styling */
+.add-feature-btn {
+  width: 100%;
+  background: #e2e8f0;
+  color: #0f172a;
+  border: 1px dashed #94a3b8;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  transition: all 0.2s ease;
+}
+
+.add-feature-btn:hover {
+  background: #cbd5e1;
+  border-color: #64748b;
+}
+
+/* ==========================================================================
+   MODAL FOOTER ACTIONS
+   ========================================================================== */
+.admin-modal-footer {
+  flex-shrink: 0;
+  padding: 16px 22px 22px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.admin-btn {
+  border: none;
+  padding: 11px 18px;
+  border-radius: 13px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.admin-btn-primary {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+.admin-btn-secondary {
+  background: #e5e7eb;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   TABLET / SMALL SCREENS (MAX-WIDTH: 900px)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .membership-header-box {
+    padding: 22px;
+  }
+  .membership-header-box h2 {
+    font-size: 28px;
+  }
+  .admin-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE PORTRAIT (MAX-WIDTH: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .membership-header-box {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    border-radius: 20px;
+  }
+  .membership-header-box h2 {
+    font-size: 26px;
+  }
+  .membership-header-box p {
+    font-size: 13px;
+  }
+  .membership-label {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+  .membership-add-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+  .admin-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .admin-item-card {
+    padding: 20px;
+  }
+  .admin-item-title {
+    font-size: 19px;
+  }
+  .membership-price,
+  .admin-item-subtitle {
+    font-size: 30px;
+  }
+
+  /* Full screen modal adjustments */
+  .admin-modal-overlay {
+    padding: 0 !important;
+    align-items: stretch;
+  }
+  .admin-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+  .admin-modal-header {
+    padding: 18px 20px;
+  }
+  .admin-modal-title {
+    font-size: 19px;
+  }
+  .admin-modal-body {
+    padding: 18px 20px;
+  }
+  .admin-modal-footer {
+    padding: 14px 20px 20px;
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+  .admin-modal-footer button {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   SUPER MOBILE / EXTREME DEVISE (MAX-WIDTH: 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .membership-header-box {
+    padding: 16px;
+    border-radius: 18px;
+    margin-bottom: 18px;
+  }
+  .membership-header-box h2 {
+    font-size: 22px;
+  }
+  .membership-header-box p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .membership-label {
+    font-size: 10px;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+  }
+  .membership-add-btn {
+    padding: 11px 14px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+  .admin-cards-grid {
+    gap: 14px;
+  }
+  .admin-item-card {
+    padding: 18px;
+    border-radius: 18px;
+  }
+  .admin-item-title {
+    font-size: 17px;
+  }
+  .membership-price,
+  .admin-item-subtitle {
+    font-size: 26px;
+    margin: 10px 0;
+  }
+  .membership-badge {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+  .membership-subtitle {
+    font-size: 13px;
+  }
+  .membership-feature-list li {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+  .admin-item-footer {
+    margin-top: 18px;
+    gap: 10px;
+  }
+  .btn-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+  .admin-modal-header {
+    padding: 16px 18px !important;
+  }
+  .admin-modal-title {
+    font-size: 17px !important;
+  }
+  .admin-modal-close {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  .admin-modal-body {
+    padding: 16px 18px !important;
+  }
+  .admin-form-group {
+    margin-bottom: 14px;
+  }
+  .admin-form-group label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .admin-form-control {
+    padding: 11px 12px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+  
+  /* FIX: Cleaned up feature item row configurations */
+  .features-input-item {
+    display: flex !important;
+    flex-direction: row !important; /* Forces layout to remain a side-by-side row */
+    gap: 8px !important;
+    align-items: center !important;
+  }
+  
+  .features-input-item input {
+    width: 100% !important;
+  }
+  
+  .feature-remove-btn {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 10px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .admin-modal-footer {
+    padding: 14px 18px 18px !important;
+  }
+  .admin-btn {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,267 @@
+/* ================= HERO SECTION ================= */
+
+.home-section {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  padding-top: 80px;
+}
+
+/* Background Video */
+.background-video {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  filter: blur(3px);
+  transform: scale(1.05);
+
+  z-index: 0;
+}
+
+/* Optional old background image fallback */
+.background-image {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  z-index: 0;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.75)
+  );
+
+  z-index: 1;
+}
+
+.home-content {
+  position: relative;
+  z-index: 2;
+
+  text-align: center;
+  color: white;
+
+  width: 100%;
+  max-width: 1000px;
+
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 250px;
+}
+
+/* ================= BADGE ================= */
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  backdrop-filter: blur(10px);
+
+  padding: 10px 25px;
+  border-radius: 30px;
+
+  color: white;
+  font-weight: 600;
+
+  margin-bottom: 25px;
+}
+
+/* ================= TITLE ================= */
+
+.home-title {
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 2px;
+
+  text-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+
+  margin-bottom: 20px;
+}
+
+/* ================= SUBTITLE ================= */
+
+.home-subtitle {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.95);
+
+  margin-bottom: 35px;
+  line-height: 1.8;
+}
+
+/* ================= BUTTON ================= */
+
+.join-btn {
+  background: #22c55e;
+  color: white;
+
+  border: none;
+  padding: 16px 45px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  border-radius: 50px;
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.join-btn:hover {
+  background: #16a34a;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(34, 197, 94, 0.4);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1200px) {
+  .contact-info-box {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .home-title {
+    font-size: 55px;
+  }
+
+  .home-content {
+    margin-bottom: 330px;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-section {
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 30px;
+  }
+
+  .background-video,
+  .background-image {
+    height: 100%;
+  }
+
+  .home-content {
+    margin-bottom: 30px;
+    padding: 40px 20px 10px;
+  }
+
+  .home-title {
+    font-size: 42px;
+  }
+
+  .home-subtitle {
+    font-size: 18px;
+  }
+
+  .contact-info-section {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+
+    width: 100%;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .contact-info-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .home-section {
+    min-height: 100vh;
+    padding-top: 90px;
+    padding-bottom: 25px;
+  }
+
+  .background-video {
+    filter: blur(2px);
+    transform: scale(1.04);
+  }
+
+  .home-content {
+    padding: 30px 18px 10px;
+    margin-bottom: 20px;
+  }
+
+  .hero-badge {
+    font-size: 13px;
+    padding: 8px 18px;
+    margin-bottom: 18px;
+  }
+
+  .home-title {
+    font-size: 32px;
+    line-height: 1.25;
+    letter-spacing: 1px;
+  }
+
+  .home-subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+
+  .join-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 30px;
+    font-size: 16px;
+  }
+
+  .contact-info-section {
+    padding: 15px 18px 35px;
+  }
+
+  .contact-info-box {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .info-card {
+    width: 100%;
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  .info-card span {
+    width: 58px;
+    height: 58px;
+    font-size: 24px;
+  }
+
+  .info-card h3 {
+    font-size: 18px;
+  }
+
+  .info-card p {
+    font-size: 13px;
+  }
+}  

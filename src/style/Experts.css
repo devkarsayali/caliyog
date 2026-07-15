@@ -1,0 +1,354 @@
+.experts-section {
+  width: 100%;
+  padding: 70px 7%;
+  background: #f8f9fa;
+  overflow-x: hidden;
+}
+
+/* ================= Heading ================= */
+
+.experts-heading {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.experts-heading h2 {
+  font-size: 40px;
+  color: #1f3d2b;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.experts-heading p {
+  color: #666;
+  font-size: 16px;
+  max-width: 700px;
+  margin: auto;
+  line-height: 1.6;
+}
+
+/* ================= Top Image ================= */
+
+.experts-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.experts-image {
+  width: 100%;
+  max-width: 1050px;
+  border-radius: 20px;
+  display: block;
+  box-shadow: 0 12px 30px rgba(0,0,0,.15);
+  transition: .35s;
+}
+
+.experts-image:hover{
+  transform:scale(1.02);
+}
+
+/* ================= Grid ================= */
+
+.experts-info-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 45px auto 0;
+
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 28px;
+}
+
+/* Every card takes 2 columns */
+
+.expert-info-card {
+  grid-column: span 2;
+
+  background: #ffffff;
+  border-radius: 18px;
+  overflow: hidden;
+
+  border-bottom: 4px solid #2ecc71;
+
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+
+  transition: .35s;
+
+  min-height: 435px;
+}
+
+/* Last row perfectly centered */
+
+.expert-info-card:nth-child(9){
+    grid-column:2 / span 2;
+}
+
+.expert-info-card:nth-child(10){
+    grid-column:4 / span 2;
+}
+
+.expert-info-card:nth-child(11){
+    grid-column:6 / span 2;
+}
+
+.expert-info-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(46,204,113,.22);
+}
+
+/* ================= Card ================= */
+
+.expert-info-card{
+
+  background:#fff;
+
+  border-radius:18px;
+
+  overflow:hidden;
+
+  border-bottom:4px solid #2ecc71;
+
+  box-shadow:0 10px 28px rgba(0,0,0,.12);
+
+  transition:.35s;
+
+  min-height:430px;
+
+}
+
+.expert-info-card:hover{
+
+  transform:translateY(-8px);
+
+  box-shadow:0 18px 40px rgba(46,204,113,.22);
+
+}
+
+/* ================= Image ================= */
+
+.expert-card-image-box{
+
+    width:100%;
+    height:240px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#f5f5f5;
+
+    overflow:hidden;
+}
+
+.expert-card-image{
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+    object-position:center top;
+
+    display:block;
+
+    transition:.4s;
+
+}
+
+.expert-info-card:hover .expert-card-image{
+
+    transform:scale(1.05);
+
+}
+
+/* ================= Content ================= */
+
+.expert-card-content{
+
+    padding:20px;
+
+    text-align:center;
+}
+
+.expert-card-content h3{
+
+    font-size:24px;
+
+    color:#07132b;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+}
+
+.expert-card-content h4{
+
+    color:#22c55e;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    line-height:1.5;
+
+    margin-bottom:12px;
+}
+
+.expert-card-content p{
+
+    color:#55657d;
+
+    font-size:14px;
+
+    line-height:1.8;
+}
+/* ================= Loading ================= */
+
+.experts-message{
+
+  grid-column:1/-1;
+
+  text-align:center;
+
+  font-size:18px;
+
+  font-weight:700;
+
+  color:#2d4739;
+
+  padding:40px;
+
+}
+
+/* ================= Laptop ================= */
+
+@media (max-width:1200px){
+
+.experts-info-container{
+
+grid-template-columns:repeat(3,1fr);
+
+}
+
+.expert-info-card{
+
+grid-column:auto !important;
+
+min-height:430px;
+
+}
+
+}
+
+/* ================= Tablet ================= */
+
+@media (max-width:992px){
+
+.experts-section{
+
+padding:65px 30px;
+
+}
+
+.experts-info-container{
+
+grid-template-columns:repeat(2,1fr);
+
+gap:22px;
+
+}
+
+.expert-info-card{
+
+grid-column:auto !important;
+
+min-height:420px;
+
+}
+
+.expert-card-image-box{
+
+height:230px;
+
+}
+
+}
+/* ================= Mobile ================= */
+
+@media (max-width:768px){
+
+.experts-section{
+
+padding:55px 20px;
+
+}
+
+.experts-info-container{
+
+grid-template-columns:1fr;
+
+}
+
+.expert-info-card{
+
+grid-column:auto !important;
+
+min-height:auto;
+
+}
+
+.expert-card-image-box{
+
+height:280px;
+
+}
+
+.expert-card-content h3{
+
+font-size:22px;
+
+}
+
+}
+
+/* ================= Small Mobile ================= */
+
+@media (max-width:480px){
+
+.experts-section{
+
+padding:45px 16px;
+
+}
+
+.expert-card-image-box{
+
+height:220px;
+
+}
+
+.expert-card-content{
+
+padding:18px;
+
+}
+
+.expert-card-content h3{
+
+font-size:20px;
+
+}
+
+.expert-card-content h4{
+
+font-size:15px;
+
+}
+
+.expert-card-content p{
+
+font-size:13px;
+
+}
+
+}

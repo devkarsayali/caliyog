@@ -1,0 +1,182 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { adminsAPI } from "../../api/dataAPI";
+
+import "../../style/Admin/AdminCommon.css";
+import logo from "../../assets/CaliYog-Logo.png";
+import homeVideo from "../../assets/home-video.mp4";
+
+function AdminRegister() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Password and Confirm Password do not match");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await adminsAPI.create({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        mobile: formData.mobile.trim(),
+        password: formData.password,
+        createdAt: new Date().toISOString(),
+      });
+
+      toast.success("Admin Registered Successfully!");
+      navigate("/admin-login");
+    } catch (error) {
+      console.error("Registration Error:", error);
+      toast.error("Registration Failed. Account may already exist.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="select-none">
+      {/* Video Background */}
+      <video
+        className="admin-video-bg"
+        src={homeVideo}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1920"
+      />
+      <div className="admin-video-overlay" />
+
+      <div className="admin-login-page">
+        <div className="admin-login-card admin-register-card">
+          <div className="admin-login-header">
+            <img src={logo} alt="CaliYog Logo" className="admin-login-logo" />
+            <h1>REGISTER</h1>
+            <p>Create CaliYog Admin Account</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="admin-form-group">
+              <label>
+                <span className="label-icon">👤</span> Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter Admin Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="admin-form-group">
+              <label>
+                <span className="label-icon">📧</span> Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter Admin Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="admin-form-group">
+              <label>
+                <span className="label-icon">📞</span> Contact Number
+              </label>
+              <input
+                type="tel"
+                name="mobile"
+                placeholder="Enter Contact Number"
+                value={formData.mobile}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="admin-form-group">
+              <label>
+                <span className="label-icon">🔒</span> Password
+              </label>
+              <div className="admin-password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="admin-password-toggle cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                </button>
+              </div>
+            </div>
+
+            <div className="admin-form-group">
+              <label>
+                <span className="label-icon">🔒</span> Confirm Password
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" className="admin-login-btn cursor-pointer" disabled={loading}>
+              {loading && <span className="admin-btn-spinner" />}
+              {loading ? "Registering..." : "Register"}
+            </button>
+          </form>
+
+          <div className="admin-login-footer">
+            Already have an admin account?{" "}
+            <a href="/admin-login" className="admin-login-link">
+              Login Admin
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default AdminRegister;
