@@ -2,11 +2,11 @@
 .admin-sidebar {
   position: fixed;
   left: 0;
-  top: 30px;
+  top: 76px;
   width: 240px;
-  height: calc(100vh - 76px);
+  height: calc(100dvh - 76px);
   background: #ffffff;
-  padding: 18px;
+  padding: 18px 18px 30px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -44,7 +44,7 @@
   width: 280px;
   max-width: 82vw;
   top: 64px;
-  height: calc(100vh - 64px);
+  height: calc(100dvh - 64px);
   transform: translateX(-100%);
   z-index: 2500;
 }
@@ -402,6 +402,6 @@
 
   .admin-sidebar {
     top: 64px;
-    height: calc(100vh - 64px);
+    height: calc(100dvh - 64px);
   }
 }
