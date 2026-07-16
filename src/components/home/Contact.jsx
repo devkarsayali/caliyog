@@ -71,11 +71,13 @@ function Contact() {
         <div className="contact-info">
           <h3>Get In Touch</h3>
 
-          <p>
+          <p className="contact-address">
             <span className="contact-icon">
               <FaMapMarkerAlt />
             </span>
-            <strong>Address:</strong> Near Your Location, Sangli
+            <span>
+              <strong>Address:</strong> Padmavati colony, Dhamani-Road, near Naminath nagar ground, behind Starlocal mart, Sangli - 416416.
+            </span>
           </p>
 
           <p>
@@ -83,7 +85,7 @@ function Contact() {
               <FaPhoneAlt />
             </span>
             <strong>Phone:</strong>{" "}
-            <a href="tel:+919876543210">+91 98765 43210</a>
+            <a href="tel:+9404128090">+91 9404128090</a>
           </p>
 
           <p>
@@ -91,8 +93,8 @@ function Contact() {
               <FaEnvelope />
             </span>
             <strong>Email:</strong>{" "}
-            <a href="mailto:caliyogfitness@gmail.com">
-              caliyogfitness@gmail.com
+            <a href="mailto:caliyogoutdoorfitnessclub@gmail.com">
+              caliyogoutdoorfitnessclub@gmail.com
             </a>
           </p>
 
@@ -116,7 +118,7 @@ function Contact() {
             </span>
             <strong>Instagram:</strong>{" "}
             <a
-              href="https://www.instagram.com/caliyog_fitness_club"
+              href="https://www.instagram.com/cali.yog/?utm_source=ig_web_button_share_sheet"
               target="_blank"
               rel="noreferrer"
             >
@@ -130,7 +132,7 @@ function Contact() {
             </span>
             <strong>Facebook:</strong>{" "}
             <a
-              href="https://www.facebook.com"
+              href="https://share.google/s3LpW5bI5PI0EPYqB"
               target="_blank"
               rel="noreferrer"
             >
@@ -144,7 +146,7 @@ function Contact() {
             </span>
             <strong>WhatsApp:</strong>{" "}
             <a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/9404128090"
               target="_blank"
               rel="noreferrer"
             >

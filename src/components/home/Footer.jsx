@@ -35,14 +35,14 @@ function Footer() {
           <p>📍 Sangli, Maharashtra</p>
           <p>
             📞{" "}
-            <a href="tel:+919876543210">
-              +91 98765 43210
+            <a href="tel:+919404128090">
+              +91 9404128090
             </a>
           </p>
           <p>
             📧{" "}
-            <a href="mailto:caliyogfitness@gmail.com">
-              caliyogfitness@gmail.com
+            <a href="mailto:caliyogoutdoorfitnessclub@gmail.com">
+              caliyogoutdoorfitnessclub@gmail.com
             </a>
           </p>
         </div>
@@ -51,7 +51,7 @@ function Footer() {
         <div className="footer-box">
           <h3>Follow Us</h3>
           <a
-            href="https://instagram.com/"
+            href="https://www.instagram.com/cali.yog/?utm_source=ig_web_button_share_sheet"
             target="_blank"
             rel="noreferrer"
             className="social-link"
@@ -59,20 +59,12 @@ function Footer() {
             📸 Instagram
           </a>
           <a
-            href="https://facebook.com/"
+            href="https://share.google/s3LpW5bI5PI0EPYqB"
             target="_blank"
             rel="noreferrer"
             className="social-link"
           >
             👍 Facebook
-          </a>
-          <a
-            href="https://youtube.com/"
-            target="_blank"
-            rel="noreferrer"
-            className="social-link"
-          >
-            ▶️ YouTube
           </a>
         </div>
       </div>
