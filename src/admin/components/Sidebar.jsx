@@ -71,24 +71,6 @@ function Sidebar({ isOpen, isMobile, activeTab, setActiveTab, onClose, onToggle 
           ))}
         </div>
 
-        <div className="sidebar-bottom-box">
-          <div className="admin-profile-card">
-            <div className="admin-profile-avatar">
-              {adminData?.name ? adminData.name.charAt(0).toUpperCase() : "A"}
-            </div>
-
-            <div className="admin-profile-info">
-              <h4>{adminData?.name || "Admin"}</h4>
-              <p className="truncate max-w-[130px]">{adminData?.email || "admin@caliyog.com"}</p>
-              <span>● Active</span>
-            </div>
-          </div>
-
-          <button title="Logout" className="logout-btn cursor-pointer" onClick={handleLogout}>
-            <span>🚪</span>
-            <b>Logout</b>
-          </button>
-        </div>
       </aside>
     </>
   );

@@ -9,13 +9,10 @@ const AdminLogin = lazy(() => import('./admin/pages/AdminLogin'));
 const AdminRegister = lazy(() => import('./admin/pages/AdminRegister'));
 const AdminDashboard = lazy(() => import('./admin/pages/AdminDashboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+
 function App() {
-  const [splashDone, setSplashDone] = useState(() => {
-    const path = window.location.pathname;
-    return path.startsWith('/admin') || path.startsWith('/admin-');
-  });
-
-
+  // Show splash screen on first load for both admin and user routes
+  const [splashDone, setSplashDone] = useState(false);
 
   return (
     <>
@@ -38,13 +35,9 @@ function App() {
         <SplashScreen onComplete={() => setSplashDone(true)} />
       )}
 
-      {/* Main App Routes */}
+      {/* Main App Routes (Null fallback to remove the loading spinner page) */}
       {splashDone && (
-        <Suspense fallback={
-          <div className="fixed inset-0 bg-[#090d13] flex items-center justify-center z-[9999]">
-            <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        }>
+        <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             

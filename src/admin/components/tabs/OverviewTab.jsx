@@ -4,9 +4,10 @@ import {
   FiArrowRight,
   FiMail,
   FiUserPlus,
+  FiGrid,
 } from "react-icons/fi";
 import { 
-  expertsAPI, membersAPI, batchMembersAPI, contactsAPI 
+  expertsAPI, membersAPI, batchMembersAPI, contactsAPI, batchesAPI 
 } from "../../../api/dataAPI";
 
 import "../../../style/Admin/OverviewTab.css";
@@ -14,7 +15,7 @@ import "../../../style/Admin/OverviewTab.css";
 function OverviewTab({ setActiveTab }) {
   const [expertsCount, setExpertsCount] = useState(0);
   const [membersCount, setMembersCount] = useState(0);
-  const [batchMembersCount, setBatchMembersCount] = useState(0);
+  const [batchesCount, setBatchesCount] = useState(0);
   const [enquiriesCount, setEnquiriesCount] = useState(0);
 
   useEffect(() => {
@@ -25,16 +26,21 @@ function OverviewTab({ setActiveTab }) {
           membersList,
           batchMembersList,
           enquiriesList,
+          batchesList,
         ] = await Promise.all([
           expertsAPI.getAll(),
           membersAPI.getAll(),
           batchMembersAPI.getAll(),
           contactsAPI.getAll(),
+          batchesAPI.getAll(),
         ]);
 
+        const normalMembers = membersList ? membersList.length : 0;
+        const kidsMembers = batchMembersList ? batchMembersList.length : 0;
+
         setExpertsCount(expertsList ? expertsList.length : 0);
-        setMembersCount(membersList ? membersList.length : 0);
-        setBatchMembersCount(batchMembersList ? batchMembersList.length : 0);
+        setMembersCount(normalMembers + kidsMembers);
+        setBatchesCount(batchesList ? batchesList.length : 0);
         setEnquiriesCount(enquiriesList ? enquiriesList.length : 0);
       } catch (error) {
         console.error("Overview Load Error:", error);
@@ -48,8 +54,8 @@ function OverviewTab({ setActiveTab }) {
     <div className="admin-content-window select-none">
       <section className="admin-stats-grid">
         <StatCard title="Total Experts" number={expertsCount} text="Professional trainers added" icon={<FiUsers />} onClick={() => setActiveTab("experts")} />
-        <StatCard title="Active Members" number={membersCount} text="Users added as members" icon={<FiUserPlus />} onClick={() => setActiveTab("members")} />
-        <StatCard title="Batch Members" number={batchMembersCount} text="Users added to batches" icon={<FiUsers />} onClick={() => setActiveTab("members")} />
+        <StatCard title="Active Members" number={membersCount} text="All members including kids" icon={<FiUserPlus />} onClick={() => setActiveTab("members")} />
+        <StatCard title="Total Batches" number={batchesCount} text="Active training programs" icon={<FiGrid />} onClick={() => setActiveTab("batches")} />
         <StatCard title="Enquiries" number={enquiriesCount} text="Contact form messages" icon={<FiMail />} onClick={() => setActiveTab("enquiries")} />
       </section>
 
@@ -64,7 +70,7 @@ function OverviewTab({ setActiveTab }) {
         <div className="summary-grid">
           <SummaryRow title="Experts" count={`${expertsCount} Total Records`} tab="experts" setActiveTab={setActiveTab} />
           <SummaryRow title="Members" count={`${membersCount} Active Members`} tab="members" setActiveTab={setActiveTab} />
-          <SummaryRow title="Batch Members" count={`${batchMembersCount} Batch Students`} tab="members" setActiveTab={setActiveTab} />
+          <SummaryRow title="Batches" count={`${batchesCount} Total Batches`} tab="batches" setActiveTab={setActiveTab} />
           <SummaryRow title="Enquiries" count={`${enquiriesCount} Contact Messages`} tab="enquiries" setActiveTab={setActiveTab} />
         </div>
       </div>

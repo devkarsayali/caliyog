@@ -3,6 +3,7 @@ import {
   FiMail,
   FiTrash2,
   FiCheckCircle,
+  FiX,
 } from "react-icons/fi";
 import toast from 'react-hot-toast';
 import { contactsAPI } from "../../../api/dataAPI";
@@ -11,6 +12,7 @@ import "../../../style/Admin/EnquiriesTab.css";
 function EnquiriesTab() {
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedEnquiry, setSelectedEnquiry] = useState(null);
 
   const getValue = (...values) => {
     const found = values.find(
@@ -67,16 +69,18 @@ function EnquiriesTab() {
   };
 
   const deleteEnquiry = async (id) => {
-    const confirmDelete = window.confirm("Delete this enquiry?");
-    if (!confirmDelete) return;
+    const confirmDelete = window.confirm("Do you want to delete this enquiry?");
+    if (!confirmDelete) return false;
 
     try {
       await contactsAPI.delete(id);
       toast.success("Enquiry deleted successfully");
       loadData();
+      return true;
     } catch (error) {
       console.error("Delete Enquiry Error:", error);
       toast.error("Failed to delete enquiry");
+      return false;
     }
   };
 
@@ -99,13 +103,12 @@ function EnquiriesTab() {
           <th>Message</th>
           <th>Status</th>
           <th>Date</th>
-          <th>Actions</th>
         </tr>
       </thead>
 
       <tbody>
         {enquiries.map((item, index) => (
-          <tr key={item._id || item.id}>
+          <tr key={item._id || item.id} onClick={() => setSelectedEnquiry(item)}>
             <td>{index + 1}</td>
             <td>
               {getValue(
@@ -134,24 +137,6 @@ function EnquiriesTab() {
                 item.createdAt || item.date || item.submittedOn
               )}
             </td>
-            <td className="action-cell">
-              {item.status !== "Replied" && (
-                <button
-                  type="button"
-                  className="reply-btn cursor-pointer"
-                  onClick={() => markReplied(item._id || item.id)}
-                >
-                  <FiCheckCircle />
-                </button>
-              )}
-              <button
-                type="button"
-                className="delete-btn cursor-pointer"
-                onClick={() => deleteEnquiry(item._id || item.id)}
-              >
-                <FiTrash2 />
-              </button>
-            </td>
           </tr>
         ))}
       </tbody>
@@ -162,7 +147,11 @@ function EnquiriesTab() {
   const renderCards = () => (
     <div className="enquiry-cards">
       {enquiries.map((item, index) => (
-        <div className="enquiry-card-item" key={item._id || item.id}>
+        <div 
+          className="enquiry-card-item" 
+          key={item._id || item.id}
+          onClick={() => setSelectedEnquiry(item)}
+        >
           <div className="enquiry-card-top">
             <div>
               <span className="enquiry-card-index">#{index + 1}</span>
@@ -213,25 +202,6 @@ function EnquiriesTab() {
               <p>{getValue(item.message, item.msg, item.description)}</p>
             </div>
           </div>
-
-          <div className="enquiry-card-footer">
-            {item.status !== "Replied" && (
-              <button
-                type="button"
-                className="reply-btn cursor-pointer"
-                onClick={() => markReplied(item._id || item.id)}
-              >
-                <FiCheckCircle /> Mark Replied
-              </button>
-            )}
-            <button
-              type="button"
-              className="delete-btn cursor-pointer"
-              onClick={() => deleteEnquiry(item._id || item.id)}
-            >
-              <FiTrash2 /> Delete
-            </button>
-          </div>
         </div>
       ))}
     </div>
@@ -258,6 +228,107 @@ function EnquiriesTab() {
           {/* Mobile view */}
           <div className="enquiry-mobile-view">{renderCards()}</div>
         </>
+      )}
+
+      {/* Enquiry Detail Modal containing delete and action buttons */}
+      {selectedEnquiry && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal small-expert-modal">
+            <div className="admin-modal-header">
+              <h3 className="admin-modal-title">Enquiry Details</h3>
+              <button 
+                type="button" 
+                className="admin-modal-close cursor-pointer" 
+                onClick={() => setSelectedEnquiry(null)}
+              >
+                <FiX />
+              </button>
+            </div>
+            
+            <div className="admin-modal-body compact-modal-body" style={{ color: '#0f172a', padding: '20px' }}>
+              <div className="enquiry-detail-row">
+                <strong>Name:</strong>
+                <span>
+                  {getValue(
+                    selectedEnquiry.name,
+                    selectedEnquiry.fullName,
+                    selectedEnquiry.userName,
+                    selectedEnquiry.memberName
+                  )}
+                </span>
+              </div>
+              <div className="enquiry-detail-row">
+                <strong>Email:</strong>
+                <span>{getValue(selectedEnquiry.email, selectedEnquiry.userEmail)}</span>
+              </div>
+              <div className="enquiry-detail-row">
+                <strong>Contact:</strong>
+                <span>{getContactNumber(selectedEnquiry)}</span>
+              </div>
+              <div className="enquiry-detail-row">
+                <strong>Status:</strong>
+                <span className={selectedEnquiry.status === "Replied" ? "status-replied" : "status-new"}>
+                  {selectedEnquiry.status || "New"}
+                </span>
+              </div>
+              <div className="enquiry-detail-row">
+                <strong>Date:</strong>
+                <span>
+                  {formatDate(
+                    selectedEnquiry.createdAt || selectedEnquiry.date || selectedEnquiry.submittedOn
+                  )}
+                </span>
+              </div>
+              <div className="enquiry-detail-message">
+                <strong>Message:</strong>
+                <p>{getValue(selectedEnquiry.message, selectedEnquiry.msg, selectedEnquiry.description)}</p>
+              </div>
+            </div>
+
+            <div className="admin-modal-footer">
+              <button 
+                type="button" 
+                className="admin-btn admin-btn-secondary cursor-pointer" 
+                onClick={() => setSelectedEnquiry(null)}
+              >
+                Close
+              </button>
+              
+              {selectedEnquiry.status !== "Replied" && (
+                <button 
+                  type="button" 
+                  className="admin-btn admin-btn-primary cursor-pointer"
+                  onClick={async () => {
+                    await markReplied(selectedEnquiry._id || selectedEnquiry.id);
+                    setSelectedEnquiry(null);
+                  }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <FiCheckCircle /> Mark Replied
+                </button>
+              )}
+
+              <button 
+                type="button" 
+                className="admin-btn cursor-pointer"
+                style={{ 
+                  background: '#ef4444', 
+                  color: '#ffffff', 
+                  borderRadius: '13px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                onClick={async () => {
+                  const deleted = await deleteEnquiry(selectedEnquiry._id || selectedEnquiry.id);
+                  if (deleted) setSelectedEnquiry(null);
+                }}
+              >
+                <FiTrash2 /> Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

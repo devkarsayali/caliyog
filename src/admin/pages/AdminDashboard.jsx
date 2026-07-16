@@ -219,6 +219,8 @@ function AdminDashboard() {
         onOpenSettings={openSettings}
         searchText={searchText}
         setSearchText={setSearchText}
+        setActiveTab={handleTabChange}
+        activeTab={activeTab}
       />
 
       <GlobalSearchResults
