@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "../../style/Admin/Sidebar.css";
-import logo from "../../assets/CaliYog-Logo.png";
 
 
 function Sidebar({ isOpen, isMobile, activeTab, setActiveTab, onClose, onToggle }) {
@@ -55,13 +54,8 @@ function Sidebar({ isOpen, isMobile, activeTab, setActiveTab, onClose, onToggle 
       )}
 
       <aside className={`admin-sidebar ${isOpen ? "open" : "closed"} ${isMobile ? "mobile-mode" : "desktop-mode"} select-none`}>
-        <div className="admin-sidebar-title">
-          <div className="logo-block">
-            <img src={logo} alt="CaliYog Logo" className="admin-sidebar-logo" />
-            <h2>CALIYOG</h2>
-            <p>Admin Portal</p>
-          </div>
-        </div>
+        <div className="admin-sidebar-title"></div>
+
 
         <div className="sidebar-menu">
           {menuItems.map((item) => (
