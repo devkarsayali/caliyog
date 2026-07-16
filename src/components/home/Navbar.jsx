@@ -168,14 +168,6 @@ function Navbar({ onJoinClick }) {
           </a>
         </li>
       </ul>
-
-      {/* Join Now */}
-      <button
-        className="navbar-btn join-link cursor-pointer"
-        onClick={handleJoinClick}
-      >
-        Join Now
-      </button>
     </nav>
   );
 }
