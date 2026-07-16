@@ -30,30 +30,57 @@ function Experts() {
         />
       </div>
 
-      {/* Cards */}
-      <div className="experts-info-container">
-        {experts.map((expert, index) => (
-          <div className="expert-info-card" key={expert._id || index}>
-            <div className="expert-card-image-box">
-              <img
-                className="expert-card-image"
-                src={expert.image}
-                alt={expert.name || "Fitness Expert"}
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = expertsImage;
-                }}
-              />
-            </div>
+      {/* Scrolling Marquee Cards */}
+      <div className="experts-marquee-wrapper">
+        <div className="experts-track">
+          {/* Render first copy */}
+          {experts.map((expert, index) => (
+            <div className="expert-info-card" key={`expert-1-${expert._id || index}`}>
+              <div className="expert-card-image-box">
+                <img
+                  className="expert-card-image"
+                  src={expert.image}
+                  alt={expert.name || "Fitness Expert"}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = expertsImage;
+                  }}
+                />
+              </div>
 
-            <div className="expert-card-content">
-              <h3>{expert.name || "Expert Name"}</h3>
-              <h4>{expert.specialization || expert.role || "Fitness Expert"}</h4>
-              <p>{expert.experience || expert.description || expert.bio || ""}</p>
+              <div className="expert-card-content">
+                <h3>{expert.name || "Expert Name"}</h3>
+                <h4>{expert.specialization || expert.role || "Fitness Expert"}</h4>
+                <p>{expert.experience || expert.description || expert.bio || ""}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+
+          {/* Render second copy for seamless infinite scrolling */}
+          {experts.map((expert, index) => (
+            <div className="expert-info-card" key={`expert-2-${expert._id || index}`}>
+              <div className="expert-card-image-box">
+                <img
+                  className="expert-card-image"
+                  src={expert.image}
+                  alt={expert.name || "Fitness Expert"}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = expertsImage;
+                  }}
+                />
+              </div>
+
+              <div className="expert-card-content">
+                <h3>{expert.name || "Expert Name"}</h3>
+                <h4>{expert.specialization || expert.role || "Fitness Expert"}</h4>
+                <p>{expert.experience || expert.description || expert.bio || ""}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

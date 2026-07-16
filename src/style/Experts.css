@@ -48,81 +48,75 @@
   transform:scale(1.02);
 }
 
-/* ================= Grid ================= */
+/* ================= Scrolling Marquee ================= */
 
-.experts-info-container {
+.experts-marquee-wrapper {
+  overflow: hidden;
   width: 100%;
-  max-width: 1320px;
-  margin: 45px auto 0;
-
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 28px;
+  padding: 20px 0 40px;
+  position: relative;
+  margin-top: 45px;
 }
 
-/* Every card takes 2 columns */
+/* Premium gradient fades on edges */
+.experts-marquee-wrapper::before,
+.experts-marquee-wrapper::after {
+  content: "";
+  height: 100%;
+  width: 150px;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.experts-marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #f8f9fa 15%, transparent 100%);
+}
+
+.experts-marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #f8f9fa 15%, transparent 100%);
+}
+
+.experts-track {
+  display: flex;
+  width: max-content;
+  gap: 28px;
+  animation: scrollMarquee 45s linear infinite;
+}
+
+.experts-track:hover {
+  animation-play-state: paused;
+}
 
 .expert-info-card {
-  grid-column: span 2;
-
+  flex-shrink: 0;
+  width: 290px;
   background: #ffffff;
   border-radius: 18px;
   overflow: hidden;
-
   border-bottom: 4px solid #2ecc71;
-
-  box-shadow: 0 10px 28px rgba(0,0,0,.12);
-
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
   transition: .35s;
-
-  min-height: 435px;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Last row perfectly centered */
-
-.expert-info-card:nth-child(9){
-    grid-column:2 / span 2;
+.expert-info-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(46,204,113,.22);
 }
 
-.expert-info-card:nth-child(10){
-    grid-column:4 / span 2;
-}
-
-.expert-info-card:nth-child(11){
-    grid-column:6 / span 2;
-}
-
-.expert-info-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 20px 40px rgba(46,204,113,.22);
-}
-
-/* ================= Card ================= */
-
-.expert-info-card{
-
-  background:#fff;
-
-  border-radius:18px;
-
-  overflow:hidden;
-
-  border-bottom:4px solid #2ecc71;
-
-  box-shadow:0 10px 28px rgba(0,0,0,.12);
-
-  transition:.35s;
-
-  min-height:430px;
-
-}
-
-.expert-info-card:hover{
-
-  transform:translateY(-8px);
-
-  box-shadow:0 18px 40px rgba(46,204,113,.22);
-
+@keyframes scrollMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* ================= Image ================= */
@@ -224,18 +218,9 @@
 
 @media (max-width:1200px){
 
-.experts-info-container{
-
-grid-template-columns:repeat(3,1fr);
-
-}
-
-.expert-info-card{
-
-grid-column:auto !important;
-
-min-height:430px;
-
+.expert-info-card {
+  width: 270px;
+  min-height: 400px;
 }
 
 }
@@ -245,68 +230,49 @@ min-height:430px;
 @media (max-width:992px){
 
 .experts-section{
-
-padding:65px 30px;
-
+  padding: 65px 30px;
 }
 
-.experts-info-container{
-
-grid-template-columns:repeat(2,1fr);
-
-gap:22px;
-
+.experts-marquee-wrapper::before,
+.experts-marquee-wrapper::after {
+  width: 100px;
 }
 
-.expert-info-card{
-
-grid-column:auto !important;
-
-min-height:420px;
-
+.expert-info-card {
+  width: 260px;
+  min-height: 390px;
 }
 
 .expert-card-image-box{
-
-height:230px;
-
+  height: 210px;
 }
 
 }
+
 /* ================= Mobile ================= */
 
 @media (max-width:768px){
 
 .experts-section{
-
-padding:55px 20px;
-
+  padding: 55px 20px;
 }
 
-.experts-info-container{
-
-grid-template-columns:1fr;
-
+.experts-marquee-wrapper::before,
+.experts-marquee-wrapper::after {
+  width: 50px;
 }
 
 .expert-info-card{
-
-grid-column:auto !important;
-
-min-height:auto;
-
+  width: 240px;
+  min-height: 360px;
 }
 
 .expert-card-image-box{
-
-height:280px;
-
+  height: 190px;
 }
 
 .expert-card-content h3{
-
-font-size:22px;
-
+  font-size: 20px;
 }
 
 }
@@ -316,39 +282,27 @@ font-size:22px;
 @media (max-width:480px){
 
 .experts-section{
-
-padding:45px 16px;
-
+  padding: 45px 16px;
 }
 
 .expert-card-image-box{
-
-height:220px;
-
+  height: 170px;
 }
 
 .expert-card-content{
-
-padding:18px;
-
+  padding: 16px;
 }
 
 .expert-card-content h3{
-
-font-size:20px;
-
+  font-size: 18px;
 }
 
 .expert-card-content h4{
-
-font-size:15px;
-
+  font-size: 14px;
 }
 
 .expert-card-content p{
-
-font-size:13px;
-
+  font-size: 12px;
 }
 
 }
