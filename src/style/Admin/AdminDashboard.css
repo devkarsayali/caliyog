@@ -35,8 +35,8 @@ html, body {
   flex-direction: column;
   min-width: 0;
   min-height: 100vh;
+  padding-top: 76px;
   position: relative;            /* ← REQUIRED for sticky to work */
-  
   transition: margin-left 0.35s ease, width 0.35s ease;
 }
 
@@ -47,25 +47,6 @@ html, body {
 }
 
 /* Desktop - Sidebar Collapsed */
-.admin-main-area.desktop.si.admin-dashboard-wrapper {
-  width: 100%;
-  min-height: 100vh;
-  background: #f5f7fb;
-  position: relative;
-  overflow-x: hidden;
-}
-
-.admin-main-area {
-  min-height: 100vh;
-  padding-top: 76px;
-  transition: margin-left 0.35s ease, width 0.35s ease;
-}
-
-.admin-main-area.desktop.sidebar-open {
-  margin-left: 240px;
-  width: calc(100% - 240px);
-}
-
 .admin-main-area.desktop.sidebar-closed {
   margin-left: 76px;
   width: calc(100% - 76px);
@@ -76,6 +57,7 @@ html, body {
   width: 100% !important;
   padding-top: 64px;
 }
+
 
 .admin-content {
   background: #f5f7fb;

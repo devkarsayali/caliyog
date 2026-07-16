@@ -9,9 +9,13 @@ const AdminLogin = lazy(() => import('./admin/pages/AdminLogin'));
 const AdminRegister = lazy(() => import('./admin/pages/AdminRegister'));
 const AdminDashboard = lazy(() => import('./admin/pages/AdminDashboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-
 function App() {
-  const [splashDone, setSplashDone] = useState(false);
+  const [splashDone, setSplashDone] = useState(() => {
+    const path = window.location.pathname;
+    return path.startsWith('/admin') || path.startsWith('/admin-');
+  });
+
+
 
   return (
     <>
