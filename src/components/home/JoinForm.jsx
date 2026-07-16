@@ -81,6 +81,29 @@ function JoinForm({ onClose, selectedPlan }) {
     e.preventDefault();
     setLoading(true);
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      toast.error("Please enter a valid email address");
+      setLoading(false);
+      return;
+    }
+
+    // Phone validation
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(formData.contact.trim())) {
+      toast.error("Contact number must be exactly 10 digits");
+      setLoading(false);
+      return;
+    }
+
+    // Parent contact validation if Kids Batch
+    if (batch === "Kids Batch" && formData.parentContact.trim() && !phoneRegex.test(formData.parentContact.trim())) {
+      toast.error("Parent contact number must be exactly 10 digits");
+      setLoading(false);
+      return;
+    }
+
     const joinRequest = {
       name: formData.name.trim(),
       email: formData.email.trim(),
@@ -99,16 +122,17 @@ function JoinForm({ onClose, selectedPlan }) {
 
     try {
       await joinRequestsAPI.create(joinRequest);
-      alert("Your membership request has been submitted successfully!");
+      toast.success("Your membership request has been submitted successfully!");
       resetForm();
       if (onClose) onClose();
     } catch (error) {
       console.error("Join Form Error:", error);
-      alert("Failed to submit request. Please check backend connectivity.");
+      toast.error("Failed to submit request. Please check backend connectivity.");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="modal-overlay select-none">
@@ -153,9 +177,15 @@ function JoinForm({ onClose, selectedPlan }) {
             <input
               type="tel"
               name="contact"
-              placeholder="Enter contact number"
+              placeholder="Enter 10-digit contact number"
               value={formData.contact}
-              onChange={handleChange}
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setFormData((prev) => ({ ...prev, contact: val }));
+              }}
+              maxLength={10}
+              minLength={10}
+              inputMode="numeric"
               required
             />
           </div>
@@ -203,9 +233,15 @@ function JoinForm({ onClose, selectedPlan }) {
                 <input
                   type="tel"
                   name="parentContact"
-                  placeholder="Enter parent contact number"
+                  placeholder="Enter 10-digit parent contact number"
                   value={formData.parentContact}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    setFormData((prev) => ({ ...prev, parentContact: val }));
+                  }}
+                  maxLength={10}
+                  minLength={10}
+                  inputMode="numeric"
                   required
                 />
               </div>

@@ -47,10 +47,10 @@ function OverviewTab({ setActiveTab }) {
   return (
     <div className="admin-content-window select-none">
       <section className="admin-stats-grid">
-        <StatCard title="Total Experts" number={expertsCount} text="Professional trainers added" icon={<FiUsers />} />
-        <StatCard title="Active Members" number={membersCount} text="Users added as members" icon={<FiUserPlus />} />
-        <StatCard title="Batch Members" number={batchMembersCount} text="Users added to batches" icon={<FiUsers />} />
-        <StatCard title="Enquiries" number={enquiriesCount} text="Contact form messages" icon={<FiMail />} />
+        <StatCard title="Total Experts" number={expertsCount} text="Professional trainers added" icon={<FiUsers />} onClick={() => setActiveTab("experts")} />
+        <StatCard title="Active Members" number={membersCount} text="Users added as members" icon={<FiUserPlus />} onClick={() => setActiveTab("members")} />
+        <StatCard title="Batch Members" number={batchMembersCount} text="Users added to batches" icon={<FiUsers />} onClick={() => setActiveTab("members")} />
+        <StatCard title="Enquiries" number={enquiriesCount} text="Contact form messages" icon={<FiMail />} onClick={() => setActiveTab("enquiries")} />
       </section>
 
       <div className="admin-summary-panel">
@@ -72,9 +72,9 @@ function OverviewTab({ setActiveTab }) {
   );
 }
 
-function StatCard({ title, number, text, icon }) {
+function StatCard({ title, number, text, icon, onClick }) {
   return (
-    <div className="stat-card-admin">
+    <div className={`stat-card-admin ${onClick ? 'clickable-card' : ''}`} onClick={onClick}>
       <div className="stat-info-admin">
         <h3>{title}</h3>
         <div className="stat-number">{number}</div>

@@ -45,6 +45,8 @@ function About() {
             <div className="feature">✓ Weight Loss Programs</div>
             <div className="feature">✓ Functional Fitness</div>
             <div className="feature">✓ Yoga & Mobility</div>
+            <div className="feature">✓ Calisthenics</div>
+            <div className="feature">✓ Nutrition Guidance</div>
           </div>
         </div>
       </div>

@@ -200,7 +200,7 @@
   backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 20px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;

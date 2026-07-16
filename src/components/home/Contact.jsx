@@ -33,6 +33,22 @@ function Contact() {
     e.preventDefault();
     setLoading(true);
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      toast.error("Please enter a valid email address");
+      setLoading(false);
+      return;
+    }
+
+    // Phone validation (required field, must be exactly 10 digits)
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(formData.contact.trim())) {
+      toast.error("Phone number must be exactly 10 digits");
+      setLoading(false);
+      return;
+    }
+
     try {
       await contactsAPI.create({
         name: formData.name.trim(),
@@ -57,6 +73,7 @@ function Contact() {
       setLoading(false);
     }
   };
+
 
   return (
     <section className="contact-section select-none" id="contact">
@@ -182,11 +199,17 @@ function Contact() {
           />
 
           <input
-            type="text"
+            type="tel"
             name="contact"
-            placeholder="Enter Your Phone Number"
+            placeholder="Enter Your Phone Number (10 digits) *"
             value={formData.contact}
-            onChange={handleChange}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+              setFormData((prev) => ({ ...prev, contact: val }));
+            }}
+            maxLength={10}
+            inputMode="numeric"
+            required
           />
 
           <textarea

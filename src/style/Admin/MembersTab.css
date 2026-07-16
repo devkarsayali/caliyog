@@ -92,15 +92,59 @@
   font-weight: 900;
 }
 
+/* Base remaining badge */
 .remaining-badge {
   display: inline-block;
-  background: #dcfce7;
-  color: #15803d;
-  padding: 7px 13px;
+  padding: 5px 12px;
   border-radius: 30px;
   font-weight: 900;
-  font-size: 13px;
+  font-size: 12px;
+  white-space: nowrap;
 }
+
+/* Active — green (> 30 days) */
+.badge-active {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+
+/* Warning — amber (7-30 days) */
+.badge-warning {
+  background: #fef9c3;
+  color: #a16207;
+  border: 1px solid #fde047;
+}
+
+/* Critical — red (1-7 days) */
+.badge-critical {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  animation: pulse-badge 1.5s ease-in-out infinite;
+}
+
+/* Expired — gray */
+.badge-expired {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  text-decoration: line-through;
+}
+
+/* Unknown / no date */
+.badge-unknown {
+  background: #f8fafc;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
+  font-style: italic;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+
 
 .member-delete-btn {
   border: none;

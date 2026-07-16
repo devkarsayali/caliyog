@@ -27,6 +27,20 @@ function AdminRegister() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Phone validation - must be exactly 10 digits
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(formData.mobile.trim())) {
+      toast.error("Contact number must be exactly 10 digits");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Password and Confirm Password do not match");
       return;
@@ -57,6 +71,7 @@ function AdminRegister() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="select-none">
@@ -117,9 +132,15 @@ function AdminRegister() {
               <input
                 type="tel"
                 name="mobile"
-                placeholder="Enter Contact Number"
+                placeholder="Enter 10-digit Contact Number"
                 value={formData.mobile}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                  setFormData({ ...formData, mobile: val });
+                }}
+                maxLength={10}
+                minLength={10}
+                inputMode="numeric"
                 required
               />
             </div>

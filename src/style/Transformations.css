@@ -35,27 +35,6 @@
   margin: 0 auto;
 }
 
-/* Fading Edge overlays */
-.transform-slider-wrapper::before,
-.transform-slider-wrapper::after {
-  content: "";
-  height: 100%;
-  width: 150px;
-  position: absolute;
-  top: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.transform-slider-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, #f8fff9 10%, transparent 100%);
-}
-
-.transform-slider-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, #eef5ef 10%, transparent 100%);
-}
 
 /* Slider Track */
 .transform-slider {
@@ -192,10 +171,6 @@
     padding: 75px 30px;
   }
 
-  .transform-slider-wrapper::before,
-  .transform-slider-wrapper::after {
-    width: 100px;
-  }
 
   .transform-card {
     width: 260px;
@@ -213,10 +188,6 @@
     padding: 55px 20px;
   }
 
-  .transform-slider-wrapper::before,
-  .transform-slider-wrapper::after {
-    width: 50px;
-  }
 
   .transform-card {
     width: 240px;

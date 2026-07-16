@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+﻿import React, { useEffect, useState, useCallback } from "react";
 import { FiUserPlus } from "react-icons/fi";
 import toast from 'react-hot-toast';
 import { membersAPI, batchMembersAPI } from "../../../api/dataAPI";
@@ -61,26 +61,63 @@ function MembersTab() {
   }, [fetchFromBackend]);
 
   const getMembershipDays = (membership = "") => {
-    if (membership.includes("Weekly")) return 7;
-    if (membership.includes("15 Days")) return 15;
-    if (membership.includes("Monthly")) return 30;
-    if (membership.includes("3 Months")) return 90;
-    if (membership.includes("6 Months")) return 180;
-    if (membership.includes("Yearly")) return 365;
+    const m = membership.toLowerCase();
+    if (m.includes("weekly") || m.includes("week")) return 7;
+    if (m.includes("15 days") || m.includes("15days") || m.includes("15-day")) return 15;
+    if (m.includes("3 month") || m.includes("3month") || m.includes("quarter")) return 90;
+    if (m.includes("6 month") || m.includes("6month") || m.includes("half year")) return 180;
+    if (m.includes("year") || m.includes("annual")) return 365;
+    if (m.includes("month")) return 30;
     return 30;
   };
 
-  const getRemainingDays = (member) => {
-    const start = new Date(member.startDate || member.joinedAt || member.createdAt);
+  const getRemainingInfo = (member) => {
+    const rawDate = member.startDate || member.joinedAt || member.createdAt;
+    const start = rawDate ? new Date(rawDate) : null;
     const totalDays = getMembershipDays(member.membership || "");
 
-    if (isNaN(start.getTime())) return 0;
+    if (!start || isNaN(start.getTime())) {
+      return { days: 0, status: "unknown", endDate: null };
+    }
 
     const end = new Date(start);
     end.setDate(start.getDate() + totalDays);
 
-    const diff = end - new Date();
-    return Math.max(Math.ceil(diff / (1000 * 60 * 60 * 24)), 0);
+    const now = new Date();
+    // Compare only dates (ignore time)
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+
+    const diffMs = endDate - nowDate;
+    const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    let status;
+    if (days <= 0) status = "expired";
+    else if (days <= 7) status = "critical";
+    else if (days <= 30) status = "warning";
+    else status = "active";
+
+    return { days: Math.max(days, 0), status, endDate: end, totalDays };
+  };
+
+  const getBadgeClass = (status) => {
+    switch (status) {
+      case "expired": return "remaining-badge badge-expired";
+      case "critical": return "remaining-badge badge-critical";
+      case "warning": return "remaining-badge badge-warning";
+      case "unknown": return "remaining-badge badge-unknown";
+      default: return "remaining-badge badge-active";
+    }
+  };
+
+  const renderBadge = (member) => {
+    const { days, status } = getRemainingInfo(member);
+    const cls = getBadgeClass(status);
+    if (status === "expired") return <span className={cls}>Expired</span>;
+    if (status === "unknown") return <span className={cls}>No Date</span>;
+    if (status === "critical") return <span className={cls}>⚠ {days}d left</span>;
+    if (status === "warning") return <span className={cls}>{days}d left</span>;
+    return <span className={cls}>{days} days</span>;
   };
 
   const formatDate = (dateValue) => {
@@ -149,11 +186,7 @@ function MembersTab() {
                   <td>{member.membership || "-"}</td>
                   <td>{member.transactionType || "-"}</td>
                   <td>{formatDate(member.startDate || member.joinedAt || member.createdAt)}</td>
-                  <td>
-                    <span className="remaining-badge">
-                      {getRemainingDays(member)} days
-                    </span>
-                  </td>
+                  <td>{renderBadge(member)}</td>
                   <td>
                     <button
                       type="button"
@@ -215,11 +248,7 @@ function MembersTab() {
                   <td>{member.membership || "-"}</td>
                   <td>{member.transactionType || "-"}</td>
                   <td>{formatDate(member.startDate || member.joinedAt || member.createdAt)}</td>
-                  <td>
-                    <span className="remaining-badge">
-                      {getRemainingDays(member)} days
-                    </span>
-                  </td>
+                  <td>{renderBadge(member)}</td>
                   <td>
                     <button
                       type="button"
@@ -250,9 +279,7 @@ function MembersTab() {
           <div className="member-card" key={member._id || member.id}>
             <div className="member-card-header">
               <h3>{member.name || "Unnamed"}</h3>
-              <span className="remaining-badge">
-                {getRemainingDays(member)} days
-              </span>
+              {renderBadge(member)}
             </div>
 
             <div className="member-card-body">
@@ -316,9 +343,7 @@ function MembersTab() {
           <div className="member-card" key={member._id || member.id}>
             <div className="member-card-header">
               <h3>{member.name || "Unnamed"}</h3>
-              <span className="remaining-badge">
-                {getRemainingDays(member)} days
-              </span>
+              {renderBadge(member)}
             </div>
 
             <div className="member-card-body">

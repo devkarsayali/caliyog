@@ -9,6 +9,10 @@ function AddMemberForm({ closeForm, onMemberAdded }) {
   const [timingType, setTimingType] = useState("");
   const [membership, setMembership] = useState("");
   const [loading, setLoading] = useState(false);
+  const [startDate, setStartDate] = useState(() => {
+    // Default to today's date in YYYY-MM-DD format
+    return new Date().toISOString().split('T')[0];
+  });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -77,6 +81,26 @@ function AddMemberForm({ closeForm, onMemberAdded }) {
       return;
     }
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // Phone validation - must be exactly 10 digits
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(formData.contact.trim())) {
+      toast.error("Contact number must be exactly 10 digits");
+      return;
+    }
+
+    // Parent contact validation
+    if (batch === "Kids Batch" && formData.parentContact.trim() && !phoneRegex.test(formData.parentContact.trim())) {
+      toast.error("Parent contact number must be exactly 10 digits");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -93,7 +117,7 @@ function AddMemberForm({ closeForm, onMemberAdded }) {
         timing: formData.timing,
         membership,
         transactionType: formData.transactionType,
-        startDate: new Date().toISOString(),
+        startDate: startDate ? new Date(startDate).toISOString() : new Date().toISOString(),
         status: "Active",
         createdAt: new Date().toISOString(),
       };
@@ -172,9 +196,15 @@ function AddMemberForm({ closeForm, onMemberAdded }) {
             <input
               type="tel"
               name="contact"
-              placeholder="Enter contact number"
+              placeholder="Enter 10-digit contact number"
               value={formData.contact}
-              onChange={handleChange}
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setFormData((prev) => ({ ...prev, contact: val, mobile: val }));
+              }}
+              maxLength={10}
+              minLength={10}
+              inputMode="numeric"
               required
             />
           </div>
@@ -224,9 +254,15 @@ function AddMemberForm({ closeForm, onMemberAdded }) {
                 <input
                   type="tel"
                   name="parentContact"
-                  placeholder="Enter parent contact number"
+                  placeholder="Enter 10-digit parent contact"
                   value={formData.parentContact}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    setFormData((prev) => ({ ...prev, parentContact: val }));
+                  }}
+                  maxLength={10}
+                  minLength={10}
+                  inputMode="numeric"
                   required
                 />
               </div>
@@ -314,19 +350,33 @@ function AddMemberForm({ closeForm, onMemberAdded }) {
           </div>
 
           {membership && (
-            <div className="form-group">
-              <label>Transaction Type *</label>
-              <select
-                name="transactionType"
-                value={formData.transactionType}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Choose Payment Type</option>
-                <option value="UPI Payment">UPI Payment</option>
-                <option value="Cash Payment">Cash Payment</option>
-              </select>
-            </div>
+            <>
+              <div className="form-group">
+                <label>Membership Start Date *</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                  required
+                  style={{ color: '#0f172a' }}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Transaction Type *</label>
+                <select
+                  name="transactionType"
+                  value={formData.transactionType}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Choose Payment Type</option>
+                  <option value="UPI Payment">UPI Payment</option>
+                  <option value="Cash Payment">Cash Payment</option>
+                </select>
+              </div>
+            </>
           )}
 
           <button type="submit" className="submit-btn cursor-pointer" disabled={loading}>
