@@ -124,7 +124,7 @@ function OverviewTab({ setActiveTab }) {
         </div>
       </section>
 
-      {/* Charts Section
+      {/* Charts Section */}
       <section className="admin-charts-section">
         <div className="chart-card">
           <div className="chart-header">
@@ -154,6 +154,7 @@ function OverviewTab({ setActiveTab }) {
           </div>
         </div>
 
+        {/* Enquiries Comparison Bar Chart (Temporarily commented out for client review)
         <div className="chart-card">
           <div className="chart-header">
             <h3>Enquiries Comparison</h3>
@@ -194,8 +195,8 @@ function OverviewTab({ setActiveTab }) {
             </div>
           </div>
         </div>
+        */}
       </section>
-      */}
 
       <div className="admin-summary-panel">
         <div className="admin-summary-header">

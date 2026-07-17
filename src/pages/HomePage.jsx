@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
 import { useData } from '../context/DataContext';
 import { FaArrowUp } from 'react-icons/fa';
 import Navbar from '../components/home/Navbar';
@@ -14,11 +13,8 @@ import Events from '../components/home/Events';
 import Feedback from '../components/home/Feedback';
 import Contact from '../components/home/Contact';
 import Footer from '../components/home/Footer';
-import JoinForm from '../components/home/JoinForm';
 
 const HomePage = () => {
-  const [showJoinForm, setShowJoinForm] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
   const { refresh } = useData();
 
@@ -46,33 +42,27 @@ const HomePage = () => {
     });
   };
 
-  const openJoinForm = (plan = '') => {
-    setSelectedPlan(plan);
-    setShowJoinForm(true);
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <div className="bg-white min-h-screen relative">
-      <Navbar onJoinClick={() => openJoinForm('')} />
-      <Home onJoinClick={() => openJoinForm('')} />
+      <Navbar onJoinClick={scrollToContact} />
+      <Home onJoinClick={scrollToContact} />
       <About />
       <WhyChooseUs />
-      <Batches onJoinClick={() => openJoinForm('')} />
-      <Membership onJoinClick={openJoinForm} />
+      <Batches onJoinClick={scrollToContact} />
+      <Membership onJoinClick={scrollToContact} />
       <Transformations />
       <Experts />
       <Events />
       <Feedback />
       <Contact />
       <Footer />
-      <AnimatePresence>
-        {showJoinForm && (
-          <JoinForm
-            onClose={() => setShowJoinForm(false)}
-            selectedPlan={selectedPlan}
-          />
-        )}
-      </AnimatePresence>
 
       {/* Floating Scroll to Top Button */}
       {showScrollTop && (
