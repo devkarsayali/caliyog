@@ -226,51 +226,70 @@
   }
 
   .membership-header {
-    margin-bottom: 35px;
+    margin-bottom: 30px;
   }
 
   .membership-header p {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .membership-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 
   .plan-card {
-    padding: 22px 18px;
+    padding: 16px 12px;
     min-height: auto;
+    border-radius: 14px;
+    border-width: 2px;
   }
 
   .plan-card h3 {
-    font-size: 20px;
+    font-size: 15px;
+    font-weight: 800;
   }
 
   .plan-card h1 {
-    font-size: 32px;
+    font-size: 24px;
+    margin: 8px 0 4px;
+  }
+
+  .plan-subtitle {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .plan-card ul {
+    margin: 10px 0;
   }
 
   .plan-card li {
-    font-size: 14px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    margin-bottom: 6px;
   }
 
   .plan-btn {
     width: 100%;
     text-align: center;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    border-radius: 20px;
+    margin-top: 10px;
   }
 
   .membership-note {
-    padding: 22px 18px;
-    margin-top: 40px;
+    padding: 20px 16px;
+    margin-top: 35px;
   }
 
   .membership-note h4 {
-    font-size: 21px;
+    font-size: 19px;
   }
 
   .membership-note p {
-    font-size: 14px;
+    font-size: 13.5px;
   }
 }
 
@@ -281,39 +300,57 @@
   }
 
   .membership-header h2 {
-    font-size: 27px;
+    font-size: 24px;
   }
 
   .membership-header p {
-    font-size: 14px;
-  }
-
-  .plan-card {
-    padding: 20px 16px;
-    border-radius: 16px;
-  }
-
-  .plan-card h3 {
-    font-size: 19px;
-  }
-
-  .plan-card h1 {
-    font-size: 29px;
-  }
-
-  .plan-card li {
     font-size: 13px;
   }
 
+  .membership-grid {
+    gap: 8px;
+  }
+
+  .plan-card {
+    padding: 12px 8px;
+    border-radius: 12px;
+  }
+
+  .plan-card h3 {
+    font-size: 13px;
+  }
+
+  .plan-card h1 {
+    font-size: 20px;
+    margin: 6px 0 2px;
+  }
+
+  .plan-subtitle {
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .plan-card li {
+    font-size: 10.5px;
+    margin-bottom: 4px;
+  }
+
+  .plan-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+    border-radius: 16px;
+  }
+
   .membership-note {
-    padding: 20px 16px;
+    padding: 16px 12px;
+    margin-top: 30px;
   }
 
   .membership-note h4 {
-    font-size: 20px;
+    font-size: 17px;
   }
 
   .membership-note p {
-    font-size: 14px;
+    font-size: 12.5px;
   }
 }
