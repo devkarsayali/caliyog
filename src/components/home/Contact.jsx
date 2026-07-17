@@ -101,81 +101,95 @@ function Contact() {
             <span className="contact-icon">
               <FaPhoneAlt />
             </span>
-            <strong>Phone:</strong>{" "}
-            <a href="tel:+9404128090">+91 9404128090</a>
+            <span>
+              <strong>Phone:</strong>{" "}
+              <a href="tel:+9404128090">+91 9404128090</a>
+            </span>
           </p>
 
           <p>
             <span className="contact-icon">
               <FaEnvelope />
             </span>
-            <strong>Email:</strong>{" "}
-            <a href="mailto:caliyogoutdoorfitnessclub@gmail.com">
-              caliyogoutdoorfitnessclub@gmail.com
-            </a>
+            <span>
+              <strong>Email:</strong>{" "}
+              <a href="mailto:caliyogoutdoorfitnessclub@gmail.com">
+                caliyogoutdoorfitnessclub@gmail.com
+              </a>
+            </span>
           </p>
 
           <p>
             <span className="contact-icon">
               <FaGlobe />
             </span>
-            <strong>Website:</strong>{" "}
-            <a
-              href="https://www.caliyogfitness.com"
-              target="_blank"
-              rel="noreferrer"
-            >
-              www.caliyogfitness.com
-            </a>
+            <span>
+              <strong>Website:</strong>{" "}
+              <a
+                href="https://www.caliyogfitness.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                www.caliyogfitness.com
+              </a>
+            </span>
           </p>
 
           <p>
             <span className="contact-icon">
               <FaInstagram />
             </span>
-            <strong>Instagram:</strong>{" "}
-            <a
-              href="https://www.instagram.com/cali.yog/?utm_source=ig_web_button_share_sheet"
-              target="_blank"
-              rel="noreferrer"
-            >
-              @caliyog_fitness_club
-            </a>
+            <span>
+              <strong>Instagram:</strong>{" "}
+              <a
+                href="https://www.instagram.com/cali.yog/?utm_source=ig_web_button_share_sheet"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @caliyog_fitness_club
+              </a>
+            </span>
           </p>
 
           <p>
             <span className="contact-icon">
               <FaFacebookF />
             </span>
-            <strong>Facebook:</strong>{" "}
-            <a
-              href="https://share.google/s3LpW5bI5PI0EPYqB"
-              target="_blank"
-              rel="noreferrer"
-            >
-              CaliYog Outdoor Fitness Club
-            </a>
+            <span>
+              <strong>Facebook:</strong>{" "}
+              <a
+                href="https://share.google/s3LpW5bI5PI0EPYqB"
+                target="_blank"
+                rel="noreferrer"
+              >
+                CaliYog Outdoor Fitness Club
+              </a>
+            </span>
           </p>
 
           <p>
             <span className="contact-icon">
               <FaWhatsapp />
             </span>
-            <strong>WhatsApp:</strong>{" "}
-            <a
-              href="https://wa.me/9404128090"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Chat on WhatsApp
-            </a>
+            <span>
+              <strong>WhatsApp:</strong>{" "}
+              <a
+                href="https://wa.me/9404128090"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Chat on WhatsApp
+              </a>
+            </span>
           </p>
 
           <p>
             <span className="contact-icon">
               <FaClock />
             </span>
-            <strong>Timings:</strong> Morning & Evening Batches Available
+            <span>
+              <strong>Timings:</strong> Morning & Evening Batches Available
+            </span>
           </p>
         </div>
 

@@ -40,7 +40,9 @@ function Batches() {
       <div className="section-title">
         <span>TRAINING PROGRAMS</span>
         <h2>Batches We Provide</h2>
-        <p>Professional fitness programs designed for all age groups.</p>
+        <p class="description">
+          Professional fitness programs designed for all age groups.
+        </p>
       </div>
 
       <div className="batch-details">
@@ -77,7 +79,10 @@ function Batches() {
         <div className="section-title">
           <span>BATCH TIMINGS</span>
           <h2>Choose Your Perfect Time Slot</h2>
-          <p>Morning and evening batches available for all age groups.</p>
+          <p class="description">
+            Morning and evening batches available for all age groups.
+          </p>
+
         </div>
 
         <div className="timing-grid">

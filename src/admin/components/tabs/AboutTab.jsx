@@ -17,7 +17,7 @@ function AboutTab() {
   const [image2File, setImage2File] = useState(null);
   const [oldImage1, setOldImage1] = useState("");
   const [oldImage2, setOldImage2] = useState("");
-  
+
   const [loading, setLoading] = useState(false);
   const [compressing, setCompressing] = useState(false);
 
@@ -144,7 +144,7 @@ function AboutTab() {
         const url1 = await uploadToCloudinary(image1File);
         if (url1) finalImg1 = url1;
       }
-      
+
       if (image2File) {
         const url2 = await uploadToCloudinary(image2File);
         if (url2) finalImg2 = url2;
@@ -278,8 +278,8 @@ function AboutTab() {
           {compressing
             ? "Compressing Image..."
             : loading
-            ? "Saving..."
-            : "Save About Section"}
+              ? "Saving..."
+              : "Save About Section"}
         </button>
       </form>
     </div>

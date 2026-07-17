@@ -12,6 +12,11 @@
   margin-bottom: 55px;
 }
 
+.section-title .description {
+  font-weight: normal;
+  text-transform: none;
+}
+
 .section-title span {
   color: #22c55e;
   font-weight: 900;
@@ -98,6 +103,7 @@
 }
 
 @keyframes batchFloat {
+
   0%,
   100% {
     transform: translateY(0);

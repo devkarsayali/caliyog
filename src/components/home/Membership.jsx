@@ -13,14 +13,14 @@ function Membership({ onJoinClick }) {
     <section className="membership-section" id="membership">
       <div className="membership-header">
         <span>MEMBERSHIP PLANS</span>
-        <h2>Choose Your Fitness Journey</h2>
+        <h2><b>Choose Your Fitness Journey</b></h2>
         <p>Flexible plans designed for every fitness goal.</p>
       </div>
 
       <div className="membership-grid">
         {memberships.map((plan, index) => {
-          const isKids = 
-            String(plan.title || "").toLowerCase().includes("kids") || 
+          const isKids =
+            String(plan.title || "").toLowerCase().includes("kids") ||
             String(plan.subtitle || "").toLowerCase().includes("kids");
 
           return (
