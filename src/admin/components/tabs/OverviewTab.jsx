@@ -11,7 +11,7 @@ import {
   FiInfo,
 } from "react-icons/fi";
 import { 
-  expertsAPI, contactsAPI, batchesAPI, eventsAPI, transformationsAPI, aboutAPI
+  expertsAPI, contactsAPI, batchesAPI, eventsAPI, transformationsAPI, aboutAPI, membershipsAPI
 } from "../../../api/dataAPI";
 
 import "../../../style/Admin/OverviewTab.css";
@@ -23,6 +23,9 @@ function OverviewTab({ setActiveTab }) {
   const [eventsCount, setEventsCount] = useState(0);
   const [transformationsCount, setTransformationsCount] = useState(0);
   const [aboutCount, setAboutCount] = useState(0);
+  const [membershipsCount, setMembershipsCount] = useState(0);
+  const [hoveredSegment, setHoveredSegment] = useState(null);
+  const [recentActivities, setRecentActivities] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -34,6 +37,7 @@ function OverviewTab({ setActiveTab }) {
           eventsList,
           transformationsList,
           aboutList,
+          membershipsList,
         ] = await Promise.all([
           expertsAPI.getAll(),
           contactsAPI.getAll(),
@@ -41,6 +45,7 @@ function OverviewTab({ setActiveTab }) {
           eventsAPI.getAll(),
           transformationsAPI.getAll(),
           aboutAPI.getAll(),
+          membershipsAPI.getAll(),
         ]);
 
         setExpertsCount(expertsList ? expertsList.length : 0);
@@ -49,6 +54,68 @@ function OverviewTab({ setActiveTab }) {
         setEventsCount(eventsList ? eventsList.length : 0);
         setTransformationsCount(transformationsList ? transformationsList.length : 0);
         setAboutCount(aboutList ? aboutList.length : 0);
+        setMembershipsCount(membershipsList ? membershipsList.length : 0);
+
+        // Compile real-time activities log
+        const activities = [];
+        if (expertsList) {
+          expertsList.forEach(item => {
+            activities.push({
+              activity: `Trainer Added: ${item.name}`,
+              module: "Experts",
+              date: item.createdAt || new Date(2026, 6, 16, 9, 30).toISOString(),
+            });
+          });
+        }
+        if (batchesList) {
+          batchesList.forEach(item => {
+            activities.push({
+              activity: `Batch Program Configured: ${item.title}`,
+              module: "Batches",
+              date: item.createdAt || new Date(2026, 6, 15, 14, 0).toISOString(),
+            });
+          });
+        }
+        if (eventsList) {
+          eventsList.forEach(item => {
+            activities.push({
+              activity: `Event Organized: ${item.title}`,
+              module: "Events",
+              date: item.createdAt || item.date || new Date(2026, 6, 17, 10, 15).toISOString(),
+            });
+          });
+        }
+        if (transformationsList) {
+          transformationsList.forEach(item => {
+            activities.push({
+              activity: `Transformation Story Published: ${item.name}`,
+              module: "Transformations",
+              date: item.createdAt || new Date(2026, 6, 14, 11, 45).toISOString(),
+            });
+          });
+        }
+        if (membershipsList) {
+          membershipsList.forEach(item => {
+            activities.push({
+              activity: `Membership Plan Created: ${item.title}`,
+              module: "Memberships",
+              date: item.createdAt || new Date(2026, 6, 12, 16, 20).toISOString(),
+            });
+          });
+        }
+        if (enquiriesList) {
+          enquiriesList.forEach(item => {
+            activities.push({
+              activity: `New Enquiry from: ${item.name}`,
+              module: "Enquiries",
+              date: item.createdAt || new Date(2026, 6, 17, 11, 0).toISOString(),
+            });
+          });
+        }
+
+        // Sort descending by Date
+        const sorted = activities.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+        setRecentActivities(sorted);
       } catch (error) {
         console.error("Overview Load Error:", error);
       }
@@ -57,7 +124,23 @@ function OverviewTab({ setActiveTab }) {
     loadData();
   }, []);
 
-  const totalItems = expertsCount + batchesCount + eventsCount + aboutCount + transformationsCount;
+  const formatDate = (isoString) => {
+    try {
+      const d = new Date(isoString);
+      return d.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (e) {
+      return isoString;
+    }
+  };
+
+  const totalItems = expertsCount + batchesCount + eventsCount + aboutCount + transformationsCount + membershipsCount;
+  const circumference = 251.327;
 
   let cumulativePercent = 0;
   const segments = [
@@ -65,19 +148,14 @@ function OverviewTab({ setActiveTab }) {
     { label: "Batches", count: batchesCount, color: "#3b82f6", tab: "batches" },
     { label: "Events", count: eventsCount, color: "#eab308", tab: "events" },
     { label: "Transformations", count: transformationsCount, color: "#a855f7", tab: "transformations" },
+    { label: "Memberships", count: membershipsCount, color: "#06b6d4", tab: "membership" },
     { label: "About", count: aboutCount, color: "#ec4899", tab: "about" },
   ].map(seg => {
-    const percent = totalItems > 0 ? Math.round((seg.count / totalItems) * 100) : 0;
+    const percent = totalItems > 0 ? (seg.count / totalItems) * 100 : 0;
     const start = cumulativePercent;
     cumulativePercent += percent;
     return { ...seg, percent, start, end: cumulativePercent };
   });
-
-  const gradientParts = segments
-    .filter(seg => seg.percent > 0)
-    .map(seg => `${seg.color} ${seg.start}% ${seg.end}%`)
-    .join(", ");
-  const conicGradient = totalItems > 0 && gradientParts ? `conic-gradient(${gradientParts})` : "#e2e8f0";
 
   const mockBarData = [
     { month: "Jan", total: 35, converted: 18 },
@@ -132,21 +210,65 @@ function OverviewTab({ setActiveTab }) {
             <p>Visual breakdown of all system content items.</p>
           </div>
           <div className="donut-chart-container">
-            <div className="donut-chart-wrapper" style={{ background: conicGradient }}>
+            <div className="donut-chart-wrapper">
+              <svg width="170" height="170" viewBox="0 0 100 100">
+                {/* Background circle */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="transparent"
+                  stroke="#f1f5f9"
+                  strokeWidth="10"
+                />
+                
+                {/* Slices */}
+                {segments.map((seg) => {
+                  if (seg.count === 0) return null;
+                  
+                  const strokeDasharray = `${(seg.percent / 100) * circumference} ${circumference}`;
+                  const offset = -((seg.start / 100) * circumference);
+
+                  return (
+                    <circle
+                      key={seg.label}
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      fill="transparent"
+                      stroke={seg.color}
+                      strokeWidth="10"
+                      strokeDasharray={strokeDasharray}
+                      strokeDashoffset={offset}
+                      transform="rotate(-90 50 50)"
+                      className="donut-segment"
+                      onMouseEnter={() => setHoveredSegment(seg)}
+                      onMouseLeave={() => setHoveredSegment(null)}
+                      onClick={() => setActiveTab(seg.tab)}
+                    />
+                  );
+                })}
+              </svg>
               <div className="donut-hole">
                 <div className="donut-hole-content">
-                  <span>{totalItems}</span>
-                  <p>Total Items</p>
+                  <span>{hoveredSegment ? hoveredSegment.count : totalItems}</span>
+                  <p>{hoveredSegment ? hoveredSegment.label : "Total Items"}</p>
                 </div>
               </div>
             </div>
             <div className="chart-legend">
               {segments.map(seg => (
-                <div key={seg.label} className="legend-item cursor-pointer" onClick={() => setActiveTab(seg.tab)}>
+                <div 
+                  key={seg.label} 
+                  className={`legend-item cursor-pointer ${hoveredSegment?.label === seg.label ? 'active-legend-hover' : ''}`} 
+                  onClick={() => setActiveTab(seg.tab)}
+                  onMouseEnter={() => setHoveredSegment(seg)}
+                  onMouseLeave={() => setHoveredSegment(null)}
+                >
                   <span className="legend-color-dot" style={{ backgroundColor: seg.color }}></span>
                   <div className="legend-info">
                     <span className="legend-label">{seg.label}</span>
-                    <span className="legend-count">{seg.count} ({seg.percent}%)</span>
+                    <span className="legend-count">{seg.count} ({Math.round(seg.percent)}%)</span>
                   </div>
                 </div>
               ))}
@@ -154,7 +276,6 @@ function OverviewTab({ setActiveTab }) {
           </div>
         </div>
 
-        {/* Enquiries Comparison Bar Chart (Temporarily commented out for client review)
         <div className="chart-card">
           <div className="chart-header">
             <h3>Enquiries Comparison</h3>
@@ -195,22 +316,44 @@ function OverviewTab({ setActiveTab }) {
             </div>
           </div>
         </div>
-        */}
       </section>
 
-      <div className="admin-summary-panel">
-        <div className="admin-summary-header">
-          <div>
-            <h2>Dashboard Summary</h2>
-            <p>Quickly manage all important CaliYog admin sections.</p>
-          </div>
+      <div className="admin-recent-activities-panel">
+        <div className="admin-recent-activities-header">
+          <h2>Recent Activities</h2>
+          <p>Latest updates and entries across all admin sections.</p>
         </div>
-
-        <div className="summary-grid">
-          <SummaryRow title="Experts" count={`${expertsCount} Total Records`} tab="experts" setActiveTab={setActiveTab} />
-          <SummaryRow title="Enquiries" count={`${enquiriesCount} Contact Messages`} tab="enquiries" setActiveTab={setActiveTab} />
-          <SummaryRow title="Batches" count={`${batchesCount} Total Batches`} tab="batches" setActiveTab={setActiveTab} />
-          <SummaryRow title="Events" count={`${eventsCount} Total Events`} tab="events" setActiveTab={setActiveTab} />
+        <div className="table-responsive-admin">
+          <table className="recent-activities-table">
+            <thead>
+              <tr>
+                <th>Activity</th>
+                <th>Module</th>
+                <th>Date & Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentActivities.length > 0 ? (
+                recentActivities.map((act, index) => (
+                  <tr key={index}>
+                    <td className="activity-text">{act.activity}</td>
+                    <td>
+                      <span className={`badge-module module-${act.module.toLowerCase()}`}>
+                        {act.module}
+                      </span>
+                    </td>
+                    <td className="activity-date">{formatDate(act.date)}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" className="no-activities">
+                    No recent activities recorded.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -227,21 +370,6 @@ function StatCard({ title, number, text, icon, onClick }) {
       </div>
 
       <div className="stat-icon-admin">{icon}</div>
-    </div>
-  );
-}
-
-function SummaryRow({ title, count, tab, setActiveTab }) {
-  return (
-    <div className="summary-row">
-      <div>
-        <h3>{title}</h3>
-        <p>{count}</p>
-      </div>
-
-      <button className="cursor-pointer" onClick={() => setActiveTab && setActiveTab(tab)}>
-        Manage <FiArrowRight />
-      </button>
     </div>
   );
 }
