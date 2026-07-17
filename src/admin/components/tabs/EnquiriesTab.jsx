@@ -4,6 +4,7 @@ import {
   FiTrash2,
   FiCheckCircle,
   FiX,
+  FiPhone,
 } from "react-icons/fi";
 import toast from 'react-hot-toast';
 import { contactsAPI } from "../../../api/dataAPI";
@@ -119,18 +120,45 @@ function EnquiriesTab() {
               )}
             </td>
             <td>{getValue(item.email, item.userEmail)}</td>
-            <td>{getContactNumber(item)}</td>
+            <td>
+              <div className="contact-cell-container">
+                <a
+                  href={`tel:${getContactNumber(item)}`}
+                  className="enquiry-call-link-btn"
+                  title="Call User"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <FiPhone />
+                </a>
+                <span>{getContactNumber(item)}</span>
+              </div>
+            </td>
             <td className="message-cell">
               {getValue(item.message, item.msg, item.description)}
             </td>
             <td>
-              <span
-                className={
-                  item.status === "Replied" ? "status-replied" : "status-new"
-                }
-              >
-                {item.status || "New"}
-              </span>
+              <div className="status-cell-container">
+                <span
+                  className={
+                    item.status === "Replied" ? "status-replied" : "status-new"
+                  }
+                >
+                  {item.status || "New"}
+                </span>
+                {item.status !== "Replied" && (
+                  <button
+                    type="button"
+                    className="enquiry-quick-reply-btn"
+                    title="Mark as Replied"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      await markReplied(item._id || item.id);
+                    }}
+                  >
+                    <FiCheckCircle />
+                  </button>
+                )}
+              </div>
             </td>
             <td>
               {formatDate(
@@ -183,8 +211,29 @@ function EnquiriesTab() {
 
             <div className="enquiry-card-row">
               <span className="enquiry-card-label">📞 Contact</span>
-              <span className="enquiry-card-value">
-                {getContactNumber(item)}
+              <span className="enquiry-card-value contact-value-container">
+                <a
+                  href={`tel:${getContactNumber(item)}`}
+                  className="enquiry-call-link-btn"
+                  title="Call User"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <FiPhone />
+                </a>
+                <span>{getContactNumber(item)}</span>
+                {item.status !== "Replied" && (
+                  <button
+                    type="button"
+                    className="enquiry-quick-reply-btn card-version"
+                    title="Mark as Replied"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      await markReplied(item._id || item.id);
+                    }}
+                  >
+                    <FiCheckCircle />
+                  </button>
+                )}
               </span>
             </div>
 
@@ -263,7 +312,17 @@ function EnquiriesTab() {
               </div>
               <div className="enquiry-detail-row">
                 <strong>Contact:</strong>
-                <span>{getContactNumber(selectedEnquiry)}</span>
+                <div className="contact-cell-container" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                  <a
+                    href={`tel:${getContactNumber(selectedEnquiry)}`}
+                    className="enquiry-call-link-btn"
+                    title="Call User"
+                    style={{ margin: 0 }}
+                  >
+                    <FiPhone />
+                  </a>
+                  <span>{getContactNumber(selectedEnquiry)}</span>
+                </div>
               </div>
               <div className="enquiry-detail-row">
                 <strong>Status:</strong>
