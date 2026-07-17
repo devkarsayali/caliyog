@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { transformationsAPI, uploadToCloudinary } from "../../../api/dataAPI";
 import "../../../style/Admin/TransformationsTab.css";
 
-function TransformationsTab() {
+function TransformationsTab({ action, onActionHandled }) {
   const fileInputRef = useRef(null);
 
   const [transformations, setTransformations] = useState([]);
@@ -61,6 +61,13 @@ function TransformationsTab() {
     resetForm();
     setShowForm(true);
   };
+
+  useEffect(() => {
+    if (action === "add") {
+      openAddForm();
+      if (onActionHandled) onActionHandled();
+    }
+  }, [action, onActionHandled]);
 
   const saveTransformation = async (e) => {
     e.preventDefault();

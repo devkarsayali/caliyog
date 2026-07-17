@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 import { expertsAPI, uploadToCloudinary } from "../../../api/dataAPI";
 import "../../../style/Admin/ExpertsTab.css";
 
-function ExpertsTab() {
+function ExpertsTab({ action, onActionHandled }) {
   const [experts, setExperts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -42,6 +42,13 @@ function ExpertsTab() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    if (action === "add") {
+      openAddModal();
+      if (onActionHandled) onActionHandled();
+    }
+  }, [action, onActionHandled]);
 
   const closeModal = () => {
     setShowModal(false);

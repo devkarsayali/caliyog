@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { membershipsAPI } from "../../../api/dataAPI";
 import "../../../style/Admin/MembershipTab.css";
 
-function MembershipTab() {
+function MembershipTab({ action, onActionHandled }) {
   const [memberships, setMemberships] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -31,6 +31,13 @@ function MembershipTab() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    if (action === "add") {
+      openAddModal();
+      if (onActionHandled) onActionHandled();
+    }
+  }, [action, onActionHandled]);
 
   const closeModal = () => {
     setShowModal(false);

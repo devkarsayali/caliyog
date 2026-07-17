@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { eventsAPI } from "../../../api/dataAPI";
 import "../../../style/Admin/EventsTab.css";
 
-function EventsTab() {
+function EventsTab({ action, onActionHandled }) {
   const [organisedEvents, setOrganisedEvents] = useState([]);
   const [showOrganisedModal, setShowOrganisedModal] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -30,6 +30,13 @@ function EventsTab() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => {
+    if (action === "add") {
+      openOrganisedAdd();
+      if (onActionHandled) onActionHandled();
+    }
+  }, [action, onActionHandled]);
 
   const closeOrganisedModal = () => {
     setShowOrganisedModal(false);

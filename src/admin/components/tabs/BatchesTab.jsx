@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { batchesAPI } from "../../../api/dataAPI";
 import "../../../style/Admin/BatchesTab.css";
 
-function BatchesTab() {
+function BatchesTab({ action, onActionHandled }) {
   const [batches, setBatches] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -29,6 +29,13 @@ function BatchesTab() {
   useEffect(() => {
     loadBatches();
   }, []);
+
+  useEffect(() => {
+    if (action === "add") {
+      openAddModal();
+      if (onActionHandled) onActionHandled();
+    }
+  }, [action, onActionHandled]);
 
   const resetForm = () => {
     setForm({

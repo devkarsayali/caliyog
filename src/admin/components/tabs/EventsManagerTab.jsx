@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EventsTab from "./EventsTab";
 import GalleryEventsTab from "./GalleryEventsTab";
 import "../../../style/Admin/EventsTab.css";
 
-function EventsManagerTab() {
+function EventsManagerTab({ action, onActionHandled }) {
   const [selectedEventPage, setSelectedEventPage] = useState("");
+
+  useEffect(() => {
+    if (action === "add") {
+      setSelectedEventPage("organized");
+    }
+  }, [action]);
 
   if (selectedEventPage === "organized") {
     return (
@@ -19,7 +25,7 @@ function EventsManagerTab() {
           </button>
         </div>
 
-        <EventsTab />
+        <EventsTab action={action} onActionHandled={onActionHandled} />
       </>
     );
   }

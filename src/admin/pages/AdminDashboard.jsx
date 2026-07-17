@@ -25,6 +25,7 @@ import {
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [tabAction, setTabAction] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -185,8 +186,9 @@ function AdminDashboard() {
     setSearchResults(sorted.slice(0, 15));
   }, [searchText, allSearchData]);
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = (tab, action = null) => {
     setActiveTab(tab);
+    setTabAction(action);
     if (isMobile) setIsSidebarOpen(false);
   };
 
@@ -247,13 +249,13 @@ function AdminDashboard() {
           {activeTab === "overview" && (
             <OverviewTab setActiveTab={handleTabChange} />
           )}
-          {activeTab === "about" && <AboutTab />}
+          {activeTab === "about" && <AboutTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
           {activeTab === "whyChooseUs" && <WhyChooseUsTab />}
-          {activeTab === "batches" && <BatchesTab />}
-          {activeTab === "membership" && <MembershipTab />}
-          {activeTab === "transformations" && <TransformationsTab />}
-          {activeTab === "experts" && <ExpertsTab />}
-          {activeTab === "events" && <EventsManagerTab />}
+          {activeTab === "batches" && <BatchesTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
+          {activeTab === "membership" && <MembershipTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
+          {activeTab === "transformations" && <TransformationsTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
+          {activeTab === "experts" && <ExpertsTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
+          {activeTab === "events" && <EventsManagerTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
           {activeTab === "enquiries" && <EnquiriesTab />}
           {activeTab === "reports" && <ReportsManagerTab />}
           {activeTab === "members" && <MembersTab />}
