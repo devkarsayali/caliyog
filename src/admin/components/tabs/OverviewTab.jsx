@@ -26,6 +26,24 @@ function OverviewTab({ setActiveTab }) {
   const [membershipsCount, setMembershipsCount] = useState(0);
   const [hoveredSegment, setHoveredSegment] = useState(null);
   const [recentActivities, setRecentActivities] = useState([]);
+  const [enquiriesData, setEnquiriesData] = useState([]);
+
+  // Helper to compile the last 6 months chronologically
+  const getLast6Months = () => {
+    const months = [];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const today = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      months.push({
+        name: monthNames[d.getMonth()],
+        monthIndex: d.getMonth(),
+        year: d.getFullYear(),
+        count: 0
+      });
+    }
+    return months;
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -55,6 +73,28 @@ function OverviewTab({ setActiveTab }) {
         setTransformationsCount(transformationsList ? transformationsList.length : 0);
         setAboutCount(aboutList ? aboutList.length : 0);
         setMembershipsCount(membershipsList ? membershipsList.length : 0);
+
+        // Group enquiries dynamically
+        const monthlyEnquiries = getLast6Months();
+        if (enquiriesList) {
+          enquiriesList.forEach(item => {
+            const dateValue = item.createdAt || item.date || item.submittedOn;
+            if (dateValue) {
+              const date = new Date(dateValue);
+              if (!isNaN(date.getTime())) {
+                const itemMonth = date.getMonth();
+                const itemYear = date.getFullYear();
+                const slot = monthlyEnquiries.find(
+                  m => m.monthIndex === itemMonth && m.year === itemYear
+                );
+                if (slot) {
+                  slot.count += 1;
+                }
+              }
+            }
+          });
+        }
+        setEnquiriesData(monthlyEnquiries);
 
         // Compile real-time activities log
         const activities = [];
@@ -278,43 +318,53 @@ function OverviewTab({ setActiveTab }) {
 
         <div className="chart-card">
           <div className="chart-header">
-            <h3>Enquiries Comparison</h3>
-            <p>Month-wise comparison of Total vs Converted Enquiries.</p>
+            <h3>Enquiries Received</h3>
+            <p>Month-wise breakdown of real contact enquiries.</p>
           </div>
-          <div className="bar-chart-container">
-            <div className="bars-y-axis">
-              <span>100</span>
-              <span>75</span>
-              <span>50</span>
-              <span>25</span>
-              <span>0</span>
-            </div>
-            <div className="bar-chart-grid">
-              {mockBarData.map(d => (
-                <div key={d.month} className="bar-group">
-                  <div className="bars-wrapper">
-                    <div className="bar-column total" style={{ height: `${d.total}%` }}>
-                      <span className="bar-tooltip">Total: {d.total}</span>
-                    </div>
-                    <div className="bar-column converted" style={{ height: `${d.converted}%` }}>
-                      <span className="bar-tooltip">Converted: {d.converted}</span>
-                    </div>
+          {(() => {
+            const maxCount = Math.max(...enquiriesData.map(d => d.count), 0);
+            const maxVal = maxCount > 0 ? Math.ceil(maxCount / 5) * 5 : 5;
+            const yAxisTicks = [
+              maxVal,
+              Math.round(maxVal * 0.75),
+              Math.round(maxVal * 0.5),
+              Math.round(maxVal * 0.25),
+              0
+            ];
+
+            return (
+              <>
+                <div className="bar-chart-container">
+                  <div className="bars-y-axis">
+                    {yAxisTicks.map((tick, idx) => (
+                      <span key={idx}>{tick}</span>
+                    ))}
                   </div>
-                  <span className="bar-label">{d.month}</span>
+                  <div className="bar-chart-grid">
+                    {enquiriesData.map(d => {
+                      const heightPercent = maxVal > 0 ? (d.count / maxVal) * 100 : 0;
+                      return (
+                        <div key={d.name} className="bar-group">
+                          <div className="bars-wrapper">
+                            <div className="bar-column enquiry-bar" style={{ height: `${heightPercent}%` }}>
+                              <span className="bar-tooltip">Enquiries: {d.count}</span>
+                            </div>
+                          </div>
+                          <span className="bar-label">{d.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-          <div className="bar-chart-legend">
-            <div className="legend-item-bar">
-              <span className="legend-color-dot total"></span>
-              <span>Total Enquiries</span>
-            </div>
-            <div className="legend-item-bar">
-              <span className="legend-color-dot converted"></span>
-              <span>Converted Enquiries</span>
-            </div>
-          </div>
+                <div className="bar-chart-legend">
+                  <div className="legend-item-bar">
+                    <span className="legend-color-dot enquiry"></span>
+                    <span>Received Enquiries</span>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </section>
 

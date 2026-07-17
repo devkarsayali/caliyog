@@ -900,3 +900,20 @@
     font-size: 10px;
   }
 }
+
+/* Enquiries Bar styling */
+.bar-column.enquiry-bar {
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+  width: 14px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.bar-column.enquiry-bar:hover {
+  background: linear-gradient(180deg, #16a34a, #15803d);
+  transform: scaleX(1.05);
+}
+
+.legend-item-bar .legend-color-dot.enquiry {
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+}
