@@ -204,6 +204,10 @@ section {
     font-size: 15px;
   }
 
+  .navbar-btn {
+    padding: 10px 18px;
+    font-size: 13px;
+  }
 
 }
 

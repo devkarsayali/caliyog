@@ -285,17 +285,66 @@ html, body {
   .admin-content h1 {
     font-size: 24px;
   }
+
+  /* Fix double-padding from tabs that add their own inner padding */
+  .transformation-admin,
+  .about-tab,
+  .why-admin {
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  /* Fix the selection cards grid on tablet-mobile */
+  .admin-selection-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 @media (max-width: 480px) {
   .admin-content {
-    padding: 12px 12px 100px !important;
+    padding: 10px 10px 100px !important;
   }
   .admin-content h1 {
-    font-size: 20px;
+    font-size: 18px;
   }
   .admin-cards-grid {
     gap: 12px;
+  }
+
+  /* Remove double-padding from tabs that wrap entire content */
+  .transformation-admin,
+  .about-tab,
+  .why-admin {
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  /* Selection cards stack to single column on very small screens */
+  .admin-selection-cards {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .admin-selection-cards button {
+    padding: 22px 18px;
+  }
+
+  .admin-selection-cards span {
+    font-size: 32px;
+  }
+
+  .admin-selection-cards h3 {
+    font-size: 18px;
+    margin: 12px 0 6px;
+  }
+
+  .admin-selection-page {
+    padding: 18px;
+  }
+
+  .admin-selection-page h2 {
+    font-size: 20px;
   }
 }
 

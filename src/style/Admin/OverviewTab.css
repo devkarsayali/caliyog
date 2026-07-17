@@ -81,7 +81,7 @@
 /* Stats */
 .admin-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 22px;
   margin-bottom: 30px;
 }
@@ -317,7 +317,7 @@
 
 .quick-actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
   gap: 16px;
 }
 
@@ -371,7 +371,7 @@
 /* Charts Section */
 .admin-charts-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 22px;
   margin-bottom: 30px;
 }
@@ -740,16 +740,44 @@
   }
 
   .admin-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 
   .stat-card-admin {
-    padding: 20px;
+    padding: 18px;
   }
 
   .stat-number {
-    font-size: 32px;
+    font-size: 28px;
+  }
+
+  .admin-quick-actions-panel {
+    padding: 20px;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .quick-action-btn {
+    padding: 14px 14px;
+    font-size: 13px;
+  }
+
+  .admin-charts-section {
+    grid-template-columns: 1fr;
+  }
+
+  .donut-chart-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .chart-legend {
+    max-width: 100%;
+    width: 100%;
   }
 
   .admin-recent-activities-panel {
@@ -759,16 +787,22 @@
   .admin-recent-activities-header h2 {
     font-size: 20px;
   }
+
+  .recent-activities-table th,
+  .recent-activities-table td {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
 }
 
 /* Small Mobile (480px and below) */
 @media (max-width: 480px) {
   .overview-hero {
-    padding: 20px;
+    padding: 18px;
   }
 
   .overview-hero h2 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .overview-hero p {
@@ -780,8 +814,13 @@
     padding: 6px 12px;
   }
 
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
   .stat-card-admin {
-    padding: 18px;
+    padding: 16px;
     border-radius: 18px;
   }
 
@@ -790,29 +829,74 @@
   }
 
   .stat-number {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .stat-info-admin p {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .stat-icon-admin {
-    width: 46px;
-    height: 46px;
-    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+  }
+
+  .admin-quick-actions-panel {
+    padding: 16px;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .quick-action-btn {
+    padding: 12px 10px;
+    font-size: 12px;
+    border-radius: 16px;
+  }
+
+  .quick-action-btn .btn-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 17px;
+  }
+
+  .chart-card {
+    padding: 18px;
+  }
+
+  .donut-chart-wrapper {
+    width: 140px;
+    height: 140px;
   }
 
   .admin-recent-activities-panel {
-    padding: 16px;
-    border-radius: 20px;
+    padding: 14px;
+    border-radius: 18px;
   }
 
   .admin-recent-activities-header h2 {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .admin-recent-activities-header p {
-    font-size: 13px;
+    font-size: 12px;
+  }
+
+  .recent-activities-table th {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .recent-activities-table td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .badge-module {
+    padding: 4px 8px;
+    font-size: 10px;
   }
 }

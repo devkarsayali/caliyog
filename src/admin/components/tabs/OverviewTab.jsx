@@ -211,7 +211,7 @@ function OverviewTab({ setActiveTab }) {
           </div>
           <div className="donut-chart-container">
             <div className="donut-chart-wrapper">
-              <svg width="170" height="170" viewBox="0 0 100 100">
+              <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
                 {/* Background circle */}
                 <circle
                   cx="50"
