@@ -11,7 +11,7 @@
 }
 
 .transform-heading h2 {
-  font-size: 44px;
+  font-size: clamp(26px, 5.5vw, 44px);
   color: #12351f;
   font-weight: 900;
   margin-bottom: 15px;
@@ -21,7 +21,7 @@
 
 .transform-heading p {
   color: #555;
-  font-size: 18px;
+  font-size: clamp(14px, 4vw, 18px);
   max-width: 750px;
   margin: auto;
   line-height: 1.7;
@@ -185,9 +185,13 @@
 /* Mobile Media Queries */
 @media (max-width: 768px) {
   .transform-section {
-    padding: 55px 20px;
+    padding: 55px 0; /* Full bleed scroll edge padding */
   }
 
+  .transform-slider {
+    padding: 20px 20px 40px; /* Gives cards breathing room on edges */
+    gap: 16px;
+  }
 
   .transform-card {
     width: 240px;
@@ -203,24 +207,19 @@
   }
 
   .slider-arrow {
-    width: 40px;
-    height: 40px;
-    font-size: 14px;
-  }
-  
-  .arrow-left {
-    left: 5px;
-  }
-  
-  .arrow-right {
-    right: 5px;
+    display: none !important; /* Hide arrows on touch screens for cleaner UX */
   }
 }
 
 /* Small Mobile Media Queries */
 @media (max-width: 480px) {
   .transform-section {
-    padding: 45px 16px;
+    padding: 45px 0;
+  }
+
+  .transform-slider {
+    padding: 20px 16px 40px;
+    gap: 14px;
   }
 
   .transform-card-image-box {
