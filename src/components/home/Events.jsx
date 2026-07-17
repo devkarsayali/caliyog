@@ -66,7 +66,7 @@ function Events() {
           </div>
 
           <div className="coach-message">
-            <h3>10+ Coaches Dedicated To One Mission</h3>
+            <h3><b>10+ Coaches Dedicated To One Mission</b></h3>
             <p>
               Introducing fitness into everyone's life through outdoor training,
               community support, discipline, and performance-based fitness.

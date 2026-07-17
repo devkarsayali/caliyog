@@ -24,7 +24,7 @@ function WhyChooseUs() {
             </div>
 
             <div className="why-content">
-              <h3>{item.title}</h3>
+              <h3><b>{item.title}</b></h3>
               <p>{item.description}</p>
             </div>
           </div>
