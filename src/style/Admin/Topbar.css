@@ -571,8 +571,8 @@
   }
 
   .notifications-dropdown-menu {
-    right: -60px !important;
-    width: 290px !important;
+    right: -45px !important;
+    width: 280px !important;
     top: calc(100% + 6px) !important;
   }
 
