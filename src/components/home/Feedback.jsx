@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import logo from "../../assets/CaliYog-Logo.png";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "../../style/Feedback.css";
 
 const feedbacks = [
@@ -78,6 +79,20 @@ const feedbacks = [
 ];
 
 function Feedback() {
+  const sliderRef = useRef(null);
+
+  const scrollLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: -320, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: 320, behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="feedback" className="feedback-section">
       <div className="feedback-heading">
@@ -94,41 +109,53 @@ function Feedback() {
         </p>
       </div>
 
-      <div className="feedback-container">
-        {feedbacks.map((item, index) => (
-          <div className="feedback-card" key={index}>
-            <div className="feedback-top">
-              <div className="feedback-user-img">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  loading="lazy"
-                />
+      <div className="feedback-slider-wrapper">
+        <button
+          type="button"
+          className="feedback-slider-arrow feedback-arrow-left cursor-pointer"
+          onClick={scrollLeft}
+          aria-label="Previous"
+        >
+          <FaChevronLeft />
+        </button>
+
+        <div className="feedback-slider" ref={sliderRef}>
+          {feedbacks.map((item, index) => (
+            <div className="feedback-card" key={index}>
+              <div className="feedback-top">
+                <div className="feedback-user-info">
+                  <h3>{item.name}</h3>
+                  <p>
+                    {item.reviews} • {item.photos}
+                  </p>
+                </div>
+
+                <div className="google-icon-box">
+                  <span className="google-letter-g">G</span>
+                </div>
               </div>
 
-              <div className="feedback-user-info">
-                <h3>{item.name}</h3>
-                <p>
-                  {item.reviews} • {item.photos}
-                </p>
+              <div className="feedback-rating">
+                <div className="stars">
+                  {"★".repeat(item.rating)}
+                  {"☆".repeat(5 - item.rating)}
+                </div>
+                <span className="feedback-date">{item.date}</span>
               </div>
 
-              <div className="google-icon-box">
-                <span className="google-letter-g">G</span>
-              </div>
+              <p className="feedback-text">{item.text}</p>
             </div>
+          ))}
+        </div>
 
-            <div className="feedback-rating">
-              <div className="stars">
-                {"★".repeat(item.rating)}
-                {"☆".repeat(5 - item.rating)}
-              </div>
-              <span className="feedback-date">{item.date}</span>
-            </div>
-
-            <p className="feedback-text">{item.text}</p>
-          </div>
-        ))}
+        <button
+          type="button"
+          className="feedback-slider-arrow feedback-arrow-right cursor-pointer"
+          onClick={scrollRight}
+          aria-label="Next"
+        >
+          <FaChevronRight />
+        </button>
       </div>
     </section>
   );

@@ -146,7 +146,7 @@ function Topbar({
 
         {/* Right Section containing Date, Actions and Profile Dropdown */}
         <div className="admin-topbar-right">
-          
+
           {/* Calendar Date Section */}
           <div className="admin-topbar-date">
             <FiCalendar className="date-icon" />
@@ -155,8 +155,8 @@ function Topbar({
 
           {/* Quick Action Icons: Notification bell with dropdown */}
           <div className="topbar-actions" ref={notificationRef}>
-            <button 
-              className="topbar-action-btn cursor-pointer" 
+            <button
+              className="topbar-action-btn cursor-pointer"
               onClick={() => setIsNotificationOpen(!isNotificationOpen)}
               title="Notifications"
               style={{ position: 'relative' }}
@@ -187,9 +187,9 @@ function Topbar({
                     </div>
                   ) : (
                     notifications.map((item) => (
-                      <div 
-                        key={item._id || item.id} 
-                        className="notification-item" 
+                      <div
+                        key={item._id || item.id}
+                        className="notification-item"
                         onClick={handleNotificationClick}
                       >
                         <div className="notification-icon-box">
@@ -211,8 +211,8 @@ function Topbar({
 
           {/* Admin Profile Dropdown */}
           <div className="admin-profile-card-wrapper" ref={dropdownRef}>
-            <div 
-              className="admin-profile-card cursor-pointer" 
+            <div
+              className="admin-profile-card cursor-pointer"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <div className="profile-avatar">
