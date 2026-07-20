@@ -33,7 +33,7 @@ const feedbacks = [
     reviews: "2 reviews",
     photos: "",
     date: "a year ago",
-    text: "The best place to workout. Let me save you the trouble. Just go n join it. U will love the gym(Should be called something else) The experience and joy is something you wont get in any other gym. Stop the research and pondering, and just join the gym already!!!",
+    text: "The best place to workout. Let me save you the trouble. Just go n join it. U will love the gym(Should be called something else) The experience and joy is something you wont get in any other gym.",
   },
   {
     name: "Tarachand Ratawa",
@@ -64,7 +64,7 @@ const feedbacks = [
     rating: 5,
     reviews: "3 reviews",
     photos: "",
-    date: "4 years ago",
+    date: "6 months ago",
     text: "Caliyog has been awesome to me. The workouts are fun, the Coach are inspiring, they know how to push you to the limit in the best way possible with your workouts!",
   },
   {
