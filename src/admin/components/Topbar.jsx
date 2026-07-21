@@ -117,6 +117,24 @@ function Topbar({
     }
   };
 
+  const formatNotificationTime = (createdAt) => {
+    if (!createdAt) return "Just now";
+    const dateObj = new Date(createdAt);
+    if (isNaN(dateObj.getTime())) return "Just now";
+
+    const today = new Date();
+    const isToday =
+      dateObj.getDate() === today.getDate() &&
+      dateObj.getMonth() === today.getMonth() &&
+      dateObj.getFullYear() === today.getFullYear();
+
+    if (isToday) {
+      return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
+    } else {
+      return dateObj.toLocaleDateString();
+    }
+  };
+
   return (
     <div className="admin-topbar-wrapper select-none">
       <div className="admin-main-topbar">
@@ -199,7 +217,7 @@ function Topbar({
                         <div className="notification-content">
                           <p>New enquiry received from <strong>{item.name}</strong></p>
                           <span className="notification-time">
-                            {item.createdAt ? new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Just now"}
+                            {formatNotificationTime(item.createdAt)}
                           </span>
                         </div>
                       </div>
