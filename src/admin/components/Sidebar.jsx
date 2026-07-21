@@ -33,6 +33,7 @@ function Sidebar({ isOpen, isMobile, activeTab, setActiveTab, onClose, onToggle 
     { key: "experts", icon: "👨‍🏫", label: "Experts" },
     { key: "events", icon: "🎉", label: "Events" },
     { key: "enquiries", icon: "📩", label: "Enquiries" },
+    { key: "followups", icon: "🗓️", label: "Follow-ups" },
     //{ key: "reports", icon: "📋", label: "Reports" },
     //{ key: "members", icon: "👥", label: "Members" },
     { key: "settings", icon: "⚙️", label: "Settings" },

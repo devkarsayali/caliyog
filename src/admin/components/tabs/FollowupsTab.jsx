@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import {
-  FiMail,
-  FiTrash2,
   FiCheckCircle,
   FiX,
   FiPhone,
   FiCalendar,
   FiClock,
+  FiMail,
 } from "react-icons/fi";
 import toast from 'react-hot-toast';
 import { contactsAPI } from "../../../api/dataAPI";
-import "../../../style/Admin/EnquiriesTab.css";
+import "../../../style/Admin/EnquiriesTab.css"; // Reuse existing enquiries layout styles
 
-function EnquiriesTab() {
-  const [enquiries, setEnquiries] = useState([]);
+function FollowupsTab() {
+  const [followups, setFollowups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
   const [showFollowupForm, setShowFollowupForm] = useState(false);
@@ -22,21 +21,20 @@ function EnquiriesTab() {
   const [followupNote, setFollowupNote] = useState("");
   const [filterType, setFilterType] = useState("all");
 
-  const getFilteredEnquiries = () => {
+  const getTodayDateString = () => {
     const today = new Date();
-    const todayStr = today.toDateString();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
-    return enquiries.filter((item) => {
-      const itemDateVal = item.createdAt || item.date || item.submittedOn;
-      const itemDate = itemDateVal ? new Date(itemDateVal) : null;
-
+  const getFilteredFollowups = () => {
+    const todayDateStr = getTodayDateString();
+    return followups.filter((item) => {
       switch (filterType) {
         case "today":
-          return itemDate && itemDate.toDateString() === todayStr;
-        case "monthly":
-          return itemDate &&
-            itemDate.getMonth() === today.getMonth() &&
-            itemDate.getFullYear() === today.getFullYear();
+          return item.followupDate === todayDateStr;
         case "new":
           return !item.status || item.status === "New";
         case "replied":
@@ -52,35 +50,23 @@ function EnquiriesTab() {
     });
   };
 
-  const filteredEnquiries = getFilteredEnquiries();
+  const filteredFollowups = getFilteredFollowups();
 
   const renderKpiCards = () => {
-    const allCount = enquiries.length;
-
-    const todayDateStr = new Date().toDateString();
-    const todayCount = enquiries.filter(item => {
-      const d = item.createdAt || item.date || item.submittedOn;
-      return d && new Date(d).toDateString() === todayDateStr;
-    }).length;
-
-    const thisMonth = new Date().getMonth();
-    const thisYear = new Date().getFullYear();
-    const monthlyCount = enquiries.filter(item => {
-      const d = item.createdAt || item.date || item.submittedOn;
-      if (!d) return false;
-      const dateObj = new Date(d);
-      return dateObj.getMonth() === thisMonth && dateObj.getFullYear() === thisYear;
-    }).length;
-
-    const newCount = enquiries.filter(item => !item.status || item.status === "New").length;
-    const completedCount = enquiries.filter(item => item.status === "Completed").length;
+    const allCount = followups.length;
+    const todayDateStr = getTodayDateString();
+    const todayCount = followups.filter(item => item.followupDate === todayDateStr).length;
+    const newCount = followups.filter(item => !item.status || item.status === "New").length;
+    const repliedCount = followups.filter(item => item.status === "Replied").length;
+    const progressCount = followups.filter(item => item.status === "In Progress").length;
+    const completedCount = followups.filter(item => item.status === "Completed").length;
 
     const cards = [
-      { key: "all", label: "ALL ENQUIRIES", count: allCount, sub: "Total messages", color: "#22c55e", bg: "rgba(34,197,94,0.08)", icon: <FiMail /> },
-      { key: "today", label: "TODAY'S ENQUIRIES", count: todayCount, sub: "Received today", color: "#a855f7", bg: "rgba(168,85,247,0.08)", icon: <FiClock /> },
-      { key: "monthly", label: "MONTHLY ENQUIRIES", count: monthlyCount, sub: "Received this month", color: "#f97316", bg: "rgba(249,115,22,0.08)", icon: <FiCalendar /> },
-      { key: "new", label: "NEW ENQUIRIES", count: newCount, sub: "Pending reply", color: "#eab308", bg: "rgba(234,179,8,0.08)", icon: <FiMail /> },
-      { key: "completed", label: "COMPLETED ENQUIRIES", count: completedCount, sub: "Completed logs", color: "#64748b", bg: "rgba(100,116,139,0.08)", icon: <FiCheckCircle /> },
+      { key: "today", label: "TODAY'S REMINDER", count: todayCount, sub: "Scheduled today", color: "#a855f7", bg: "rgba(168,85,247,0.08)", icon: <FiClock /> },
+      { key: "new", label: "NEW", count: newCount, sub: "Pending calls", color: "#eab308", bg: "rgba(234,179,8,0.08)", icon: <FiMail /> },
+      { key: "replied", label: "REPLIED", count: repliedCount, sub: "Contacted logs", color: "#10b981", bg: "rgba(16,185,129,0.08)", icon: <FiCheckCircle /> },
+      { key: "in_progress", label: "IN PROGRESS", count: progressCount, sub: "Ongoing calls", color: "#0ea5e9", bg: "rgba(14,165,233,0.08)", icon: <FiClock /> },
+      { key: "completed", label: "COMPLETED", count: completedCount, sub: "Completed logs", color: "#64748b", bg: "rgba(100,116,139,0.08)", icon: <FiCheckCircle /> },
     ];
 
     return (
@@ -95,7 +81,7 @@ function EnquiriesTab() {
           return (
             <div
               key={card.key}
-              onClick={() => setFilterType(card.key)}
+              onClick={() => setFilterType((prev) => (prev === card.key ? "all" : card.key))}
               style={{
                 flex: '1 1 120px',
                 background: '#ffffff',
@@ -131,7 +117,7 @@ function EnquiriesTab() {
                   {card.icon}
                 </div>
               </div>
-
+              
               <div style={{ marginTop: '4px' }}>
                 <h3 style={{ margin: 0, fontSize: '22px', fontWeight: '800', color: '#0f172a', lineHeight: 1 }}>
                   {card.count}
@@ -177,10 +163,20 @@ function EnquiriesTab() {
     try {
       setLoading(true);
       const data = await contactsAPI.getAll();
-      setEnquiries(data || []);
+      // Filter only enquiries that have follow-up date or follow-up note
+      const filtered = (data || []).filter(
+        (item) => item.followupDate || item.followupNote
+      );
+      // Sort: nearest follow-up date first
+      filtered.sort((a, b) => {
+        if (!a.followupDate) return 1;
+        if (!b.followupDate) return -1;
+        return new Date(a.followupDate) - new Date(b.followupDate);
+      });
+      setFollowups(filtered);
     } catch (error) {
-      console.error("Load Enquiry Error:", error);
-      toast.error("Failed to load enquiries");
+      console.error("Load Followups Error:", error);
+      toast.error("Failed to load follow-up records");
     } finally {
       setLoading(false);
     }
@@ -211,39 +207,13 @@ function EnquiriesTab() {
         followupNote: followupNote
       };
       await contactsAPI.update(id, updatedFields);
-      toast.success("Follow-up saved successfully");
+      toast.success("Follow-up updated successfully");
+      
       setSelectedEnquiry(null);
       loadData();
     } catch (error) {
       console.error("Save Follow-up Error:", error);
       toast.error("Failed to save follow-up");
-    }
-  };
-
-  const markReplied = async (id) => {
-    try {
-      await contactsAPI.update(id, { status: "Replied" });
-      toast.success("Enquiry marked as replied");
-      loadData();
-    } catch (error) {
-      console.error("Update Enquiry Error:", error);
-      toast.error("Failed to update enquiry");
-    }
-  };
-
-  const deleteEnquiry = async (id) => {
-    const confirmDelete = window.confirm("Do you want to delete this enquiry?");
-    if (!confirmDelete) return false;
-
-    try {
-      await contactsAPI.delete(id);
-      toast.success("Enquiry deleted successfully");
-      loadData();
-      return true;
-    } catch (error) {
-      console.error("Delete Enquiry Error:", error);
-      toast.error("Failed to delete enquiry");
-      return false;
     }
   };
 
@@ -254,6 +224,8 @@ function EnquiriesTab() {
     return date.toLocaleDateString();
   };
 
+
+
   // ==================== DESKTOP TABLE ====================
   const renderTable = () => (
     <table className="enquiry-table">
@@ -261,27 +233,29 @@ function EnquiriesTab() {
         <tr>
           <th>#</th>
           <th>Name</th>
-          <th>Email</th>
           <th>Contact</th>
-          <th>Message</th>
+          <th>Follow-up Date</th>
+          <th>User Response / Note</th>
           <th>Status</th>
-          <th>Date</th>
+          <th>Original Date</th>
+          <th>Action</th>
         </tr>
       </thead>
 
       <tbody>
-        {filteredEnquiries.map((item, index) => (
+        {filteredFollowups.map((item, index) => (
           <tr key={item._id || item.id} onClick={() => setSelectedEnquiry(item)}>
             <td>{index + 1}</td>
             <td>
-              {getValue(
-                item.name,
-                item.fullName,
-                item.userName,
-                item.memberName
-              )}
+              <strong>
+                {getValue(
+                  item.name,
+                  item.fullName,
+                  item.userName,
+                  item.memberName
+                )}
+              </strong>
             </td>
-            <td>{getValue(item.email, item.userEmail)}</td>
             <td>
               <div className="contact-cell-container">
                 <a
@@ -295,39 +269,49 @@ function EnquiriesTab() {
                 <span>{getContactNumber(item)}</span>
               </div>
             </td>
-            <td className="message-cell">
-              {getValue(item.message, item.msg, item.description)}
-            </td>
             <td>
-              <div className="status-cell-container">
-                <span
-                  className={
-                    item.status === "Replied" ? "status-replied" :
-                      item.status === "In Progress" ? "status-progress" :
-                        item.status === "Completed" ? "status-completed" : "status-new"
-                  }
-                >
-                  {item.status || "New"}
-                </span>
-                {item.status !== "Replied" && (
-                  <button
-                    type="button"
-                    className="enquiry-quick-reply-btn"
-                    title="Mark as Replied"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      await markReplied(item._id || item.id);
-                    }}
-                  >
-                    <FiCheckCircle />
-                  </button>
-                )}
-              </div>
+              <span style={{ color: '#3b82f6', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <FiClock /> {item.followupDate ? formatDate(item.followupDate) : "-"}
+              </span>
             </td>
-            <td>
-              {formatDate(
-                item.createdAt || item.date || item.submittedOn
+            <td className="message-cell" title={item.followupNote || ""}>
+              {item.followupNote ? (
+                item.followupNote.length > 50 ? (
+                  `${item.followupNote.substring(0, 50)}...`
+                ) : (
+                  item.followupNote
+                )
+              ) : (
+                "-"
               )}
+            </td>
+            <td>
+              <span
+                className={
+                  item.status === "Replied" ? "status-replied" :
+                  item.status === "In Progress" ? "status-progress" :
+                  item.status === "Completed" ? "status-completed" : "status-new"
+                }
+              >
+                {item.status || "New"}
+              </span>
+            </td>
+            <td>
+              {formatDate(item.createdAt || item.date || item.submittedOn)}
+            </td>
+            <td>
+              <button
+                type="button"
+                className="enquiry-followup-text-btn"
+                title="Update Follow-up"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedEnquiry(item);
+                  setTimeout(() => setShowFollowupForm(true), 50);
+                }}
+              >
+                <FiCalendar style={{ marginRight: '6px' }} /> Update
+              </button>
             </td>
           </tr>
         ))}
@@ -337,9 +321,9 @@ function EnquiriesTab() {
 
   const renderCards = () => (
     <div className="enquiry-cards">
-      {filteredEnquiries.map((item, index) => (
-        <div
-          className="enquiry-card-item"
+      {filteredFollowups.map((item, index) => (
+        <div 
+          className="enquiry-card-item" 
           key={item._id || item.id}
           onClick={() => setSelectedEnquiry(item)}
         >
@@ -357,9 +341,9 @@ function EnquiriesTab() {
             </div>
             <span
               className={
-                item.status === "Replied" ? "status-replied" :
-                  item.status === "In Progress" ? "status-progress" :
-                    item.status === "Completed" ? "status-completed" : "status-new"
+                 item.status === "Replied" ? "status-replied" :
+                 item.status === "In Progress" ? "status-progress" :
+                 item.status === "Completed" ? "status-completed" : "status-new"
               }
             >
               {item.status || "New"}
@@ -367,13 +351,6 @@ function EnquiriesTab() {
           </div>
 
           <div className="enquiry-card-body">
-            <div className="enquiry-card-row">
-              <span className="enquiry-card-label">📧 Email</span>
-              <span className="enquiry-card-value">
-                {getValue(item.email, item.userEmail)}
-              </span>
-            </div>
-
             <div className="enquiry-card-row">
               <span className="enquiry-card-label">📞 Contact</span>
               <span className="enquiry-card-value contact-value-container">
@@ -386,34 +363,58 @@ function EnquiriesTab() {
                   <FiPhone />
                 </a>
                 <span>{getContactNumber(item)}</span>
-                {item.status !== "Replied" && (
-                  <button
-                    type="button"
-                    className="enquiry-quick-reply-btn card-version"
-                    title="Mark as Replied"
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      await markReplied(item._id || item.id);
-                    }}
-                  >
-                    <FiCheckCircle />
-                  </button>
-                )}
               </span>
             </div>
 
             <div className="enquiry-card-row">
-              <span className="enquiry-card-label">📅 Date</span>
-              <span className="enquiry-card-value">
-                {formatDate(
-                  item.createdAt || item.date || item.submittedOn
-                )}
+              <span className="enquiry-card-label">🗓️ Follow-up Date</span>
+              <span className="enquiry-card-value" style={{ color: '#3b82f6', fontWeight: '700' }}>
+                {item.followupDate ? formatDate(item.followupDate) : "-"}
               </span>
             </div>
 
-            <div className="enquiry-card-message">
-              <span className="enquiry-card-label">💬 Message</span>
-              <p>{getValue(item.message, item.msg, item.description)}</p>
+            <div className="enquiry-card-row">
+              <span className="enquiry-card-label">📝 Response/Note</span>
+              <span className="enquiry-card-value">
+                {item.followupNote || "-"}
+              </span>
+            </div>
+
+            <div className="enquiry-card-row">
+              <span className="enquiry-card-label">📅 Original Date</span>
+              <span className="enquiry-card-value">
+                {formatDate(item.createdAt || item.date || item.submittedOn)}
+              </span>
+            </div>
+
+            <div className="enquiry-card-row">
+              <span className="enquiry-card-label">⚙️ Action</span>
+              <span className="enquiry-card-value">
+                <button
+                  type="button"
+                  className="enquiry-followup-btn mobile-version"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedEnquiry(item);
+                    setTimeout(() => setShowFollowupForm(true), 50);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    background: '#3b82f6',
+                    color: '#ffffff',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}
+                >
+                  <FiCalendar /> Update
+                </button>
+              </span>
             </div>
           </div>
         </div>
@@ -427,19 +428,19 @@ function EnquiriesTab() {
 
       {loading ? (
         <div className="empty-enquiry-box">
-          <h3>Loading Enquiries...</h3>
+          <h3>Loading Follow-up Records...</h3>
         </div>
-      ) : enquiries.length === 0 ? (
+      ) : followups.length === 0 ? (
         <div className="empty-enquiry-box">
-          <FiMail />
-          <h3>No Enquiries Yet</h3>
-          <p>Contact form submissions will appear here.</p>
+          <FiCalendar style={{ fontSize: '40px', color: '#cbd5e1', marginBottom: '10px' }} />
+          <h3>No Follow-ups Scheduled</h3>
+          <p>Go to the Enquiries tab, select a record, and click Add Followup to set one.</p>
         </div>
-      ) : filteredEnquiries.length === 0 ? (
+      ) : filteredFollowups.length === 0 ? (
         <div className="empty-enquiry-box">
-          <FiMail />
-          <h3>No Enquiries Found</h3>
-          <p>There are no enquiries matching the selected filter option.</p>
+          <FiCalendar style={{ fontSize: '40px', color: '#cbd5e1', marginBottom: '10px' }} />
+          <h3>No Follow-ups Found</h3>
+          <p>There are no follow-up activities matching the selected filter option.</p>
         </div>
       ) : (
         <>
@@ -452,23 +453,23 @@ function EnquiriesTab() {
         </>
       )}
 
-      {/* Enquiry Detail Modal containing delete, action, and follow-up buttons */}
+      {/* Enquiry Detail Modal containing update sub-form */}
       {selectedEnquiry && (
         <div className="admin-modal-overlay">
           <div className="admin-modal small-expert-modal enquiry-details-modal">
             {!showFollowupForm ? (
               <>
                 <div className="admin-modal-header">
-                  <h3 className="admin-modal-title">Enquiry Details</h3>
-                  <button
-                    type="button"
-                    className="admin-modal-close cursor-pointer"
+                  <h3 className="admin-modal-title">Follow-up Details</h3>
+                  <button 
+                    type="button" 
+                    className="admin-modal-close cursor-pointer" 
                     onClick={() => setSelectedEnquiry(null)}
                   >
                     <FiX />
                   </button>
                 </div>
-
+                
                 <div className="admin-modal-body compact-modal-body" style={{ color: '#0f172a', padding: '20px' }}>
                   <div className="enquiry-detail-row">
                     <strong>Name:</strong>
@@ -502,30 +503,27 @@ function EnquiriesTab() {
                   <div className="enquiry-detail-row">
                     <strong>Status:</strong>
                     <span className={
-                      selectedEnquiry.status === "Replied" ? "status-replied" :
-                        selectedEnquiry.status === "In Progress" ? "status-progress" :
-                          selectedEnquiry.status === "Completed" ? "status-completed" : "status-new"
+                       selectedEnquiry.status === "Replied" ? "status-replied" :
+                       selectedEnquiry.status === "In Progress" ? "status-progress" :
+                       selectedEnquiry.status === "Completed" ? "status-completed" : "status-new"
                     }>
                       {selectedEnquiry.status || "New"}
                     </span>
                   </div>
                   <div className="enquiry-detail-row">
-                    <strong>Date:</strong>
+                    <strong>Follow-up Date:</strong>
+                    <span style={{ color: '#3b82f6', fontWeight: '700' }}>
+                      {selectedEnquiry.followupDate ? formatDate(selectedEnquiry.followupDate) : "-"}
+                    </span>
+                  </div>
+                  <div className="enquiry-detail-row">
+                    <strong>Enquiry Date:</strong>
                     <span>
                       {formatDate(
                         selectedEnquiry.createdAt || selectedEnquiry.date || selectedEnquiry.submittedOn
                       )}
                     </span>
                   </div>
-
-                  {selectedEnquiry.followupDate && (
-                    <div className="enquiry-detail-row">
-                      <strong>Follow-up Date:</strong>
-                      <span style={{ color: '#3b82f6', fontWeight: '700' }}>
-                        {formatDate(selectedEnquiry.followupDate)}
-                      </span>
-                    </div>
-                  )}
 
                   {selectedEnquiry.followupNote && (
                     <div className="enquiry-detail-message" style={{ marginTop: '12px' }}>
@@ -537,26 +535,26 @@ function EnquiriesTab() {
                   )}
 
                   <div className="enquiry-detail-message">
-                    <strong>Message:</strong>
+                    <strong>Original Enquiry Message:</strong>
                     <p>{getValue(selectedEnquiry.message, selectedEnquiry.msg, selectedEnquiry.description)}</p>
                   </div>
                 </div>
 
                 <div className="admin-modal-footer">
-                  <button
-                    type="button"
-                    className="admin-btn admin-btn-secondary cursor-pointer"
+                  <button 
+                    type="button" 
+                    className="admin-btn admin-btn-secondary cursor-pointer" 
                     onClick={() => setSelectedEnquiry(null)}
                   >
                     Close
                   </button>
-
-                  <button
-                    type="button"
+                  
+                  <button 
+                    type="button" 
                     className="admin-btn cursor-pointer"
-                    style={{
-                      background: '#3b82f6',
-                      color: '#ffffff',
+                    style={{ 
+                      background: '#3b82f6', 
+                      color: '#ffffff', 
                       borderRadius: '13px',
                       display: 'flex',
                       alignItems: 'center',
@@ -564,40 +562,7 @@ function EnquiriesTab() {
                     }}
                     onClick={() => setShowFollowupForm(true)}
                   >
-                    <FiCalendar /> Add Followup
-                  </button>
-
-                  {selectedEnquiry.status !== "Replied" && (
-                    <button
-                      type="button"
-                      className="admin-btn admin-btn-primary cursor-pointer"
-                      onClick={async () => {
-                        await markReplied(selectedEnquiry._id || selectedEnquiry.id);
-                        setSelectedEnquiry(null);
-                      }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-                    >
-                      <FiCheckCircle /> Mark Replied
-                    </button>
-                  )}
-
-                  <button
-                    type="button"
-                    className="admin-btn cursor-pointer"
-                    style={{
-                      background: '#ef4444',
-                      color: '#ffffff',
-                      borderRadius: '13px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                    onClick={async () => {
-                      const deleted = await deleteEnquiry(selectedEnquiry._id || selectedEnquiry.id);
-                      if (deleted) setSelectedEnquiry(null);
-                    }}
-                  >
-                    <FiTrash2 /> Delete
+                    <FiCalendar /> Update Follow-up
                   </button>
                 </div>
               </>
@@ -605,15 +570,15 @@ function EnquiriesTab() {
               <>
                 <div className="admin-modal-header">
                   <h3 className="admin-modal-title">Manage Follow-up</h3>
-                  <button
-                    type="button"
-                    className="admin-modal-close cursor-pointer"
+                  <button 
+                    type="button" 
+                    className="admin-modal-close cursor-pointer" 
                     onClick={() => setShowFollowupForm(false)}
                   >
                     <FiX />
                   </button>
                 </div>
-
+                
                 <form onSubmit={handleFollowupSubmit}>
                   <div className="admin-modal-body compact-modal-body" style={{ color: '#0f172a', padding: '20px' }}>
                     <div className="enquiry-detail-row" style={{ marginBottom: '10px' }}>
@@ -627,7 +592,7 @@ function EnquiriesTab() {
                         )}
                       </span>
                     </div>
-
+                    
                     <div className="enquiry-detail-row" style={{ marginBottom: '15px' }}>
                       <strong>Contact:</strong>
                       <span>{getContactNumber(selectedEnquiry)}</span>
@@ -681,16 +646,16 @@ function EnquiriesTab() {
                   </div>
 
                   <div className="admin-modal-footer">
-                    <button
-                      type="button"
-                      className="admin-btn admin-btn-secondary cursor-pointer"
+                    <button 
+                      type="button" 
+                      className="admin-btn admin-btn-secondary cursor-pointer" 
                       onClick={() => setShowFollowupForm(false)}
                     >
                       Back
                     </button>
-
-                    <button
-                      type="submit"
+                    
+                    <button 
+                      type="submit" 
                       className="admin-btn admin-btn-primary cursor-pointer"
                       style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                     >
@@ -707,4 +672,4 @@ function EnquiriesTab() {
   );
 }
 
-export default EnquiriesTab;
+export default FollowupsTab;

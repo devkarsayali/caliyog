@@ -18,7 +18,7 @@ const feedbacks = [
     reviews: "Local Guide",
     photos: "37 reviews • 8 photos",
     date: "a year ago",
-    text: "Definitely one of the best places in the town yet. Fantastic coaches and a great vibe all around.",
+    text: "Definitely one of the best places in the town yet. Fantastic coaches an2d a great vibe all around.",
   },
   {
     name: "Nikhil Chavan",

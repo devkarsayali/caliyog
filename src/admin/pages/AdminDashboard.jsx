@@ -13,6 +13,7 @@ import MembershipTab from "../components/tabs/MembershipTab";
 import TransformationsTab from "../components/tabs/TransformationsTab";
 import ExpertsTab from "../components/tabs/ExpertsTab";
 import EnquiriesTab from "../components/tabs/EnquiriesTab";
+import FollowupsTab from "../components/tabs/FollowupsTab";
 import MembersTab from "../components/tabs/MembersTab";
 import SettingsTab from "../components/tabs/SettingsTab";
 import EventsManagerTab from "../components/tabs/EventsManagerTab";
@@ -257,6 +258,7 @@ function AdminDashboard() {
           {activeTab === "experts" && <ExpertsTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
           {activeTab === "events" && <EventsManagerTab action={tabAction} onActionHandled={() => setTabAction(null)} />}
           {activeTab === "enquiries" && <EnquiriesTab />}
+          {activeTab === "followups" && <FollowupsTab />}
           {activeTab === "reports" && <ReportsManagerTab />}
           {activeTab === "members" && <MembersTab />}
           {activeTab === "settings" && <SettingsTab />}

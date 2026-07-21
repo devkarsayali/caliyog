@@ -20,7 +20,7 @@ function OverviewTab({ setActiveTab }) {
   const [expertsCount, setExpertsCount] = useState(0);
   const [enquiriesCount, setEnquiriesCount] = useState(0);
   const [batchesCount, setBatchesCount] = useState(0);
-  const [eventsCount, setEventsCount] = useState(0);
+  const [followupsCount, setFollowupsCount] = useState(0);
   const [transformationsCount, setTransformationsCount] = useState(0);
   const [aboutCount, setAboutCount] = useState(0);
   const [membershipsCount, setMembershipsCount] = useState(0);
@@ -69,7 +69,8 @@ function OverviewTab({ setActiveTab }) {
         setExpertsCount(expertsList ? expertsList.length : 0);
         setEnquiriesCount(enquiriesList ? enquiriesList.length : 0);
         setBatchesCount(batchesList ? batchesList.length : 0);
-        setEventsCount(eventsList ? eventsList.length : 0);
+        const fList = enquiriesList ? enquiriesList.filter(item => item.followupDate || item.followupNote) : [];
+        setFollowupsCount(fList.length);
         setTransformationsCount(transformationsList ? transformationsList.length : 0);
         setAboutCount(aboutList ? aboutList.length : 0);
         setMembershipsCount(membershipsList ? membershipsList.length : 0);
@@ -179,14 +180,14 @@ function OverviewTab({ setActiveTab }) {
     }
   };
 
-  const totalItems = expertsCount + batchesCount + eventsCount + aboutCount + transformationsCount + membershipsCount;
+  const totalItems = expertsCount + batchesCount + followupsCount + aboutCount + transformationsCount + membershipsCount;
   const circumference = 251.327;
 
   let cumulativePercent = 0;
   const segments = [
     { label: "Experts", count: expertsCount, color: "#22c55e", tab: "experts" },
     { label: "Batches", count: batchesCount, color: "#3b82f6", tab: "batches" },
-    { label: "Events", count: eventsCount, color: "#eab308", tab: "events" },
+    { label: "Follow-ups", count: followupsCount, color: "#eab308", tab: "followups" },
     { label: "Transformations", count: transformationsCount, color: "#a855f7", tab: "transformations" },
     { label: "Memberships", count: membershipsCount, color: "#06b6d4", tab: "membership" },
     { label: "About", count: aboutCount, color: "#ec4899", tab: "about" },
@@ -212,7 +213,7 @@ function OverviewTab({ setActiveTab }) {
         <StatCard title="Total Experts" number={expertsCount} text="Professional trainers added" icon={<FiUsers />} onClick={() => setActiveTab("experts")} />
         <StatCard title="Total Enquiries" number={enquiriesCount} text="Contact form messages" icon={<FiMail />} onClick={() => setActiveTab("enquiries")} />
         <StatCard title="Total Batches" number={batchesCount} text="Active training programs" icon={<FiGrid />} onClick={() => setActiveTab("batches")} />
-        <StatCard title="Total Events" number={eventsCount} text="Gym events & programs" icon={<FiCalendar />} onClick={() => setActiveTab("events")} />
+        <StatCard title="Total Follow-ups" number={followupsCount} text="Scheduled client activities" icon={<FiCalendar />} onClick={() => setActiveTab("followups")} />
       </section>
 
       <section className="admin-quick-actions-panel">
