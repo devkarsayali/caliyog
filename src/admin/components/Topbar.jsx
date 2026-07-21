@@ -32,6 +32,7 @@ function Topbar({
       experts: "Experts",
       events: "Events",
       enquiries: "Enquiries",
+      followups: "Follow-ups",
       reports: "Reports",
       members: "Members",
       settings: "Settings",

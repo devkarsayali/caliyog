@@ -862,3 +862,12 @@ textarea.admin-input-field {
   }
 }
 
+/* Constrain Message and Note table columns to be compact and show ellipsis */
+.enquiry-table td.message-cell,
+.enquiry-table td.note-cell {
+  max-width: 140px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+

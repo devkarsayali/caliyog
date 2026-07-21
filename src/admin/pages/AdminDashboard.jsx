@@ -169,19 +169,25 @@ function AdminDashboard() {
     });
 
     const sorted = filtered.sort((a, b) => {
-      if (a._priority !== b._priority) {
-        return (a._priority || 99) - (b._priority || 99);
+      const getScore = (item) => {
+        const title = (item._displayTitle || "").toLowerCase();
+        const fullText = (item._searchText || "");
+        if (title === query) return 4;
+        if (title.startsWith(query)) return 3;
+        if (title.includes(query)) return 2;
+        if (fullText.includes(query)) return 1;
+        return 0;
+      };
+
+      const scoreA = getScore(a);
+      const scoreB = getScore(b);
+
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA; // Descending: higher score first
       }
 
-      const aTitle = (a._displayTitle || "").toLowerCase();
-      const bTitle = (b._displayTitle || "").toLowerCase();
-
-      if (aTitle === query) return -1;
-      if (bTitle === query) return 1;
-      if (aTitle.startsWith(query) && !bTitle.startsWith(query)) return -1;
-      if (!aTitle.startsWith(query) && bTitle.startsWith(query)) return 1;
-
-      return 0;
+      // If scores are equal, sort by priority (Members priority 1, others 2)
+      return (a._priority || 99) - (b._priority || 99);
     });
 
     setSearchResults(sorted.slice(0, 15));

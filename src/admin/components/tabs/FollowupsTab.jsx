@@ -217,6 +217,26 @@ function FollowupsTab() {
     }
   };
 
+  const handleSaveNote = async () => {
+    if (!selectedEnquiry) return;
+    try {
+      const id = selectedEnquiry._id || selectedEnquiry.id;
+      const updatedFields = {
+        followupNote: followupNote
+      };
+      await contactsAPI.update(id, updatedFields);
+      toast.success("Note saved successfully");
+      setSelectedEnquiry(prev => ({
+        ...prev,
+        followupNote: followupNote
+      }));
+      loadData();
+    } catch (error) {
+      console.error("Save Note Error:", error);
+      toast.error("Failed to save note");
+    }
+  };
+
   const formatDate = (dateValue) => {
     if (!dateValue) return "-";
     const date = new Date(dateValue);
@@ -525,14 +545,26 @@ function FollowupsTab() {
                     </span>
                   </div>
 
-                  {selectedEnquiry.followupNote && (
-                    <div className="enquiry-detail-message" style={{ marginTop: '12px' }}>
-                      <strong>Latest Response:</strong>
-                      <p style={{ background: '#f8fafc', padding: '10px', borderRadius: '8px', color: '#475569', fontSize: '13px', marginTop: '4px', border: '1px solid #e2e8f0' }}>
-                        {selectedEnquiry.followupNote}
-                      </p>
+                  <div className="enquiry-detail-message" style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <strong>Response Note / What User Said:</strong>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'stretch' }}>
+                      <textarea
+                        className="admin-input-field"
+                        style={{ minHeight: '50px', resize: 'vertical', padding: '8px 12px', fontSize: '13px', flex: 1, margin: 0 }}
+                        value={followupNote}
+                        onChange={(e) => setFollowupNote(e.target.value)}
+                        placeholder="Type what the user said..."
+                      />
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn-primary cursor-pointer"
+                        style={{ alignSelf: 'stretch', padding: '0 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 0, borderRadius: '12px' }}
+                        onClick={handleSaveNote}
+                      >
+                        Save
+                      </button>
                     </div>
-                  )}
+                  </div>
 
                   <div className="enquiry-detail-message">
                     <strong>Original Enquiry Message:</strong>

@@ -58,27 +58,7 @@
   margin-top: 45px;
 }
 
-/* Premium gradient fades on edges */
-.experts-marquee-wrapper::before,
-.experts-marquee-wrapper::after {
-  content: "";
-  height: 100%;
-  width: 150px;
-  position: absolute;
-  top: 0;
-  z-index: 2;
-  pointer-events: none;
-}
 
-.experts-marquee-wrapper::before {
-  left: 0;
-  background: linear-gradient(to right, #f8f9fa 15%, transparent 100%);
-}
-
-.experts-marquee-wrapper::after {
-  right: 0;
-  background: linear-gradient(to left, #f8f9fa 15%, transparent 100%);
-}
 
 .experts-track {
   display: flex;
@@ -233,11 +213,6 @@
   padding: 65px 30px;
 }
 
-.experts-marquee-wrapper::before,
-.experts-marquee-wrapper::after {
-  width: 100px;
-}
-
 .expert-info-card {
   width: 260px;
   min-height: 390px;
@@ -255,11 +230,6 @@
 
 .experts-section{
   padding: 55px 20px;
-}
-
-.experts-marquee-wrapper::before,
-.experts-marquee-wrapper::after {
-  width: 50px;
 }
 
 .expert-info-card{
