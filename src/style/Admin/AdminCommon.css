@@ -25,17 +25,15 @@
 }
 
 .admin-login-page {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
   margin: 0;
-  padding: 20px;
+  padding: 40px 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  overflow-y: auto;
+  align-items: center;
+  box-sizing: border-box;
   color: white;
 }
 
@@ -47,7 +45,7 @@
   width: 100%;
   max-width: 440px;
   padding: 36px 34px;
-  margin: auto 0;
+  margin: 20px 0;
   border-radius: 28px;
   background: rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(6px) saturate(150%);
@@ -404,11 +402,12 @@
 }
 
 @media (max-width: 480px) {
-  .admin-login-page { padding: 10px; }
+  .admin-login-page { padding: 20px 10px; }
   .admin-login-card {
     max-width: 100%;
-    padding: 24px 20px;
+    padding: 24px 16px;
     border-radius: 20px;
+    margin: 10px 0;
   }
   .admin-register-card { max-width: 100%; }
   .admin-login-header { margin-bottom: 20px; }
@@ -422,6 +421,7 @@
   .admin-login-btn { padding: 13px; font-size: 14px; border-radius: 40px; }
   .admin-login-footer { margin-top: 16px; font-size: 12px; line-height: 1.5; }
   .forgot-password { font-size: 12px; }
+  .validation-error-msg { font-size: 11.5px; }
 }
 
 /* Dynamic live validations error styling */
@@ -431,6 +431,8 @@
   color: #f87171; /* bright red accent for dark theme */
   margin-top: 6px;
   text-align: left;
+  line-height: 1.4;
+  word-break: break-word;
   animation: fadeIn 0.15s ease-in-out;
 }
 
