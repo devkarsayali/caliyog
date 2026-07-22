@@ -164,7 +164,6 @@ function AdminLogin() {
         muted
         playsInline
         preload="auto"
-        poster="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1920"
       />
       <div className="admin-video-overlay" />
 
