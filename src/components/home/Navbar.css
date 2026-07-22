@@ -181,6 +181,8 @@ section {
     left: 0;
 
     width: 100%;
+    max-height: calc(100vh - 75px);
+    overflow-y: auto;
 
     background: #111;
 

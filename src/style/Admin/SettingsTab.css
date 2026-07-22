@@ -281,3 +281,48 @@
     font-size: 14px;
   }
 }
+
+/* Settings tab live validation and password toggler styling */
+.validation-error-msg {
+  display: block;
+  font-size: 12.5px;
+  color: #ef4444; /* red error accent for light theme */
+  margin-top: 6px;
+  text-align: left;
+  animation: settingsFadeIn 0.15s ease-in-out;
+}
+
+.settings-password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.settings-password-wrapper input {
+  padding-right: 48px !important;
+}
+
+.settings-password-toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-password-toggle:hover {
+  color: #22c55e;
+}
+
+@keyframes settingsFadeIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -31,6 +31,22 @@ function SettingsTab() {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [loadingPassword, setLoadingPassword] = useState(false);
 
+  // States for toggling password visibility
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Live validation checks
+  const isEmailValid = profileData.email ? profileData.email.includes("@") : true;
+  const isMobileValid = profileData.mobile ? profileData.mobile.trim().length === 10 : true;
+
+  const passVal = passwordData.newPassword;
+  const hasUppercase = /[A-Z]/.test(passVal);
+  const hasLowercase = /[a-z]/.test(passVal);
+  const hasNumber = /\d/.test(passVal);
+  const hasSymbol = /[^A-Za-z0-9]/.test(passVal);
+  const isNewPasswordValid = passVal ? (passVal.length >= 8 && hasUppercase && hasLowercase && hasNumber && hasSymbol) : true;
+
   useEffect(() => {
     const fetchAdminDetails = async () => {
       try {
@@ -71,6 +87,16 @@ function SettingsTab() {
 
     if (!profileData.name || !profileData.email || !profileData.mobile) {
       toast.error("Please fill all profile fields");
+      return;
+    }
+
+    if (!profileData.email.includes("@")) {
+      toast.error("email should a include @");
+      return;
+    }
+
+    if (profileData.mobile.trim().length !== 10) {
+      toast.error("Enter your 10-digit mobile number");
       return;
     }
 
@@ -125,8 +151,19 @@ function SettingsTab() {
       return;
     }
 
-    if (passwordData.newPassword.length < 6) {
-      toast.error("Password must be at least 6 characters");
+    if (passwordData.newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+
+    const newPassword = passwordData.newPassword;
+    const hasU = /[A-Z]/.test(newPassword);
+    const hasL = /[a-z]/.test(newPassword);
+    const hasN = /\d/.test(newPassword);
+    const hasS = /[^A-Za-z0-9]/.test(newPassword);
+
+    if (!hasU || !hasL || !hasN || !hasS) {
+      toast.error("Minimum 8 characters with at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.");
       return;
     }
 
@@ -193,6 +230,9 @@ function SettingsTab() {
               value={profileData.email}
               onChange={handleProfileChange}
             />
+            {!isEmailValid && (
+              <span className="validation-error-msg">email should a include @</span>
+            )}
           </div>
 
           <div className="settings-group full">
@@ -202,8 +242,15 @@ function SettingsTab() {
               name="mobile"
               placeholder="Enter mobile number"
               value={profileData.mobile}
-              onChange={handleProfileChange}
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setProfileData({ ...profileData, mobile: val });
+              }}
+              maxLength={10}
             />
+            {!isMobileValid && (
+              <span className="validation-error-msg">Enter your 10-digit mobile number</span>
+            )}
           </div>
         </div>
 
@@ -221,35 +268,101 @@ function SettingsTab() {
         <div className="settings-grid">
           <div className="settings-group full">
             <label>Current Password</label>
-            <input
-              type="password"
-              name="currentPassword"
-              placeholder="Enter current password"
-              value={passwordData.currentPassword}
-              onChange={handlePasswordChange}
-            />
+            <div className="settings-password-wrapper">
+              <input
+                type={showCurrentPassword ? "text" : "password"}
+                name="currentPassword"
+                placeholder="Enter current password"
+                value={passwordData.currentPassword}
+                onChange={handlePasswordChange}
+              />
+              <button
+                type="button"
+                className="settings-password-toggle cursor-pointer"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              >
+                {showCurrentPassword ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                    <path d="M9 9a3 3 0 1 1 4.24 4.24"></path>
+                    <path d="M17.65 17.65A9 9 0 0 1 12 20c-7 0-11-8-11-8a19.82 19.82 0 0 1 3.65-4.65"></path>
+                    <path d="M8.88 8.88A3 3 0 0 1 12 8a9 9 0 0 1 5.64 3.43"></path>
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="settings-group">
             <label>New Password</label>
-            <input
-              type="password"
-              name="newPassword"
-              placeholder="Enter new password"
-              value={passwordData.newPassword}
-              onChange={handlePasswordChange}
-            />
+            <div className="settings-password-wrapper">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                name="newPassword"
+                placeholder="Enter new password"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+              />
+              <button
+                type="button"
+                className="settings-password-toggle cursor-pointer"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                    <path d="M9 9a3 3 0 1 1 4.24 4.24"></path>
+                    <path d="M17.65 17.65A9 9 0 0 1 12 20c-7 0-11-8-11-8a19.82 19.82 0 0 1 3.65-4.65"></path>
+                    <path d="M8.88 8.88A3 3 0 0 1 12 8a9 9 0 0 1 5.64 3.43"></path>
+                  </svg>
+                )}
+              </button>
+            </div>
+            {!isNewPasswordValid && (
+              <span className="validation-error-msg">Minimum 8 characters with at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.</span>
+            )}
           </div>
 
           <div className="settings-group">
             <label>Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm new password"
-              value={passwordData.confirmPassword}
-              onChange={handlePasswordChange}
-            />
+            <div className="settings-password-wrapper">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                placeholder="Confirm new password"
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
+              />
+              <button
+                type="button"
+                className="settings-password-toggle cursor-pointer"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                    <path d="M9 9a3 3 0 1 1 4.24 4.24"></path>
+                    <path d="M17.65 17.65A9 9 0 0 1 12 20c-7 0-11-8-11-8a19.82 19.82 0 0 1 3.65-4.65"></path>
+                    <path d="M8.88 8.88A3 3 0 0 1 12 8a9 9 0 0 1 5.64 3.43"></path>
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 

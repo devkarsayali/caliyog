@@ -422,3 +422,18 @@
   .admin-login-footer { margin-top: 16px; font-size: 12px; line-height: 1.5; }
   .forgot-password { font-size: 12px; }
 }
+
+/* Dynamic live validations error styling */
+.validation-error-msg {
+  display: block;
+  font-size: 12.5px;
+  color: #f87171; /* bright red accent for dark theme */
+  margin-top: 6px;
+  text-align: left;
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}

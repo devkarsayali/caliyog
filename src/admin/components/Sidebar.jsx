@@ -36,7 +36,6 @@ function Sidebar({ isOpen, isMobile, activeTab, setActiveTab, onClose, onToggle 
     { key: "followups", icon: "🗓️", label: "Follow-ups" },
     //{ key: "reports", icon: "📋", label: "Reports" },
     //{ key: "members", icon: "👥", label: "Members" },
-    { key: "settings", icon: "⚙️", label: "Settings" },
   ];
 
   return (

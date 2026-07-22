@@ -24,10 +24,25 @@ function AdminRegister() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Live checks
+  const isEmailValid = formData.email ? formData.email.includes("@") : true;
+  const isMobileValid = formData.mobile ? formData.mobile.trim().length === 10 : true;
+
+  const passVal = formData.password;
+  const hasUppercase = /[A-Z]/.test(passVal);
+  const hasLowercase = /[a-z]/.test(passVal);
+  const hasNumber = /\d/.test(passVal);
+  const hasSymbol = /[^A-Za-z0-9]/.test(passVal);
+  const isPasswordValid = passVal ? (passVal.length >= 8 && hasUppercase && hasLowercase && hasNumber && hasSymbol) : true;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Email validation
+    if (!formData.email.includes("@")) {
+      toast.error("email should a include @");
+      return;
+    }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email.trim())) {
       toast.error("Please enter a valid email address");
@@ -35,9 +50,8 @@ function AdminRegister() {
     }
 
     // Phone validation - must be exactly 10 digits
-    const phoneRegex = /^\d{10}$/;
-    if (!phoneRegex.test(formData.mobile.trim())) {
-      toast.error("Contact number must be exactly 10 digits");
+    if (formData.mobile.trim().length !== 10) {
+      toast.error("Enter your 10-digit mobile number");
       return;
     }
 
@@ -46,8 +60,13 @@ function AdminRegister() {
       return;
     }
 
-    if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 characters long");
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+
+    if (!hasUppercase || !hasLowercase || !hasNumber || !hasSymbol) {
+      toast.error("Minimum 8 characters with at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.");
       return;
     }
 
@@ -123,6 +142,9 @@ function AdminRegister() {
                 onChange={handleChange}
                 required
               />
+              {!isEmailValid && (
+                <span className="validation-error-msg">email should a include @</span>
+              )}
             </div>
 
             <div className="admin-form-group">
@@ -143,6 +165,9 @@ function AdminRegister() {
                 inputMode="numeric"
                 required
               />
+              {!isMobileValid && (
+                <span className="validation-error-msg">Enter your 10-digit mobile number</span>
+              )}
             </div>
 
             <div className="admin-form-group">
@@ -163,9 +188,24 @@ function AdminRegister() {
                   className="admin-password-toggle cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                  {showPassword ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-eye">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-eye-off">
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                      <path d="M9 9a3 3 0 1 1 4.24 4.24"></path>
+                      <path d="M17.65 17.65A9 9 0 0 1 12 20c-7 0-11-8-11-8a19.82 19.82 0 0 1 3.65-4.65"></path>
+                      <path d="M8.88 8.88A3 3 0 0 1 12 8a9 9 0 0 1 5.64 3.43"></path>
+                    </svg>
+                  )}
                 </button>
               </div>
+              {!isPasswordValid && (
+                <span className="validation-error-msg">Minimum 8 characters with at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.</span>
+              )}
             </div>
 
             <div className="admin-form-group">
