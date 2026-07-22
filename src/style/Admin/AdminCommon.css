@@ -34,7 +34,7 @@
   padding: 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   overflow-y: auto;
   color: white;
 }
@@ -47,6 +47,7 @@
   width: 100%;
   max-width: 440px;
   padding: 36px 34px;
+  margin: auto 0;
   border-radius: 28px;
   background: rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(6px) saturate(150%);

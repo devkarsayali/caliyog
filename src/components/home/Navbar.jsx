@@ -30,20 +30,17 @@ function Navbar({ onJoinClick }) {
     const sections = document.querySelectorAll("section[id]");
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 120;
+      const threshold = 160; // offset threshold (handles navbar height buffer)
+      let currentSection = "home";
 
       sections.forEach((section) => {
-        const top = section.offsetTop;
-        const height = section.offsetHeight;
-        const id = section.getAttribute("id");
-
-        if (
-          scrollPosition >= top &&
-          scrollPosition < top + height
-        ) {
-          setActiveSection(id);
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= threshold && rect.bottom > threshold) {
+          currentSection = section.getAttribute("id");
         }
       });
+
+      setActiveSection(currentSection);
     };
 
     handleScroll();

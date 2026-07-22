@@ -24,6 +24,7 @@ function OverviewTab({ setActiveTab }) {
   const [transformationsCount, setTransformationsCount] = useState(0);
   const [aboutCount, setAboutCount] = useState(0);
   const [membershipsCount, setMembershipsCount] = useState(0);
+  const [eventsCount, setEventsCount] = useState(0);
   const [hoveredSegment, setHoveredSegment] = useState(null);
   const [recentActivities, setRecentActivities] = useState([]);
   const [enquiriesData, setEnquiriesData] = useState([]);
@@ -74,6 +75,7 @@ function OverviewTab({ setActiveTab }) {
         setTransformationsCount(transformationsList ? transformationsList.length : 0);
         setAboutCount(aboutList ? aboutList.length : 0);
         setMembershipsCount(membershipsList ? membershipsList.length : 0);
+        setEventsCount(eventsList ? eventsList.length : 0);
 
         // Group enquiries dynamically
         const monthlyEnquiries = getLast6Months();
@@ -180,7 +182,7 @@ function OverviewTab({ setActiveTab }) {
     }
   };
 
-  const totalItems = expertsCount + batchesCount + followupsCount + aboutCount + transformationsCount + membershipsCount;
+  const totalItems = expertsCount + batchesCount + followupsCount + aboutCount + transformationsCount + membershipsCount + eventsCount;
   const circumference = 251.327;
 
   let cumulativePercent = 0;
@@ -190,6 +192,7 @@ function OverviewTab({ setActiveTab }) {
     { label: "Follow-ups", count: followupsCount, color: "#eab308", tab: "followups" },
     { label: "Transformations", count: transformationsCount, color: "#a855f7", tab: "transformations" },
     { label: "Memberships", count: membershipsCount, color: "#06b6d4", tab: "membership" },
+    { label: "Events", count: eventsCount, color: "#f97316", tab: "events" },
     { label: "About", count: aboutCount, color: "#ec4899", tab: "about" },
   ].map(seg => {
     const percent = totalItems > 0 ? (seg.count / totalItems) * 100 : 0;
