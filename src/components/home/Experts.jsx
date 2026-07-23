@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useData } from "../../context/DataContext";
 import expertsImage from "../../assets/experts.JPG";
+import ImageModal from "../common/ImageModal";
 import "../../style/Experts.css";
 
 function Experts() {
   const { experts } = useData();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   if (!experts || experts.length === 0) {
     return null; // Return nothing if database has no experts defined
   }
+
+  const openModal = (src, name, subtitle) => {
+    setSelectedImage({
+      src,
+      alt: name || "Fitness Expert",
+      caption: subtitle ? `${name} - ${subtitle}` : name,
+    });
+  };
 
   return (
     <section className="experts-section" id="experts">
@@ -21,7 +31,10 @@ function Experts() {
       </div>
 
       {/* Banner */}
-      <div className="experts-image-container">
+      <div
+        className="experts-image-container cursor-pointer"
+        onClick={() => openModal(expertsImage, "CaliYog Expert Coaches Team", "Outdoor Fitness Trainers")}
+      >
         <img
           src={expertsImage}
           alt="Experts Banner"
@@ -35,7 +48,11 @@ function Experts() {
         <div className="experts-track">
           {/* Render first copy */}
           {experts.map((expert, index) => (
-            <div className="expert-info-card" key={`expert-1-${expert._id || index}`}>
+            <div
+              className="expert-info-card cursor-pointer"
+              key={`expert-1-${expert._id || index}`}
+              onClick={() => openModal(expert.image || expertsImage, expert.name || "Fitness Expert", expert.specialization || expert.role)}
+            >
               <div className="expert-card-image-box">
                 <img
                   className="expert-card-image"
@@ -59,7 +76,11 @@ function Experts() {
 
           {/* Render second copy for seamless infinite scrolling */}
           {experts.map((expert, index) => (
-            <div className="expert-info-card" key={`expert-2-${expert._id || index}`}>
+            <div
+              className="expert-info-card cursor-pointer"
+              key={`expert-2-${expert._id || index}`}
+              onClick={() => openModal(expert.image || expertsImage, expert.name || "Fitness Expert", expert.specialization || expert.role)}
+            >
               <div className="expert-card-image-box">
                 <img
                   className="expert-card-image"
@@ -82,6 +103,15 @@ function Experts() {
           ))}
         </div>
       </div>
+
+      {/* Fullscreen Image Lightbox Modal */}
+      <ImageModal
+        isOpen={!!selectedImage}
+        imageSrc={selectedImage?.src}
+        imageAlt={selectedImage?.alt}
+        caption={selectedImage?.caption}
+        onClose={() => setSelectedImage(null)}
+      />
     </section>
   );
 }

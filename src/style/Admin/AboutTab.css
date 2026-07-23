@@ -1,6 +1,6 @@
 .about-tab {
-  min-height: 100vh;
-  padding: 28px;
+  min-height: auto;
+  padding: 16px;
   color: #ffffff;
 }
 
@@ -8,36 +8,36 @@
 
 .about-tab-header {
   width: 100%;
-  margin-bottom: 26px;
-  padding: 30px 34px;
+  margin-bottom: 16px;
+  padding: 18px 24px;
 
-  border-radius: 26px;
+  border-radius: 20px;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.28), transparent 35%),
     linear-gradient(135deg, #16a34a, #22c55e, #14b8a6);
 
   color: #ffffff;
-  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
   position: relative;
   overflow: hidden;
 }
 
 .admin-section-label {
   display: inline-block;
-  padding: 7px 15px;
-  margin-bottom: 12px;
+  padding: 4px 12px;
+  margin-bottom: 6px;
   border-radius: 50px;
   background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.6px;
   text-transform: uppercase;
 }
 
 .about-tab-header h2 {
-  margin: 0 0 8px;
-  font-size: 34px;
+  margin: 0 0 4px;
+  font-size: 24px;
   font-weight: 900;
 }
 
@@ -45,18 +45,18 @@
   margin: 0;
   max-width: 760px;
   color: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-/* ================= FULL SCREEN FORM ================= */
+/* ================= COMPACT SINGLE PAGE FORM ================= */
 
 .about-form {
   width: 100%;
-  min-height: calc(100vh - 190px);
+  min-height: auto;
 
-  padding: 32px;
-  border-radius: 28px;
+  padding: 20px 24px;
+  border-radius: 20px;
 
   background:
     radial-gradient(circle at top right, rgba(34, 197, 94, 0.08), transparent 35%),
@@ -65,28 +65,29 @@
   border: 1px solid rgba(34, 197, 94, 0.22);
 
   box-shadow:
-    0 22px 55px rgba(15, 23, 42, 0.12),
+    0 12px 35px rgba(15, 23, 42, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
-/* ================= GRID ================= */
-
-.form-grid {
+.about-form-main-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1.2fr 0.8fr;
   gap: 24px;
+  align-items: start;
 }
 
+/* ================= GRID & GROUPS ================= */
+
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 9px;
+  margin-bottom: 5px;
   color: #064e3b;
-  font-size: 13px;
-  font-weight: 900;
+  font-size: 12.5px;
+  font-weight: 800;
 }
 
 /* ================= INPUTS ================= */
@@ -94,15 +95,15 @@
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 15px 16px;
+  padding: 9px 13px;
 
-  border-radius: 15px;
+  border-radius: 12px;
   border: 1px solid rgba(148, 163, 184, 0.45);
 
   background: #ffffff;
   color: #0f172a;
 
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
 
   outline: none;
@@ -120,72 +121,71 @@
 }
 
 .form-group textarea {
-  resize: vertical;
-  min-height: 130px;
-  line-height: 1.7;
+  resize: none;
+  line-height: 1.5;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: #22c55e;
   background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.13);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.13);
 }
 
 /* ================= FILE INPUT ================= */
 
 .form-group input[type="file"] {
-  padding: 13px;
+  padding: 8px 10px;
   background: #ecfdf5;
   border: 1.5px dashed rgba(34, 197, 94, 0.55);
   color: #065f46;
   cursor: pointer;
+  font-size: 12px;
 }
 
 .form-group input[type="file"]::file-selector-button {
   border: none;
-  margin-right: 12px;
-  padding: 10px 16px;
-  border-radius: 11px;
+  margin-right: 10px;
+  padding: 6px 12px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #22c55e, #16a34a);
   color: #ffffff;
-  font-weight: 900;
+  font-size: 12px;
+  font-weight: 800;
   cursor: pointer;
 }
 
-.form-group small {
-  display: block;
-  margin-top: 7px;
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 600;
+/* ================= IMAGE CARDS & THUMBNAILS ================= */
+
+.image-upload-card {
+  background: #ffffff;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+  padding: 12px 14px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
 }
 
-/* ================= IMAGE PREVIEW ================= */
-
-.preview-box {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin: 10px 0 26px;
+.thumb-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
 }
 
-.preview-box img {
-  width: 100%;
-  height: 260px;
+.thumb-preview-box img {
+  width: 70px;
+  height: 52px;
   object-fit: cover;
-
-  border-radius: 24px;
-  background: #ecfdf5;
-  border: 2px solid rgba(34, 197, 94, 0.45);
-
-  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
-  transition: 0.3s ease;
+  border-radius: 8px;
+  border: 1.5px solid #22c55e;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.preview-box img:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+.thumb-preview-box span {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #16a34a;
 }
 
 /* ================= BUTTON ================= */
@@ -193,18 +193,18 @@
 .save-about-btn {
   width: 100%;
   border: none;
-  padding: 16px;
-  margin-top: 10px;
+  padding: 13px;
+  margin-top: 8px;
 
-  border-radius: 18px;
+  border-radius: 14px;
   cursor: pointer;
 
-  font-size: 16px;
+  font-size: 14.5px;
   font-weight: 900;
   color: #ffffff;
 
   background: linear-gradient(135deg, #22c55e, #16a34a);
-  box-shadow: 0 14px 28px rgba(34, 197, 94, 0.32);
+  box-shadow: 0 10px 22px rgba(34, 197, 94, 0.28);
 
   transition: 0.3s ease;
 }
@@ -240,7 +240,7 @@
     min-height: auto;
   }
 
-  .form-grid {
+  .about-form-main-grid {
     grid-template-columns: 1fr;
     gap: 0;
   }

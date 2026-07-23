@@ -26,6 +26,7 @@ function OverviewTab({ setActiveTab }) {
   const [membershipsCount, setMembershipsCount] = useState(0);
   const [eventsCount, setEventsCount] = useState(0);
   const [hoveredSegment, setHoveredSegment] = useState(null);
+  const [hoveredLinePoint, setHoveredLinePoint] = useState(null);
   const [recentActivities, setRecentActivities] = useState([]);
   const [enquiriesData, setEnquiriesData] = useState([]);
 
@@ -322,51 +323,171 @@ function OverviewTab({ setActiveTab }) {
 
         <div className="chart-card">
           <div className="chart-header">
-            <h3>Enquiries Received</h3>
-            <p>Month-wise breakdown of real contact enquiries.</p>
+            <h3>Enquiries Trend Line</h3>
+            <p>Month-wise trend line of contact enquiries received.</p>
           </div>
           {(() => {
-            const maxCount = Math.max(...enquiriesData.map(d => d.count), 0);
+            const maxCount = Math.max(...enquiriesData.map((d) => d.count), 0);
             const maxVal = maxCount > 0 ? Math.ceil(maxCount / 5) * 5 : 5;
+
             const yAxisTicks = [
-              maxVal,
-              Math.round(maxVal * 0.75),
-              Math.round(maxVal * 0.5),
-              Math.round(maxVal * 0.25),
-              0
+              { val: maxVal, y: 25 },
+              { val: Math.round(maxVal * 0.75), y: 62 },
+              { val: Math.round(maxVal * 0.5), y: 99 },
+              { val: Math.round(maxVal * 0.25), y: 136 },
+              { val: 0, y: 173 },
             ];
 
+            const points = enquiriesData.map((d, i) => {
+              const x = 50 + i * (415 / Math.max(enquiriesData.length - 1, 1));
+              const heightRatio = maxVal > 0 ? d.count / maxVal : 0;
+              const y = 173 - heightRatio * 148;
+              return { x, y, ...d };
+            });
+
+            let lineD = "";
+            let areaD = "";
+
+            if (points.length > 0) {
+              lineD = points.reduce((acc, pt, i) => {
+                if (i === 0) return `M ${pt.x} ${pt.y}`;
+                const prev = points[i - 1];
+                const cx1 = prev.x + (pt.x - prev.x) / 2;
+                const cy1 = prev.y;
+                const cx2 = prev.x + (pt.x - prev.x) / 2;
+                const cy2 = pt.y;
+                return `${acc} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${pt.x} ${pt.y}`;
+              }, "");
+
+              areaD = `${lineD} L ${points[points.length - 1].x} 173 L ${points[0].x} 173 Z`;
+            }
+
             return (
-              <>
-                <div className="bar-chart-container">
-                  <div className="bars-y-axis">
+              <div className="line-chart-wrapper">
+                <div className="line-chart-container">
+                  <svg viewBox="0 0 490 215" style={{ width: "100%", height: "100%" }}>
+                    <defs>
+                      <linearGradient id="enquiryLineGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#22c55e" stopOpacity="0.38" />
+                        <stop offset="100%" stopColor="#22c55e" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Horizontal grid lines & Y-axis labels */}
                     {yAxisTicks.map((tick, idx) => (
-                      <span key={idx}>{tick}</span>
+                      <g key={idx}>
+                        <line
+                          x1="50"
+                          y1={tick.y}
+                          x2="465"
+                          y2={tick.y}
+                          stroke="#e2e8f0"
+                          strokeDasharray="4 4"
+                          strokeWidth="1"
+                        />
+                        <text
+                          x="38"
+                          y={tick.y + 4}
+                          textAnchor="end"
+                          fill="#94a3b8"
+                          fontSize="11"
+                          fontWeight="700"
+                        >
+                          {tick.val}
+                        </text>
+                      </g>
                     ))}
-                  </div>
-                  <div className="bar-chart-grid">
-                    {enquiriesData.map(d => {
-                      const heightPercent = maxVal > 0 ? (d.count / maxVal) * 100 : 0;
+
+                    {/* Area fill under curve */}
+                    {areaD && <path d={areaD} fill="url(#enquiryLineGradient)" />}
+
+                    {/* Connecting Smooth Trend Line */}
+                    {lineD && (
+                      <path
+                        d={lineD}
+                        fill="none"
+                        stroke="#22c55e"
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
+
+                    {/* Data Points and X-Axis Month Labels */}
+                    {points.map((pt, i) => {
+                      const isHovered = hoveredLinePoint?.name === pt.name;
                       return (
-                        <div key={d.name} className="bar-group">
-                          <div className="bars-wrapper">
-                            <div className="bar-column enquiry-bar" style={{ height: `${heightPercent}%` }}>
-                              <span className="bar-tooltip">Enquiries: {d.count}</span>
-                            </div>
-                          </div>
-                          <span className="bar-label">{d.name}</span>
-                        </div>
+                        <g key={i}>
+                          {/* X-axis Month Label */}
+                          <text
+                            x={pt.x}
+                            y="198"
+                            textAnchor="middle"
+                            fill={isHovered ? "#22c55e" : "#64748b"}
+                            fontSize="11"
+                            fontWeight="800"
+                          >
+                            {pt.name}
+                          </text>
+
+                          {/* Outer pulse ring on hover */}
+                          {isHovered && (
+                            <circle
+                              cx={pt.x}
+                              cy={pt.y}
+                              r="10"
+                              fill="rgba(34, 197, 94, 0.25)"
+                            />
+                          )}
+
+                          {/* Data point circle */}
+                          <circle
+                            cx={pt.x}
+                            cy={pt.y}
+                            r={isHovered ? "6.5" : "5"}
+                            fill="#22c55e"
+                            stroke="#ffffff"
+                            strokeWidth="2.5"
+                            style={{ transition: "all 0.2s ease" }}
+                          />
+
+                          {/* Invisible hover target for smooth interaction */}
+                          <circle
+                            cx={pt.x}
+                            cy={pt.y}
+                            r="16"
+                            fill="transparent"
+                            style={{ cursor: "pointer" }}
+                            onMouseEnter={() => setHoveredLinePoint(pt)}
+                            onMouseLeave={() => setHoveredLinePoint(null)}
+                          />
+                        </g>
                       );
                     })}
-                  </div>
+                  </svg>
+
+                  {/* Floating Tooltip */}
+                  {hoveredLinePoint && (
+                    <div
+                      className="line-tooltip"
+                      style={{
+                        left: `${(hoveredLinePoint.x / 490) * 100}%`,
+                        top: `${(hoveredLinePoint.y / 215) * 100}%`,
+                      }}
+                    >
+                      <span>{hoveredLinePoint.name}</span>
+                      <strong>{hoveredLinePoint.count} Enquiries</strong>
+                    </div>
+                  )}
                 </div>
+
                 <div className="bar-chart-legend">
                   <div className="legend-item-bar">
                     <span className="legend-color-dot enquiry"></span>
-                    <span>Received Enquiries</span>
+                    <span>Received Enquiries (Line Trend)</span>
                   </div>
                 </div>
-              </>
+              </div>
             );
           })()}
         </div>

@@ -7,10 +7,8 @@ function AboutTab() {
   const [formData, setFormData] = useState({
     _id: "",
     title: "",
-    subtitle: "",
     description: "",
     mission: "",
-    vision: "",
   });
 
   const [image1File, setImage1File] = useState(null);
@@ -29,10 +27,8 @@ function AboutTab() {
         setFormData({
           _id: data._id || "",
           title: data.title || "",
-          subtitle: data.subtitle || "",
           description: data.description || "",
           mission: data.mission || "",
-          vision: data.vision || "",
         });
         setOldImage1(data.image1 || "");
         setOldImage2(data.image2 || "");
@@ -152,10 +148,8 @@ function AboutTab() {
 
       const payload = {
         title: formData.title,
-        subtitle: formData.subtitle,
         description: formData.description,
         mission: formData.mission,
-        vision: formData.vision,
         image1: finalImg1,
         image2: finalImg2,
       };
@@ -179,95 +173,79 @@ function AboutTab() {
   };
 
   return (
-    <div className="about-tab">
-      <form className="about-form" onSubmit={saveAbout}>
-        <div className="form-grid">
-          <div className="form-group">
-            <label>Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Welcome to CaliYog"
-            />
+    <div className="about-tab compact-view">
+      <form className="about-form compact-form" onSubmit={saveAbout}>
+        <div className="about-form-main-grid">
+          {/* Left Column: Text Content */}
+          <div className="form-left-col">
+            <div className="form-group">
+              <label>Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Welcome to CaliYog"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Write about your fitness club"
+                rows="3"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Mission</label>
+              <textarea
+                name="mission"
+                value={formData.mission}
+                onChange={handleChange}
+                placeholder="Enter mission statement"
+                rows="2"
+              />
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Subtitle</label>
-            <input
-              type="text"
-              name="subtitle"
-              value={formData.subtitle}
-              onChange={handleChange}
-              placeholder="With Strength and Grace"
-            />
+          {/* Right Column: Image Uploads & Small Thumbnails */}
+          <div className="form-right-col">
+            <div className="image-upload-card">
+              <div className="form-group">
+                <label>About Image 1</label>
+                <input type="file" accept="image/*" className="file-input" onChange={handleImage1Change} />
+              </div>
+              {(image1File || oldImage1) && (
+                <div className="thumb-preview-box">
+                  <img
+                    src={image1File ? URL.createObjectURL(image1File) : oldImage1}
+                    alt="About Preview 1"
+                  />
+                  <span>Image 1 Active</span>
+                </div>
+              )}
+            </div>
+
+            <div className="image-upload-card">
+              <div className="form-group">
+                <label>About Image 2</label>
+                <input type="file" accept="image/*" className="file-input" onChange={handleImage2Change} />
+              </div>
+              {(image2File || oldImage2) && (
+                <div className="thumb-preview-box">
+                  <img
+                    src={image2File ? URL.createObjectURL(image2File) : oldImage2}
+                    alt="About Preview 2"
+                  />
+                  <span>Image 2 Active</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-
-        <div className="form-group">
-          <label>Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Write about your fitness club"
-            rows="5"
-          />
-        </div>
-
-        <div className="form-grid">
-          <div className="form-group">
-            <label>Mission</label>
-            <textarea
-              name="mission"
-              value={formData.mission}
-              onChange={handleChange}
-              placeholder="Enter mission"
-              rows="4"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Vision</label>
-            <textarea
-              name="vision"
-              value={formData.vision}
-              onChange={handleChange}
-              placeholder="Enter vision"
-              rows="4"
-            />
-          </div>
-        </div>
-
-        <div className="form-grid">
-          <div className="form-group">
-            <label>About Image 1</label>
-            <input type="file" accept="image/*" className="file-input" onChange={handleImage1Change} />
-            <small>Large images will be compressed automatically</small>
-          </div>
-
-          <div className="form-group">
-            <label>About Image 2</label>
-            <input type="file" accept="image/*" className="file-input" onChange={handleImage2Change} />
-            <small>Large images will be compressed automatically</small>
-          </div>
-        </div>
-
-        <div className="preview-box">
-          {(image1File || oldImage1) && (
-            <img
-              src={image1File ? URL.createObjectURL(image1File) : oldImage1}
-              alt="About Preview 1"
-            />
-          )}
-
-          {(image2File || oldImage2) && (
-            <img
-              src={image2File ? URL.createObjectURL(image2File) : oldImage2}
-              alt="About Preview 2"
-            />
-          )}
         </div>
 
         <button

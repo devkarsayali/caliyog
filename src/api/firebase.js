@@ -3,6 +3,7 @@ import {
   getFirestore, collection, doc, getDocs, getDoc, 
   addDoc, updateDoc, deleteDoc 
 } from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 const firebaseConfig = {
@@ -18,6 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+export const auth = getAuth(app);
 
 // Generic Firestore CRUD helper functions
 export const firestoreHelpers = {

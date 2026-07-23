@@ -42,6 +42,7 @@
 .contact-info,
 .contact-form {
   width: 100%;
+  scroll-margin-top: 90px;
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);

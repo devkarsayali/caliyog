@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { adminsAPI } from "../../api/dataAPI";
+import { auth, firestoreHelpers } from "../../api/firebase";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 
 import "../../style/Admin/AdminCommon.css";
 import logo from "../../assets/CaliYog-Logo.png";
@@ -45,33 +47,72 @@ function AdminLogin() {
       return;
     }
 
+    const cleanedEmail = email.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
+    if (!emailRegex.test(cleanedEmail)) {
       toast.error("Please enter a valid email address");
       return;
     }
 
     setLoading(true);
-    try {
-      const admins = await adminsAPI.getAll();
-      const admin = admins.find(
-        (a) => a.email === email.trim() && a.password === password
-      );
+    let authenticatedUser = null;
 
-      if (admin) {
-        const token = `token_${admin._id}_${Date.now()}`;
-        login(token, { id: admin._id, name: admin.name, email: admin.email });
-        toast.success("✅ Login Successful. Welcome Admin!");
-        navigate("/admin-dashboard");
-      } else {
-        toast.error("Invalid Admin Credentials");
+    // 1. Attempt Firebase Authentication (Firebase Auth Console Users)
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, cleanedEmail, password);
+      if (userCredential && userCredential.user) {
+        const u = userCredential.user;
+        authenticatedUser = {
+          id: u.uid,
+          name: u.displayName || u.email?.split("@")[0] || "Admin",
+          email: u.email || cleanedEmail,
+        };
       }
-    } catch (error) {
-      console.error("Login Error:", error);
-      toast.error("Failed to connect to admin database.");
-    } finally {
-      setLoading(false);
+    } catch (authErr) {
+      console.log("Firebase Auth login skipped/failed:", authErr.code || authErr.message);
     }
+
+    // 2. If Firebase Auth didn't authenticate, check Firestore Database ('admins' & 'admin' collections)
+    if (!authenticatedUser) {
+      try {
+        const admins = await adminsAPI.getAll();
+        let match = admins.find((a) => {
+          const docEmail = (a.email || a.Email || a.username || "").toString().trim().toLowerCase();
+          const docPass = (a.password || a.Password || a.pass || "").toString();
+          return docEmail === cleanedEmail.toLowerCase() && docPass === password;
+        });
+
+        if (!match) {
+          // Check singular 'admin' collection in case it was created as 'admin'
+          const singularAdmins = await firestoreHelpers.getAll("admin");
+          match = singularAdmins.find((a) => {
+            const docEmail = (a.email || a.Email || a.username || "").toString().trim().toLowerCase();
+            const docPass = (a.password || a.Password || a.pass || "").toString();
+            return docEmail === cleanedEmail.toLowerCase() && docPass === password;
+          });
+        }
+
+        if (match) {
+          authenticatedUser = {
+            id: match._id,
+            name: match.name || match.Name || match.email?.split("@")[0] || "Admin",
+            email: match.email || cleanedEmail,
+          };
+        }
+      } catch (dbErr) {
+        console.error("Firestore Admin database error:", dbErr);
+      }
+    }
+
+    if (authenticatedUser) {
+      const token = `token_${authenticatedUser.id}_${Date.now()}`;
+      login(token, authenticatedUser);
+      toast.success("✅ Login Successful. Welcome Admin!");
+      navigate("/admin-dashboard");
+    } else {
+      toast.error("Invalid Admin Credentials");
+    }
+    setLoading(false);
   };
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -80,23 +121,46 @@ function AdminLogin() {
   const handleFpEmailSubmit = async (e) => {
     e.preventDefault();
 
+    const cleanedEmail = fpEmail.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(fpEmail.trim())) {
+    if (!emailRegex.test(cleanedEmail)) {
       toast.error("Please enter a valid email address");
       return;
     }
 
     setLoading(true);
+    let match = null;
+    let collectionUsed = "admins";
+
     try {
       const admins = await adminsAPI.getAll();
-      const match = admins.find(
-        (a) => a.email?.toLowerCase() === fpEmail.trim().toLowerCase()
+      match = admins.find(
+        (a) => (a.email || a.Email || a.username || "").toString().trim().toLowerCase() === cleanedEmail.toLowerCase()
       );
 
+      if (!match) {
+        const singularAdmins = await firestoreHelpers.getAll("admin");
+        match = singularAdmins.find(
+          (a) => (a.email || a.Email || a.username || "").toString().trim().toLowerCase() === cleanedEmail.toLowerCase()
+        );
+        if (match) collectionUsed = "admin";
+      }
+
+      let firebaseAuthSent = false;
+      try {
+        await sendPasswordResetEmail(auth, cleanedEmail);
+        firebaseAuthSent = true;
+        toast.success("Password reset link sent to your email!");
+      } catch (authResetErr) {
+        console.log("Firebase Auth reset email notice:", authResetErr.code || authResetErr.message);
+      }
+
       if (match) {
-        setFpAdminRecord(match);
+        setFpAdminRecord({ ...match, _collection: collectionUsed });
         setScreen(SCREEN.FORGOT_RESET);
-        toast.success("Email verified! Please set your new password.");
+        toast.success("Email verified! You can set your new password.");
+      } else if (firebaseAuthSent) {
+        setScreen(SCREEN.FORGOT_DONE);
       } else {
         toast.error("No admin account found with this email.");
       }
@@ -125,10 +189,13 @@ function AdminLogin() {
 
     setLoading(true);
     try {
-      await adminsAPI.update(fpAdminRecord._id, {
-        ...fpAdminRecord,
-        password: fpNewPassword,
-      });
+      if (fpAdminRecord) {
+        const targetCol = fpAdminRecord._collection || "admins";
+        await firestoreHelpers.update(targetCol, fpAdminRecord._id, {
+          ...fpAdminRecord,
+          password: fpNewPassword,
+        });
+      }
       setScreen(SCREEN.FORGOT_DONE);
     } catch (error) {
       console.error("FP Reset Error:", error);
@@ -416,15 +483,7 @@ function AdminLogin() {
             </div>
           )}
 
-          {/* ── FOOTER (register link) — only on login screen ───── */}
-          {screen === SCREEN.LOGIN && (
-            <div className="admin-login-footer">
-              Don't have an admin account?{" "}
-              <a href="/admin-register" className="admin-login-link">
-                Register Admin
-              </a>
-            </div>
-          )}
+          {/* ── FOOTER (register link removed) ───── */}
         </div>
       </div>
     </div>

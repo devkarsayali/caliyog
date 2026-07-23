@@ -6,7 +6,6 @@ import SplashScreen from './components/home/SplashScreen';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const AdminLogin = lazy(() => import('./admin/pages/AdminLogin'));
-const AdminRegister = lazy(() => import('./admin/pages/AdminRegister'));
 const AdminDashboard = lazy(() => import('./admin/pages/AdminDashboard'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
@@ -44,7 +43,7 @@ function App() {
             {/* Slash Admin Routes */}
             <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/register" element={<AdminRegister />} />
+            <Route path="/admin/register" element={<Navigate to="/admin/login" replace />} />
             <Route
               path="/admin/dashboard/*"
               element={
@@ -56,7 +55,7 @@ function App() {
 
             {/* Hyphenated Admin Routes (matching Vercel deploy structure) */}
             <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/admin-register" element={<AdminRegister />} />
+            <Route path="/admin-register" element={<Navigate to="/admin/login" replace />} />
             <Route
               path="/admin-dashboard/*"
               element={

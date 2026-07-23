@@ -1,12 +1,14 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useData } from "../../context/DataContext";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import expertsImage from "../../assets/experts.JPG";
+import ImageModal from "../common/ImageModal";
 import "../../style/Transformations.css";
 
 function Transformations() {
   const { transformations } = useData();
   const sliderRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   if (!transformations || transformations.length === 0) {
     return null; // Return nothing if database has no transformations
@@ -43,7 +45,17 @@ function Transformations() {
 
         <div className="transform-slider" ref={sliderRef}>
           {transformations.map((item, index) => (
-            <div className="transform-card" key={item._id || index}>
+            <div
+              className="transform-card cursor-pointer"
+              key={item._id || index}
+              onClick={() =>
+                setSelectedImage({
+                  src: item.image,
+                  alt: item.name || "Transformation Member",
+                  caption: `${item.name || "Transformation"} - Real Results`,
+                })
+              }
+            >
               <div className="transform-card-image-box">
                 <img
                   src={item.image}
@@ -72,6 +84,15 @@ function Transformations() {
           <FaChevronRight />
         </button>
       </div>
+
+      {/* Fullscreen Image Lightbox Modal */}
+      <ImageModal
+        isOpen={!!selectedImage}
+        imageSrc={selectedImage?.src}
+        imageAlt={selectedImage?.alt}
+        caption={selectedImage?.caption}
+        onClose={() => setSelectedImage(null)}
+      />
     </section>
   );
 }

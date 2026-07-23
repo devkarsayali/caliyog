@@ -25,14 +25,207 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #ffffff;
   color: #0f1419;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+h1, h2, h3, h4, h5, h6,
 .font-poppins {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ==========================================================================
+   UNIFIED TYPOGRAPHY SYSTEM (Headings, Subtitles, Badges & Body Text)
+   ========================================================================== */
+
+/* 1. Section Badges (Small uppercase tag above section headings) */
+.section-title span,
+.section-header span,
+.why-header span,
+.membership-header span,
+.experts-header span,
+.events-heading span,
+.achievement-header span,
+.feedback-header span,
+.contact-heading span,
+.about-tag,
+.about-badge {
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
+  color: #16a34a !important;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+/* 2. Section Headings (H2) */
+.section-title h2,
+.section-header h2,
+.why-header h2,
+.membership-header h2,
+.experts-header h2,
+.events-heading h2,
+.achievement-header h2,
+.feedback-header h2,
+.contact-heading h2,
+.about-content h2,
+.calisthenics-text h2,
+.mission-section h2 {
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 42px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.5px !important;
+  text-transform: uppercase !important;
+  color: #12351f !important;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+
+/* Dark section heading contrast override */
+.contact-heading h2 {
+  color: #ffffff !important;
+}
+
+/* 3. Section Subtitles (Paragraph below H2) */
+.section-title p.description,
+.section-title p,
+.section-header p,
+.why-header p,
+.membership-header p,
+.experts-header p,
+.events-heading p,
+.achievement-header p,
+.feedback-header p,
+.contact-heading p {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+  color: #555555 !important;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.contact-heading p {
+  color: #e8f5e9 !important;
+}
+
+/* 4. Body & Card Paragraphs */
+p {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.65;
+}
+
+/* 5. Responsive Typography Scaling */
+@media (max-width: 992px) {
+  .section-title h2,
+  .section-header h2,
+  .why-header h2,
+  .membership-header h2,
+  .experts-header h2,
+  .events-heading h2,
+  .achievement-header h2,
+  .feedback-header h2,
+  .contact-heading h2,
+  .about-content h2,
+  .calisthenics-text h2,
+  .mission-section h2 {
+    font-size: 34px !important;
+  }
+
+  .section-title p,
+  .section-header p,
+  .why-header p,
+  .membership-header p,
+  .experts-header p,
+  .events-heading p,
+  .achievement-header p,
+  .feedback-header p,
+  .contact-heading p {
+    font-size: 15.5px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title span,
+  .section-header span,
+  .why-header span,
+  .membership-header span,
+  .experts-header span,
+  .events-heading span,
+  .achievement-header span,
+  .feedback-header span,
+  .contact-heading span,
+  .about-tag,
+  .about-badge {
+    font-size: 12.5px !important;
+    letter-spacing: 2px !important;
+  }
+
+  .section-title h2,
+  .section-header h2,
+  .why-header h2,
+  .membership-header h2,
+  .experts-header h2,
+  .events-heading h2,
+  .achievement-header h2,
+  .feedback-header h2,
+  .contact-heading h2,
+  .about-content h2,
+  .calisthenics-text h2,
+  .mission-section h2 {
+    font-size: 28px !important;
+    line-height: 1.3 !important;
+  }
+
+  .section-title p,
+  .section-header p,
+  .why-header p,
+  .membership-header p,
+  .experts-header p,
+  .events-heading p,
+  .achievement-header p,
+  .feedback-header p,
+  .contact-heading p {
+    font-size: 14.5px !important;
+    line-height: 1.55 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-title h2,
+  .section-header h2,
+  .why-header h2,
+  .membership-header h2,
+  .experts-header h2,
+  .events-heading h2,
+  .achievement-header h2,
+  .feedback-header h2,
+  .contact-heading h2,
+  .about-content h2,
+  .calisthenics-text h2,
+  .mission-section h2 {
+    font-size: 24px !important;
+  }
+
+  .section-title p,
+  .section-header p,
+  .why-header p,
+  .membership-header p,
+  .experts-header p,
+  .events-heading p,
+  .achievement-header p,
+  .feedback-header p,
+  .contact-heading p {
+    font-size: 13.5px !important;
+  }
 }
 
 /* Custom scrollbar */

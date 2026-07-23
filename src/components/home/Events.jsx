@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useData } from "../../context/DataContext";
+import ImageModal from "../common/ImageModal";
 import "../../style/Events.css";
 
 function Events() {
   const { events } = useData();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   if (!events || events.length === 0) {
     return null; // Return nothing if database has no events defined
@@ -25,7 +27,17 @@ function Events() {
 
           <div className="events-grid">
             {galleryItems.map((item, index) => (
-              <div className="event-card" key={item._id || index}>
+              <div
+                className="event-card cursor-pointer"
+                key={item._id || index}
+                onClick={() =>
+                  setSelectedImage({
+                    src: item.image,
+                    alt: item.title || "Gallery Event",
+                    caption: item.title || "Event Image",
+                  })
+                }
+              >
                 <div className="event-img-box">
                   <img
                     src={item.image}
@@ -74,6 +86,15 @@ function Events() {
           </div>
         </div>
       )}
+
+      {/* Fullscreen Image Lightbox Modal */}
+      <ImageModal
+        isOpen={!!selectedImage}
+        imageSrc={selectedImage?.src}
+        imageAlt={selectedImage?.alt}
+        caption={selectedImage?.caption}
+        onClose={() => setSelectedImage(null)}
+      />
     </section>
   );
 }
