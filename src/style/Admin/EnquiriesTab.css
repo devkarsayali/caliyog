@@ -739,6 +739,16 @@ border-radius: 20px;
   display: inline-block;
 }
 
+.status-cancelled {
+  background: #fee2e2; /* Light red background for Cancelled status */
+  color: #dc2626;     /* Dark red text */
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-block;
+}
+
 .status-closed {
   background: #f1f5f9;
   color: #475569;

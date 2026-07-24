@@ -29,20 +29,58 @@ function FollowupsTab() {
     return `${yyyy}-${mm}-${dd}`;
   };
 
+  const isOverdueItem = (item) => {
+    if (!item.followupDate) return false;
+    const status = item.status || "New";
+    if (
+      status === "Completed" ||
+      status === "Cancelled" ||
+      status === "Canceled" ||
+      status === "Cancled"
+    ) {
+      return false;
+    }
+    const fDate = new Date(item.followupDate);
+    if (isNaN(fDate.getTime())) return false;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const fDateNormalized = new Date(
+      fDate.getFullYear(),
+      fDate.getMonth(),
+      fDate.getDate()
+    );
+
+    return fDateNormalized < today;
+  };
+
+  const isTodayFollowup = (item, todayDateStr) => {
+    if (!item.followupDate) return false;
+    const fDate = new Date(item.followupDate);
+    if (isNaN(fDate.getTime())) return false;
+    const yyyy = fDate.getFullYear();
+    const mm = String(fDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(fDate.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}` === todayDateStr;
+  };
+
   const getFilteredFollowups = () => {
     const todayDateStr = getTodayDateString();
     return followups.filter((item) => {
       switch (filterType) {
         case "today":
-          return item.followupDate === todayDateStr;
-        case "new":
-          return !item.status || item.status === "New";
-        case "replied":
-          return item.status === "Replied";
-        case "in_progress":
-          return item.status === "In Progress";
+          return isTodayFollowup(item, todayDateStr);
+        case "overdue":
+          return isOverdueItem(item);
         case "completed":
           return item.status === "Completed";
+        case "cancelled":
+          return (
+            item.status === "Cancelled" ||
+            item.status === "Canceled" ||
+            item.status === "Cancled"
+          );
         case "all":
         default:
           return true;
@@ -55,18 +93,19 @@ function FollowupsTab() {
   const renderKpiCards = () => {
     const allCount = followups.length;
     const todayDateStr = getTodayDateString();
-    const todayCount = followups.filter(item => item.followupDate === todayDateStr).length;
-    const newCount = followups.filter(item => !item.status || item.status === "New").length;
-    const repliedCount = followups.filter(item => item.status === "Replied").length;
-    const progressCount = followups.filter(item => item.status === "In Progress").length;
-    const completedCount = followups.filter(item => item.status === "Completed").length;
+    const todayCount = followups.filter((item) => isTodayFollowup(item, todayDateStr)).length;
+    const overdueCount = followups.filter((item) => isOverdueItem(item)).length;
+    const completedCount = followups.filter((item) => item.status === "Completed").length;
+    const cancelledCount = followups.filter(
+      (item) => item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled"
+    ).length;
 
     const cards = [
-      { key: "today", label: "TODAY'S REMINDER", count: todayCount, sub: "Scheduled today", color: "#a855f7", bg: "rgba(168,85,247,0.08)", icon: <FiClock /> },
-      { key: "new", label: "NEW", count: newCount, sub: "Pending calls", color: "#eab308", bg: "rgba(234,179,8,0.08)", icon: <FiMail /> },
-      { key: "replied", label: "REPLIED", count: repliedCount, sub: "Contacted logs", color: "#10b981", bg: "rgba(16,185,129,0.08)", icon: <FiCheckCircle /> },
-      { key: "in_progress", label: "IN PROGRESS", count: progressCount, sub: "Ongoing calls", color: "#0ea5e9", bg: "rgba(14,165,233,0.08)", icon: <FiClock /> },
-      { key: "completed", label: "COMPLETED", count: completedCount, sub: "Completed logs", color: "#64748b", bg: "rgba(100,116,139,0.08)", icon: <FiCheckCircle /> },
+      { key: "all", label: "ALL FOLLOW-UPS", count: allCount, sub: "Total records", color: "#22c55e", bg: "rgba(34,197,94,0.08)", icon: <FiMail /> },
+      { key: "today", label: "TODAY'S FOLLOW-UPS", count: todayCount, sub: "Scheduled today", color: "#a855f7", bg: "rgba(168,85,247,0.08)", icon: <FiClock /> },
+      { key: "overdue", label: "OVERDUE", count: overdueCount, sub: "Pending past date", color: "#f97316", bg: "rgba(249,115,22,0.08)", icon: <FiClock /> },
+      { key: "completed", label: "COMPLETED", count: completedCount, sub: "Completed logs", color: "#10b981", bg: "rgba(16,185,129,0.08)", icon: <FiCheckCircle /> },
+      { key: "cancelled", label: "CANCELLED", count: cancelledCount, sub: "Cancelled logs", color: "#ef4444", bg: "rgba(239,68,68,0.08)", icon: <FiX /> },
     ];
 
     return (
@@ -290,8 +329,25 @@ function FollowupsTab() {
               </div>
             </td>
             <td>
-              <span style={{ color: '#3b82f6', fontWeight: '700', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{
+                color: isOverdueItem(item) ? '#dc2626' : '#3b82f6',
+                fontWeight: '700',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
                 <FiClock /> {item.followupDate ? formatDate(item.followupDate) : "-"}
+                {isOverdueItem(item) && (
+                  <span style={{
+                    fontSize: '10px',
+                    background: '#fee2e2',
+                    color: '#dc2626',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    marginLeft: '4px',
+                    fontWeight: '700'
+                  }}>Overdue</span>
+                )}
               </span>
             </td>
             <td className="message-cell" title={item.followupNote || ""}>
@@ -309,8 +365,9 @@ function FollowupsTab() {
               <span
                 className={
                   item.status === "Replied" ? "status-replied" :
-                  item.status === "In Progress" ? "status-progress" :
-                  item.status === "Completed" ? "status-completed" : "status-new"
+                  item.status === "Completed" ? "status-completed" :
+                  (item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled") ? "status-cancelled" :
+                  item.status === "In Progress" ? "status-progress" : "status-new"
                 }
               >
                 {item.status || "New"}
@@ -362,8 +419,9 @@ function FollowupsTab() {
             <span
               className={
                  item.status === "Replied" ? "status-replied" :
-                 item.status === "In Progress" ? "status-progress" :
-                 item.status === "Completed" ? "status-completed" : "status-new"
+                 item.status === "Completed" ? "status-completed" :
+                 (item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled") ? "status-cancelled" :
+                 item.status === "In Progress" ? "status-progress" : "status-new"
               }
             >
               {item.status || "New"}
@@ -524,8 +582,9 @@ function FollowupsTab() {
                     <strong>Status:</strong>
                     <span className={
                        selectedEnquiry.status === "Replied" ? "status-replied" :
-                       selectedEnquiry.status === "In Progress" ? "status-progress" :
-                       selectedEnquiry.status === "Completed" ? "status-completed" : "status-new"
+                       selectedEnquiry.status === "Completed" ? "status-completed" :
+                       (selectedEnquiry.status === "Cancelled" || selectedEnquiry.status === "Canceled" || selectedEnquiry.status === "Cancled") ? "status-cancelled" :
+                       selectedEnquiry.status === "In Progress" ? "status-progress" : "status-new"
                     }>
                       {selectedEnquiry.status || "New"}
                     </span>
@@ -659,9 +718,9 @@ function FollowupsTab() {
                         onChange={(e) => setFollowupStatus(e.target.value)}
                       >
                         <option value="New">New</option>
-                        <option value="In Progress">In Progress</option>
                         <option value="Replied">Replied</option>
                         <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
                       </select>
                     </div>
 

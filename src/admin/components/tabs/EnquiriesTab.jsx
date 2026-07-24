@@ -41,10 +41,10 @@ function EnquiriesTab() {
           return !item.status || item.status === "New";
         case "replied":
           return item.status === "Replied";
-        case "in_progress":
-          return item.status === "In Progress";
         case "completed":
           return item.status === "Completed";
+        case "cancelled":
+          return item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled";
         case "all":
         default:
           return true;
@@ -73,14 +73,18 @@ function EnquiriesTab() {
     }).length;
 
     const newCount = enquiries.filter(item => !item.status || item.status === "New").length;
+    const repliedCount = enquiries.filter(item => item.status === "Replied").length;
     const completedCount = enquiries.filter(item => item.status === "Completed").length;
+    const cancelledCount = enquiries.filter(item => item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled").length;
 
     const cards = [
       { key: "all", label: "ALL ENQUIRIES", count: allCount, sub: "Total messages", color: "#22c55e", bg: "rgba(34,197,94,0.08)", icon: <FiMail /> },
       { key: "today", label: "TODAY'S ENQUIRIES", count: todayCount, sub: "Received today", color: "#a855f7", bg: "rgba(168,85,247,0.08)", icon: <FiClock /> },
       { key: "monthly", label: "MONTHLY ENQUIRIES", count: monthlyCount, sub: "Received this month", color: "#f97316", bg: "rgba(249,115,22,0.08)", icon: <FiCalendar /> },
       { key: "new", label: "NEW ENQUIRIES", count: newCount, sub: "Pending reply", color: "#eab308", bg: "rgba(234,179,8,0.08)", icon: <FiMail /> },
-      { key: "completed", label: "COMPLETED ENQUIRIES", count: completedCount, sub: "Completed logs", color: "#64748b", bg: "rgba(100,116,139,0.08)", icon: <FiCheckCircle /> },
+      { key: "replied", label: "REPLIED", count: repliedCount, sub: "Contacted logs", color: "#10b981", bg: "rgba(16,185,129,0.08)", icon: <FiCheckCircle /> },
+      { key: "completed", label: "COMPLETED", count: completedCount, sub: "Completed logs", color: "#64748b", bg: "rgba(100,116,139,0.08)", icon: <FiCheckCircle /> },
+      { key: "cancelled", label: "CANCELLED", count: cancelledCount, sub: "Cancelled logs", color: "#ef4444", bg: "rgba(239,68,68,0.08)", icon: <FiX /> },
     ];
 
     return (
@@ -327,8 +331,9 @@ function EnquiriesTab() {
                 <span
                   className={
                     item.status === "Replied" ? "status-replied" :
-                      item.status === "In Progress" ? "status-progress" :
-                        item.status === "Completed" ? "status-completed" : "status-new"
+                      item.status === "Completed" ? "status-completed" :
+                        (item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled") ? "status-cancelled" :
+                          item.status === "In Progress" ? "status-progress" : "status-new"
                   }
                 >
                   {item.status || "New"}
@@ -382,8 +387,9 @@ function EnquiriesTab() {
             <span
               className={
                 item.status === "Replied" ? "status-replied" :
-                  item.status === "In Progress" ? "status-progress" :
-                    item.status === "Completed" ? "status-completed" : "status-new"
+                  item.status === "Completed" ? "status-completed" :
+                    (item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled") ? "status-cancelled" :
+                      item.status === "In Progress" ? "status-progress" : "status-new"
               }
             >
               {item.status || "New"}
@@ -527,8 +533,9 @@ function EnquiriesTab() {
                     <strong>Status:</strong>
                     <span className={
                       selectedEnquiry.status === "Replied" ? "status-replied" :
-                        selectedEnquiry.status === "In Progress" ? "status-progress" :
-                          selectedEnquiry.status === "Completed" ? "status-completed" : "status-new"
+                        selectedEnquiry.status === "Completed" ? "status-completed" :
+                          (selectedEnquiry.status === "Cancelled" || selectedEnquiry.status === "Canceled" || selectedEnquiry.status === "Cancled") ? "status-cancelled" :
+                            selectedEnquiry.status === "In Progress" ? "status-progress" : "status-new"
                     }>
                       {selectedEnquiry.status || "New"}
                     </span>
@@ -698,9 +705,9 @@ function EnquiriesTab() {
                         onChange={(e) => setFollowupStatus(e.target.value)}
                       >
                         <option value="New">New</option>
-                        <option value="In Progress">In Progress</option>
                         <option value="Replied">Replied</option>
                         <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
                       </select>
                     </div>
 

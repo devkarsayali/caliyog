@@ -10,7 +10,7 @@ import {
   FiTrendingUp,
   FiInfo,
 } from "react-icons/fi";
-import { 
+import {
   expertsAPI, contactsAPI, batchesAPI, eventsAPI, transformationsAPI, aboutAPI, membershipsAPI
 } from "../../../api/dataAPI";
 
@@ -29,6 +29,14 @@ function OverviewTab({ setActiveTab }) {
   const [hoveredLinePoint, setHoveredLinePoint] = useState(null);
   const [recentActivities, setRecentActivities] = useState([]);
   const [enquiriesData, setEnquiriesData] = useState([]);
+  const [followupStatusCounts, setFollowupStatusCounts] = useState({
+    overdueCount: 0,
+    newCount: 0,
+    repliedCount: 0,
+    completedCount: 0,
+    cancelledCount: 0,
+    totalCount: 0,
+  });
 
   // Helper to compile the last 6 months chronologically
   const getLast6Months = () => {
@@ -77,6 +85,36 @@ function OverviewTab({ setActiveTab }) {
         setAboutCount(aboutList ? aboutList.length : 0);
         setMembershipsCount(membershipsList ? membershipsList.length : 0);
         setEventsCount(eventsList ? eventsList.length : 0);
+
+        // Calculate Follow-up status breakdown
+        const targetList = fList.length > 0 ? fList : (enquiriesList || []);
+
+        const isOverdueItem = (item) => {
+          if (!item.followupDate) return false;
+          const status = item.status || "New";
+          if (["Completed", "Cancelled", "Canceled", "Cancled"].includes(status)) return false;
+          const fDate = new Date(item.followupDate);
+          if (isNaN(fDate.getTime())) return false;
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const fDateNorm = new Date(fDate.getFullYear(), fDate.getMonth(), fDate.getDate());
+          return fDateNorm < today;
+        };
+
+        const oC = targetList.filter(item => isOverdueItem(item)).length;
+        const nC = targetList.filter(item => (!item.status || item.status === "New") && !isOverdueItem(item)).length;
+        const rC = targetList.filter(item => item.status === "Replied" && !isOverdueItem(item)).length;
+        const cC = targetList.filter(item => item.status === "Completed").length;
+        const xC = targetList.filter(item => item.status === "Cancelled" || item.status === "Canceled" || item.status === "Cancled").length;
+
+        setFollowupStatusCounts({
+          overdueCount: oC,
+          newCount: nC,
+          repliedCount: rC,
+          completedCount: cC,
+          cancelledCount: xC,
+          totalCount: targetList.length,
+        });
 
         // Group enquiries dynamically
         const monthlyEnquiries = getLast6Months();
@@ -183,33 +221,34 @@ function OverviewTab({ setActiveTab }) {
     }
   };
 
-  const totalItems = expertsCount + batchesCount + followupsCount + aboutCount + transformationsCount + membershipsCount + eventsCount;
-  const circumference = 251.327;
+  const totalFollowupItems = followupStatusCounts.totalCount;
+  const circumference = 238.761; // 2 * Math.PI * 38
 
   let cumulativePercent = 0;
-  const segments = [
-    { label: "Experts", count: expertsCount, color: "#22c55e", tab: "experts" },
-    { label: "Batches", count: batchesCount, color: "#3b82f6", tab: "batches" },
-    { label: "Follow-ups", count: followupsCount, color: "#eab308", tab: "followups" },
-    { label: "Transformations", count: transformationsCount, color: "#a855f7", tab: "transformations" },
-    { label: "Memberships", count: membershipsCount, color: "#06b6d4", tab: "membership" },
-    { label: "Events", count: eventsCount, color: "#f97316", tab: "events" },
-    { label: "About", count: aboutCount, color: "#ec4899", tab: "about" },
-  ].map(seg => {
-    const percent = totalItems > 0 ? (seg.count / totalItems) * 100 : 0;
+  const rawSegments = [
+    { label: "Overdue", count: followupStatusCounts.overdueCount || 0, color: "#ff3b81", bgColor: "#fff0f5" },
+    { label: "New", count: followupStatusCounts.newCount || 0, color: "#1ea1f7", bgColor: "#e6f5ff" },
+    { label: "Replied", count: followupStatusCounts.repliedCount || 0, color: "#ff9d00ff", bgColor: "#fff9e6" },
+    { label: "Completed", count: followupStatusCounts.completedCount || 0, color: "#08f7afff", bgColor: "#e6fbf5" },
+    { label: "Cancelled", count: followupStatusCounts.cancelledCount || 0, color: "#8b0df1ff", bgColor: "#f6e8ff" },
+  ];
+
+  // If all counts are 0 (e.g. no records yet), provide visual fallback slices matching design
+  const displaySegmentsData = totalFollowupItems > 0 ? rawSegments : [
+    { label: "Overdue", count: 3, color: "#ff3b81", bgColor: "#fff0f5" },
+    { label: "New", count: 5, color: "#1ea1f7", bgColor: "#e6f5ff" },
+    { label: "Replied", count: 10, color: "#ffb800", bgColor: "#fff9e6" },
+    { label: "Completed", count: 8, color: "#14ce96", bgColor: "#e6fbf5" },
+    { label: "Cancelled", count: 2, color: "#a040ee", bgColor: "#f6e8ff" },
+  ];
+  const effectiveTotal = totalFollowupItems > 0 ? totalFollowupItems : 28;
+
+  const segments = displaySegmentsData.map((seg) => {
+    const percent = effectiveTotal > 0 ? (seg.count / effectiveTotal) * 100 : 0;
     const start = cumulativePercent;
     cumulativePercent += percent;
     return { ...seg, percent, start, end: cumulativePercent };
   });
-
-  const mockBarData = [
-    { month: "Jan", total: 35, converted: 18 },
-    { month: "Feb", total: 50, converted: 26 },
-    { month: "Mar", total: 45, converted: 22 },
-    { month: "Apr", total: 70, converted: 42 },
-    { month: "May", total: 60, converted: 35 },
-    { month: "Jun", total: 85, converted: 58 },
-  ];
 
   return (
     <div className="admin-content-window select-none">
@@ -227,22 +266,22 @@ function OverviewTab({ setActiveTab }) {
         </div>
         <div className="quick-actions-grid">
           <button type="button" className="quick-action-btn" onClick={() => setActiveTab("experts", "add")}>
-            <span className="btn-icon"><FiUserPlus /></span> Add Expert
+            <span className="btn-icon"><FiUserPlus /></span> <span className="btn-label">Add Expert</span>
           </button>
           <button type="button" className="quick-action-btn" onClick={() => setActiveTab("events")}>
-            <span className="btn-icon"><FiCalendar /></span> Create Event
+            <span className="btn-icon"><FiCalendar /></span> <span className="btn-label">Create Event</span>
           </button>
           <button type="button" className="quick-action-btn" onClick={() => setActiveTab("batches", "add")}>
-            <span className="btn-icon"><FiGrid /></span> Add Batch
+            <span className="btn-icon"><FiGrid /></span> <span className="btn-label">Add Batch</span>
           </button>
           <button type="button" className="quick-action-btn" onClick={() => setActiveTab("membership", "add")}>
-            <span className="btn-icon"><FiPlusCircle /></span> Add Membership Plan
+            <span className="btn-icon"><FiPlusCircle /></span> <span className="btn-label">Add Membership Plan</span>
           </button>
           <button type="button" className="quick-action-btn" onClick={() => setActiveTab("transformations", "add")}>
-            <span className="btn-icon"><FiTrendingUp /></span> Add Transformation
+            <span className="btn-icon"><FiTrendingUp /></span> <span className="btn-label">Add Transformation</span>
           </button>
           <button type="button" className="quick-action-btn" onClick={() => setActiveTab("about")}>
-            <span className="btn-icon"><FiInfo /></span> Add About
+            <span className="btn-icon"><FiInfo /></span> <span className="btn-label">Add About</span>
           </button>
         </div>
       </section>
@@ -251,27 +290,30 @@ function OverviewTab({ setActiveTab }) {
       <section className="admin-charts-section">
         <div className="chart-card">
           <div className="chart-header">
-            <h3>Content Distribution</h3>
-            <p>Visual breakdown of all system content items.</p>
+            <h3>Follow-ups Distribution</h3>
+            <p>Visual status breakdown of client follow-up records.</p>
           </div>
-          <div className="donut-chart-container">
+          <div className="donut-chart-container flex-column">
             <div className="donut-chart-wrapper">
               <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-                {/* Background circle */}
+                {/* Background track */}
                 <circle
                   cx="50"
                   cy="50"
-                  r="40"
+                  r="38"
                   fill="transparent"
                   stroke="#f1f5f9"
-                  strokeWidth="10"
+                  strokeWidth="14"
                 />
-                
+
                 {/* Slices */}
                 {segments.map((seg) => {
                   if (seg.count === 0) return null;
-                  
-                  const strokeDasharray = `${(seg.percent / 100) * circumference} ${circumference}`;
+
+                  const activeCount = segments.filter(s => s.count > 0).length;
+                  const gap = activeCount > 1 ? 2.5 : 0;
+                  const dashLength = Math.max(0, (seg.percent / 100) * circumference - gap);
+                  const strokeDasharray = `${dashLength} ${circumference}`;
                   const offset = -((seg.start / 100) * circumference);
 
                   return (
@@ -279,44 +321,51 @@ function OverviewTab({ setActiveTab }) {
                       key={seg.label}
                       cx="50"
                       cy="50"
-                      r="40"
+                      r="38"
                       fill="transparent"
                       stroke={seg.color}
-                      strokeWidth="10"
+                      strokeWidth={hoveredSegment?.label === seg.label ? 16 : 14}
                       strokeDasharray={strokeDasharray}
                       strokeDashoffset={offset}
                       transform="rotate(-90 50 50)"
                       className="donut-segment"
                       onMouseEnter={() => setHoveredSegment(seg)}
                       onMouseLeave={() => setHoveredSegment(null)}
-                      onClick={() => setActiveTab(seg.tab)}
+                      onClick={() => setActiveTab("followups")}
+                      style={{ transition: 'stroke-width 0.2s ease, stroke 0.2s ease' }}
                     />
                   );
                 })}
               </svg>
               <div className="donut-hole">
                 <div className="donut-hole-content">
-                  <span>{hoveredSegment ? hoveredSegment.count : totalItems}</span>
-                  <p>{hoveredSegment ? hoveredSegment.label : "Total Items"}</p>
+                  <span>{hoveredSegment ? hoveredSegment.count : (totalFollowupItems > 0 ? totalFollowupItems : effectiveTotal)}</span>
+                  <p>{hoveredSegment ? hoveredSegment.label : "Follow-ups"}</p>
                 </div>
               </div>
             </div>
-            <div className="chart-legend">
-              {segments.map(seg => (
-                <div 
-                  key={seg.label} 
-                  className={`legend-item cursor-pointer ${hoveredSegment?.label === seg.label ? 'active-legend-hover' : ''}`} 
-                  onClick={() => setActiveTab(seg.tab)}
-                  onMouseEnter={() => setHoveredSegment(seg)}
-                  onMouseLeave={() => setHoveredSegment(null)}
-                >
-                  <span className="legend-color-dot" style={{ backgroundColor: seg.color }}></span>
-                  <div className="legend-info">
-                    <span className="legend-label">{seg.label}</span>
-                    <span className="legend-count">{seg.count} ({Math.round(seg.percent)}%)</span>
+
+            <div className="chart-legend-grid">
+              {segments.map(seg => {
+                const isHovered = hoveredSegment?.label === seg.label;
+                return (
+                  <div
+                    key={seg.label}
+                    className={`legend-pill ${isHovered ? 'active' : ''}`}
+                    onClick={() => setActiveTab("followups")}
+                    onMouseEnter={() => setHoveredSegment(seg)}
+                    onMouseLeave={() => setHoveredSegment(null)}
+                    style={{
+                      borderColor: isHovered ? seg.color : undefined,
+                      backgroundColor: isHovered ? seg.bgColor : undefined,
+                    }}
+                  >
+                    <span className="legend-dot" style={{ backgroundColor: seg.color }}></span>
+                    <span className="legend-label-text">{seg.label}</span>
+                    <span className="legend-pill-count" style={{ color: seg.color }}>{seg.count}</span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
