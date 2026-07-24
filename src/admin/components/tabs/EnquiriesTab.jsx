@@ -88,12 +88,7 @@ function EnquiriesTab() {
     ];
 
     return (
-      <div className="enquiry-kpi-container" style={{
-        display: 'flex',
-        gap: '10px',
-        flexWrap: 'wrap',
-        marginBottom: '24px'
-      }}>
+      <div className="enquiry-kpi-container">
         {cards.map((card) => {
           const isActive = filterType === card.key;
           return (
@@ -101,21 +96,11 @@ function EnquiriesTab() {
               key={card.key}
               onClick={() => setFilterType(card.key)}
               style={{
-                flex: '1 1 120px',
-                background: '#ffffff',
-                borderRadius: '16px',
-                padding: '12px 14px',
-                border: isActive ? `1.5px solid ${card.color}` : '1.5px solid #e2e8f0',
-                borderTop: `4px solid ${card.color}`,
-                boxShadow: isActive ? `0 8px 20px -6px ${card.color}40` : '0 4px 12px rgba(0,0,0,0.03)',
-                cursor: 'pointer',
-                transition: 'all 0.25s ease',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                height: '100px'
+                borderColor: isActive ? card.color : undefined,
+                borderTopColor: card.color,
+                boxShadow: isActive ? `0 8px 20px -6px ${card.color}40` : undefined,
               }}
-              className="enquiry-kpi-card"
+              className={`enquiry-kpi-card ${isActive ? 'active' : ''}`}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <span style={{ fontSize: '10px', fontWeight: '700', color: '#64748b', letterSpacing: '0.05em' }}>
