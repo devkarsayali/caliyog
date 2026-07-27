@@ -34,8 +34,11 @@ function About() {
           <span className="about-tag">ABOUT CALIYOG</span>
 
           <h2>{about?.title || "Welcome to CaliYog"}</h2>
+          <h3>{about?.subtitle || "With Strength and Grace"}</h3>
 
           <p>{about?.description || "At CaliYog Outdoor Fitness Club, we believe fitness is not just about looking good—it's about becoming stronger, healthier, and more confident every day."}</p>
+
+          {about?.vision && <p>{about.vision}</p>}
 
           <div className="about-features">
             <div className="feature">✓ Strength Training</div>
