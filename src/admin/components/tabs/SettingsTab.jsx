@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import toast from 'react-hot-toast';
 import { adminsAPI } from "../../../api/dataAPI";
+import { auth, firestoreHelpers } from "../../../api/firebase";
+import { signInWithEmailAndPassword, updatePassword as updateFbPassword } from "firebase/auth";
 import "../../../style/Admin/SettingsTab.css";
 
 function SettingsTab() {
@@ -15,21 +17,14 @@ function SettingsTab() {
 
   const savedAdmin = getSavedAdmin();
 
-  const [profileData, setProfileData] = useState({
-    name: savedAdmin.name || "",
-    email: savedAdmin.email || "",
-    mobile: savedAdmin.mobile || "",
-  });
-
+  const [email, setEmail] = useState(savedAdmin.email || "");
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
 
-  const [dbAdminRecord, setDbAdminRecord] = useState(null);
-  const [loadingProfile, setLoadingProfile] = useState(false);
-  const [loadingPassword, setLoadingPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // States for toggling password visibility
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -37,8 +32,7 @@ function SettingsTab() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Live validation checks
-  const isEmailValid = profileData.email ? profileData.email.includes("@") : true;
-  const isMobileValid = profileData.mobile ? profileData.mobile.trim().length === 10 : true;
+  const isEmailValid = email ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) : true;
 
   const passVal = passwordData.newPassword;
   const hasUppercase = /[A-Z]/.test(passVal);
@@ -47,34 +41,6 @@ function SettingsTab() {
   const hasSymbol = /[^A-Za-z0-9]/.test(passVal);
   const isNewPasswordValid = passVal ? (passVal.length >= 8 && hasUppercase && hasLowercase && hasNumber && hasSymbol) : true;
 
-  useEffect(() => {
-    const fetchAdminDetails = async () => {
-      try {
-        if (!savedAdmin.email) return;
-        const adminsList = await adminsAPI.getAll();
-        const found = adminsList.find(a => a.email === savedAdmin.email);
-        if (found) {
-          setDbAdminRecord(found);
-          setProfileData({
-            name: found.name || "",
-            email: found.email || "",
-            mobile: found.mobile || "",
-          });
-        }
-      } catch (error) {
-        console.error("Fetch Admin Error:", error);
-      }
-    };
-    fetchAdminDetails();
-  }, []);
-
-  const handleProfileChange = (e) => {
-    setProfileData({
-      ...profileData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const handlePasswordChange = (e) => {
     setPasswordData({
       ...passwordData,
@@ -82,60 +48,19 @@ function SettingsTab() {
     });
   };
 
-  const updateProfile = async (e) => {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
 
-    if (!profileData.name || !profileData.email || !profileData.mobile) {
-      toast.error("Please fill all profile fields");
+    const cleanedEmail = email.trim();
+    if (!cleanedEmail) {
+      toast.error("Please enter email address");
       return;
     }
 
-    if (!profileData.email.includes("@")) {
-      toast.error("email should a include @");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedEmail)) {
+      toast.error("Please enter a valid email address");
       return;
     }
-
-    if (profileData.mobile.trim().length !== 10) {
-      toast.error("Enter your 10-digit mobile number");
-      return;
-    }
-
-    if (!dbAdminRecord?._id) {
-      toast.error("Admin record ID not found in database");
-      return;
-    }
-
-    try {
-      setLoadingProfile(true);
-
-      const payload = {
-        name: profileData.name.trim(),
-        email: profileData.email.trim(),
-        mobile: profileData.mobile.trim(),
-      };
-
-      await adminsAPI.update(dbAdminRecord._id, payload);
-
-      const updatedUser = {
-        ...dbAdminRecord,
-        ...payload
-      };
-
-      localStorage.setItem("adminUser", JSON.stringify(updatedUser));
-      localStorage.setItem("adminData", JSON.stringify(updatedUser));
-      setDbAdminRecord(updatedUser);
-
-      toast.success("Profile updated successfully");
-    } catch (error) {
-      console.error("Profile Update Error:", error);
-      toast.error("Failed to update profile");
-    } finally {
-      setLoadingProfile(false);
-    }
-  };
-
-  const updatePassword = async (e) => {
-    e.preventDefault();
 
     if (
       !passwordData.currentPassword ||
@@ -156,39 +81,112 @@ function SettingsTab() {
       return;
     }
 
-    const newPassword = passwordData.newPassword;
-    const hasU = /[A-Z]/.test(newPassword);
-    const hasL = /[a-z]/.test(newPassword);
-    const hasN = /\d/.test(newPassword);
-    const hasS = /[^A-Za-z0-9]/.test(newPassword);
-
-    if (!hasU || !hasL || !hasN || !hasS) {
+    if (!hasUppercase || !hasLowercase || !hasNumber || !hasSymbol) {
       toast.error("Minimum 8 characters with at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.");
       return;
     }
 
-    if (!dbAdminRecord?._id) {
-      toast.error("Admin record ID not found in database");
-      return;
-    }
-
-    // Verify current password
-    if (dbAdminRecord.password !== passwordData.currentPassword) {
-      toast.error("Current password is incorrect");
-      return;
-    }
-
     try {
-      setLoadingPassword(true);
+      setLoading(true);
 
-      await adminsAPI.update(dbAdminRecord._id, {
-        password: passwordData.newPassword
-      });
+      // 1. Search for matching admin record in Firestore collections
+      let match = null;
+      let targetCollection = "admins";
 
-      setDbAdminRecord({
-        ...dbAdminRecord,
-        password: passwordData.newPassword
-      });
+      try {
+        const adminsList = await adminsAPI.getAll();
+        match = adminsList.find(
+          (a) =>
+            a._id === savedAdmin.id ||
+            a._id === savedAdmin._id ||
+            (a.email || a.Email || a.username || "").toString().trim().toLowerCase() === cleanedEmail.toLowerCase()
+        );
+      } catch (err) {
+        console.warn("Error searching admins collection:", err);
+      }
+
+      if (!match) {
+        try {
+          const singularAdmins = await firestoreHelpers.getAll("admin");
+          match = singularAdmins.find(
+            (a) =>
+              a._id === savedAdmin.id ||
+              a._id === savedAdmin._id ||
+              (a.email || a.Email || a.username || "").toString().trim().toLowerCase() === cleanedEmail.toLowerCase()
+          );
+          if (match) targetCollection = "admin";
+        } catch (err) {
+          console.warn("Error searching admin collection:", err);
+        }
+      }
+
+      // 2. Verify current password against Firebase Auth and/or Firestore database record
+      let isCurrentPasswordValid = false;
+
+      // Check Firebase Auth first (to support passwords updated via email reset link)
+      try {
+        await signInWithEmailAndPassword(auth, cleanedEmail, passwordData.currentPassword);
+        isCurrentPasswordValid = true;
+      } catch (fbAuthErr) {
+        console.log("Firebase Auth check with current password:", fbAuthErr.code || fbAuthErr.message);
+      }
+
+      // Fallback check against Firestore database document
+      if (!isCurrentPasswordValid && match) {
+        const dbPassword = (match.password || match.Password || match.pass || "").toString();
+        if (dbPassword && dbPassword === passwordData.currentPassword) {
+          isCurrentPasswordValid = true;
+        }
+      }
+
+      if (!isCurrentPasswordValid) {
+        toast.error("Current password is incorrect");
+        setLoading(false);
+        return;
+      }
+
+      // 3. Update Firestore database document
+      const updateData = {
+        email: cleanedEmail,
+        password: passwordData.newPassword,
+      };
+
+      if (match) {
+        if (match.Password !== undefined) updateData.Password = passwordData.newPassword;
+        if (match.pass !== undefined) updateData.pass = passwordData.newPassword;
+
+        await firestoreHelpers.update(targetCollection, match._id, updateData);
+      } else {
+        // Create new admin document if not present in Firestore yet
+        const newRecord = {
+          email: cleanedEmail,
+          password: passwordData.newPassword,
+          name: savedAdmin.name || cleanedEmail.split("@")[0] || "Admin",
+          createdAt: new Date().toISOString(),
+        };
+        const created = await firestoreHelpers.create("admins", newRecord);
+        match = created;
+      }
+
+      // 4. Also update Firebase Auth user password if active
+      if (auth.currentUser) {
+        try {
+          await updateFbPassword(auth.currentUser, passwordData.newPassword);
+        } catch (fbAuthErr) {
+          console.log("Firebase Auth password update note:", fbAuthErr.message);
+        }
+      }
+
+      // 5. Update cached admin record in localStorage
+      const updatedUser = {
+        ...savedAdmin,
+        ...(match || {}),
+        email: cleanedEmail,
+        password: passwordData.newPassword,
+      };
+
+      localStorage.setItem("adminUser", JSON.stringify(updatedUser));
+      localStorage.setItem("adminData", JSON.stringify(updatedUser));
 
       toast.success("Password updated successfully");
       setPasswordData({
@@ -200,72 +198,34 @@ function SettingsTab() {
       console.error("Password Update Error:", error);
       toast.error("Failed to update password");
     } finally {
-      setLoadingPassword(false);
+      setLoading(false);
     }
   };
 
+
   return (
     <div className="settings-tab select-none">
-      <form className="settings-card" onSubmit={updateProfile}>
-        <h3>👤 Profile Information</h3>
+      <form
+        className="settings-card password-card"
+        onSubmit={handleUpdatePassword}
+      >
+        <h3>🔒 Change Admin Password</h3>
 
         <div className="settings-grid">
-          <div className="settings-group">
-            <label>Admin Name</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter admin name"
-              value={profileData.name}
-              onChange={handleProfileChange}
-            />
-          </div>
-
-          <div className="settings-group">
-            <label>Email Address</label>
+          <div className="settings-group full">
+            <label>Admin Email Address</label>
             <input
               type="email"
               name="email"
               placeholder="Enter admin email"
-              value={profileData.email}
-              onChange={handleProfileChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             {!isEmailValid && (
-              <span className="validation-error-msg">email should a include @</span>
+              <span className="validation-error-msg">Please enter a valid email address</span>
             )}
           </div>
 
-          <div className="settings-group full">
-            <label>Mobile Number</label>
-            <input
-              type="tel"
-              name="mobile"
-              placeholder="Enter mobile number"
-              value={profileData.mobile}
-              onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, "").slice(0, 10);
-                setProfileData({ ...profileData, mobile: val });
-              }}
-              maxLength={10}
-            />
-            {!isMobileValid && (
-              <span className="validation-error-msg">Enter your 10-digit mobile number</span>
-            )}
-          </div>
-        </div>
-
-        <button type="submit" className="settings-btn cursor-pointer" disabled={loadingProfile}>
-          {loadingProfile ? "Saving..." : "Save Profile Changes"}
-        </button>
-      </form>
-
-      <form
-        className="settings-card password-card"
-        onSubmit={updatePassword}
-      >
-        <h3>🔒 Change Password</h3>
-
-        <div className="settings-grid">
           <div className="settings-group full">
             <label>Current Password</label>
             <div className="settings-password-wrapper">
@@ -369,9 +329,9 @@ function SettingsTab() {
         <button
           type="submit"
           className="settings-btn cursor-pointer"
-          disabled={loadingPassword}
+          disabled={loading}
         >
-          {loadingPassword ? "Updating..." : "Update Password"}
+          {loading ? "Updating Password..." : "Update Password"}
         </button>
       </form>
     </div>
@@ -379,3 +339,4 @@ function SettingsTab() {
 }
 
 export default SettingsTab;
+

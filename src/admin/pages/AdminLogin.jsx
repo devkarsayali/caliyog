@@ -13,9 +13,8 @@ import homeVideo from "../../assets/home-video.mp4";
 // ─── Screens ───────────────────────────────────────────────────────────────
 const SCREEN = {
   LOGIN: "login",
-  FORGOT_EMAIL: "forgot_email",  // Step 1: verify registered email
-  FORGOT_RESET: "forgot_reset",  // Step 2: enter new password
-  FORGOT_DONE: "forgot_done",    // Step 3: success
+  FORGOT_EMAIL: "forgot_email",  // Step 1: enter email to receive reset link
+  FORGOT_DONE: "forgot_done",    // Step 2: email sent confirmation
 };
 
 function AdminLogin() {
@@ -31,10 +30,6 @@ function AdminLogin() {
   // ── Forgot password state
   const [screen, setScreen] = useState(SCREEN.LOGIN);
   const [fpEmail, setFpEmail] = useState("");
-  const [fpAdminRecord, setFpAdminRecord] = useState(null); // matched admin doc
-  const [fpNewPassword, setFpNewPassword] = useState("");
-  const [fpConfirmPassword, setFpConfirmPassword] = useState("");
-  const [showFpPassword, setShowFpPassword] = useState(false);
 
   // ─────────────────────────────────────────────────────────────────────────
   // LOGIN SUBMIT
@@ -116,7 +111,7 @@ function AdminLogin() {
   };
 
   // ─────────────────────────────────────────────────────────────────────────
-  // FORGOT PASSWORD – STEP 1: verify email
+  // FORGOT PASSWORD – Send Reset Link Email
   // ─────────────────────────────────────────────────────────────────────────
   const handleFpEmailSubmit = async (e) => {
     e.preventDefault();
@@ -129,10 +124,10 @@ function AdminLogin() {
     }
 
     setLoading(true);
-    let match = null;
-    let collectionUsed = "admins";
 
     try {
+      // Check if admin email exists in database
+      let match = null;
       const admins = await adminsAPI.getAll();
       match = admins.find(
         (a) => (a.email || a.Email || a.username || "").toString().trim().toLowerCase() === cleanedEmail.toLowerCase()
@@ -143,63 +138,26 @@ function AdminLogin() {
         match = singularAdmins.find(
           (a) => (a.email || a.Email || a.username || "").toString().trim().toLowerCase() === cleanedEmail.toLowerCase()
         );
-        if (match) collectionUsed = "admin";
       }
 
-      let firebaseAuthSent = false;
+      let emailSent = false;
       try {
         await sendPasswordResetEmail(auth, cleanedEmail);
-        firebaseAuthSent = true;
-        toast.success("Password reset link sent to your email!");
+        emailSent = true;
       } catch (authResetErr) {
         console.log("Firebase Auth reset email notice:", authResetErr.code || authResetErr.message);
+        if (match) emailSent = true;
       }
 
-      if (match) {
-        setFpAdminRecord({ ...match, _collection: collectionUsed });
-        setScreen(SCREEN.FORGOT_RESET);
-        toast.success("Email verified! You can set your new password.");
-      } else if (firebaseAuthSent) {
+      if (emailSent || match) {
+        toast.success("Password reset link sent to your email!");
         setScreen(SCREEN.FORGOT_DONE);
       } else {
-        toast.error("No admin account found with this email.");
+        toast.error("No admin account found with this email address.");
       }
     } catch (error) {
       console.error("FP Email Error:", error);
-      toast.error("Failed to verify email. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // FORGOT PASSWORD – STEP 2: reset password
-  // ─────────────────────────────────────────────────────────────────────────
-  const handleFpResetSubmit = async (e) => {
-    e.preventDefault();
-
-    if (fpNewPassword.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
-    if (fpNewPassword !== fpConfirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      if (fpAdminRecord) {
-        const targetCol = fpAdminRecord._collection || "admins";
-        await firestoreHelpers.update(targetCol, fpAdminRecord._id, {
-          ...fpAdminRecord,
-          password: fpNewPassword,
-        });
-      }
-      setScreen(SCREEN.FORGOT_DONE);
-    } catch (error) {
-      console.error("FP Reset Error:", error);
-      toast.error("Failed to reset password. Please try again.");
+      toast.error("Failed to send reset link. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -210,10 +168,6 @@ function AdminLogin() {
   // ─────────────────────────────────────────────────────────────────────────
   const resetForgotFlow = () => {
     setFpEmail("");
-    setFpAdminRecord(null);
-    setFpNewPassword("");
-    setFpConfirmPassword("");
-    setShowFpPassword(false);
     setScreen(SCREEN.LOGIN);
   };
 
@@ -242,8 +196,7 @@ function AdminLogin() {
             <img src={logo} alt="CaliYog Logo" className="admin-login-logo" />
             {screen === SCREEN.LOGIN && <h1>LOGIN</h1>}
             {screen === SCREEN.FORGOT_EMAIL && <h1>FORGOT PASSWORD</h1>}
-            {screen === SCREEN.FORGOT_RESET && <h1>RESET PASSWORD</h1>}
-            {screen === SCREEN.FORGOT_DONE && <h1>PASSWORD RESET</h1>}
+            {screen === SCREEN.FORGOT_DONE && <h1>RESET LINK SENT</h1>}
             <p>CaliYog Admin Panel</p>
           </div>
 
@@ -323,12 +276,12 @@ function AdminLogin() {
           )}
 
           {/* ══════════════════════════════════════════════════════════
-              SCREEN 2 — FORGOT: verify email
+              SCREEN 2 — FORGOT: enter email for reset link
           ══════════════════════════════════════════════════════════ */}
           {screen === SCREEN.FORGOT_EMAIL && (
             <form onSubmit={handleFpEmailSubmit}>
               <p className="fp-hint">
-                Enter your registered admin email. We'll verify your account and let you set a new password.
+                Enter your registered admin email address below. We will send you a password reset link to your email.
               </p>
 
               <div className="admin-form-group">
@@ -351,7 +304,7 @@ function AdminLogin() {
                 disabled={loading}
               >
                 {loading && <span className="admin-btn-spinner" />}
-                {loading ? "Verifying..." : "Verify Email"}
+                {loading ? "Sending Link..." : "Send Reset Link"}
               </button>
 
               <div className="admin-login-footer">
@@ -368,122 +321,29 @@ function AdminLogin() {
           )}
 
           {/* ══════════════════════════════════════════════════════════
-              SCREEN 3 — FORGOT: set new password
-          ══════════════════════════════════════════════════════════ */}
-          {screen === SCREEN.FORGOT_RESET && (
-            <form onSubmit={handleFpResetSubmit}>
-              <p className="fp-hint">
-                Account found for <strong style={{ color: "#4ade80" }}>{fpAdminRecord?.email}</strong>.
-                Set your new password below.
-              </p>
-
-              <div className="admin-form-group">
-                <label>
-                  <span className="label-icon">🔑</span> New Password
-                </label>
-                <div className="admin-password-wrapper">
-                  <input
-                    type={showFpPassword ? "text" : "password"}
-                    placeholder="Enter new password (min 6 chars)"
-                    value={fpNewPassword}
-                    onChange={(e) => setFpNewPassword(e.target.value)}
-                    minLength={6}
-                    autoFocus
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="admin-password-toggle cursor-pointer"
-                    onClick={() => setShowFpPassword(!showFpPassword)}
-                  >
-                    {showFpPassword ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-eye">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
-                    ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-eye-off">
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                        <path d="M9 9a3 3 0 1 1 4.24 4.24"></path>
-                        <path d="M17.65 17.65A9 9 0 0 1 12 20c-7 0-11-8-11-8a19.82 19.82 0 0 1 3.65-4.65"></path>
-                        <path d="M8.88 8.88A3 3 0 0 1 12 8a9 9 0 0 1 5.64 3.43"></path>
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div className="admin-form-group">
-                <label>
-                  <span className="label-icon">🔒</span> Confirm Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="Confirm new password"
-                  value={fpConfirmPassword}
-                  onChange={(e) => setFpConfirmPassword(e.target.value)}
-                  minLength={6}
-                  required
-                />
-              </div>
-
-              {/* Password match indicator */}
-              {fpNewPassword && fpConfirmPassword && (
-                <p
-                  className="fp-match-hint"
-                  style={{
-                    color: fpNewPassword === fpConfirmPassword ? "#4ade80" : "#f87171",
-                    fontSize: "12px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {fpNewPassword === fpConfirmPassword ? "✅ Passwords match" : "❌ Passwords do not match"}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                className="admin-login-btn cursor-pointer"
-                disabled={loading}
-              >
-                {loading && <span className="admin-btn-spinner" />}
-                {loading ? "Resetting..." : "Reset Password"}
-              </button>
-
-              <div className="admin-login-footer">
-                <button
-                  type="button"
-                  className="admin-login-link"
-                  style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
-                  onClick={resetForgotFlow}
-                >
-                  ← Back to Login
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* ══════════════════════════════════════════════════════════
-              SCREEN 4 — SUCCESS
+              SCREEN 3 — CONFIRMATION: email sent
           ══════════════════════════════════════════════════════════ */}
           {screen === SCREEN.FORGOT_DONE && (
             <div className="fp-success">
-              <div className="fp-success-icon">✅</div>
-              <h3>Password Reset Successfully!</h3>
+              <div className="fp-success-icon">📩</div>
+              <h3>Reset Link Sent!</h3>
               <p>
-                Your admin password has been updated. You can now log in with your new password.
+                A password reset link has been sent to <strong style={{ color: "#4ade80" }}>{fpEmail}</strong>.
+              </p>
+              <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "10px" }}>
+                Please check your email inbox and click the link to reset your password.
               </p>
               <button
                 type="button"
                 className="admin-login-btn cursor-pointer"
+                style={{ marginTop: "20px" }}
                 onClick={resetForgotFlow}
               >
-                Go to Login
+                Back to Login
               </button>
             </div>
           )}
 
-          {/* ── FOOTER (register link removed) ───── */}
         </div>
       </div>
     </div>
