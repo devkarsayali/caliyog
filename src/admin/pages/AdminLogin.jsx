@@ -30,6 +30,7 @@ function AdminLogin() {
   // ── Forgot password state
   const [screen, setScreen] = useState(SCREEN.LOGIN);
   const [fpEmail, setFpEmail] = useState("");
+  const [fpEmailError, setFpEmailError] = useState("");
 
   // ─────────────────────────────────────────────────────────────────────────
   // LOGIN SUBMIT
@@ -115,10 +116,12 @@ function AdminLogin() {
   // ─────────────────────────────────────────────────────────────────────────
   const handleFpEmailSubmit = async (e) => {
     e.preventDefault();
+    setFpEmailError("");
 
     const cleanedEmail = fpEmail.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(cleanedEmail)) {
+      setFpEmailError("Please enter a valid email address.");
       toast.error("Please enter a valid email address");
       return;
     }
@@ -126,7 +129,7 @@ function AdminLogin() {
     setLoading(true);
 
     try {
-      // Check if admin email exists in database
+      // 1. Check if admin email exists in database ('admins' or 'admin' collection)
       let match = null;
       const admins = await adminsAPI.getAll();
       match = admins.find(
@@ -140,21 +143,24 @@ function AdminLogin() {
         );
       }
 
-      let emailSent = false;
-      try {
-        await sendPasswordResetEmail(auth, cleanedEmail);
-        emailSent = true;
-      } catch (authResetErr) {
-        console.log("Firebase Auth reset email notice:", authResetErr.code || authResetErr.message);
-        if (match) emailSent = true;
+      // If email does not exist in database, display error message on form & toast immediately
+      if (!match) {
+        const errMsg = "No admin account found with this email address.";
+        setFpEmailError(errMsg);
+        toast.error(errMsg);
+        setLoading(false);
+        return;
       }
 
-      if (emailSent || match) {
-        toast.success("Password reset link sent to your email!");
-        setScreen(SCREEN.FORGOT_DONE);
-      } else {
-        toast.error("No admin account found with this email address.");
+      // 2. Email exists in database -> Send password reset link via Firebase Auth
+      try {
+        await sendPasswordResetEmail(auth, cleanedEmail);
+      } catch (authResetErr) {
+        console.log("Firebase Auth reset email notice:", authResetErr.code || authResetErr.message);
       }
+
+      toast.success("Password reset link sent to your email!");
+      setScreen(SCREEN.FORGOT_DONE);
     } catch (error) {
       console.error("FP Email Error:", error);
       toast.error("Failed to send reset link. Please try again.");
@@ -168,6 +174,7 @@ function AdminLogin() {
   // ─────────────────────────────────────────────────────────────────────────
   const resetForgotFlow = () => {
     setFpEmail("");
+    setFpEmailError("");
     setScreen(SCREEN.LOGIN);
   };
 
@@ -258,7 +265,10 @@ function AdminLogin() {
                   type="button"
                   className="admin-login-link"
                   style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: "13px" }}
-                  onClick={() => setScreen(SCREEN.FORGOT_EMAIL)}
+                  onClick={() => {
+                    setFpEmailError("");
+                    setScreen(SCREEN.FORGOT_EMAIL);
+                  }}
                 >
                   Forgot Password?
                 </button>
@@ -292,10 +302,29 @@ function AdminLogin() {
                   type="email"
                   placeholder="Enter your admin email"
                   value={fpEmail}
-                  onChange={(e) => setFpEmail(e.target.value)}
+                  onChange={(e) => {
+                    setFpEmail(e.target.value);
+                    if (fpEmailError) setFpEmailError("");
+                  }}
                   autoFocus
                   required
                 />
+                {fpEmailError && (
+                  <p
+                    className="fp-error-msg"
+                    style={{
+                      color: "#ef4444",
+                      fontSize: "13px",
+                      marginTop: "8px",
+                      fontWeight: "600",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px"
+                    }}
+                  >
+                    ⚠️ {fpEmailError}
+                  </p>
+                )}
               </div>
 
               <button
