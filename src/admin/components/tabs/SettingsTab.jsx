@@ -1,21 +1,14 @@
 import React, { useState } from "react";
 import toast from 'react-hot-toast';
+import { useAuth } from "../../../context/AuthContext";
 import { adminsAPI } from "../../../api/dataAPI";
 import { auth, firestoreHelpers } from "../../../api/firebase";
 import { signInWithEmailAndPassword, updatePassword as updateFbPassword } from "firebase/auth";
 import "../../../style/Admin/SettingsTab.css";
 
 function SettingsTab() {
-  const getSavedAdmin = () => {
-    try {
-      const stored = localStorage.getItem("adminUser") || localStorage.getItem("adminData");
-      return stored ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
-  };
-
-  const savedAdmin = getSavedAdmin();
+  const { admin, updateAdminData } = useAuth();
+  const savedAdmin = admin || {};
 
   const [email, setEmail] = useState(savedAdmin.email || "");
   const [passwordData, setPasswordData] = useState({
@@ -177,7 +170,7 @@ function SettingsTab() {
         }
       }
 
-      // 5. Update cached admin record in localStorage
+      // 5. Update cached admin record in AuthContext
       const updatedUser = {
         ...savedAdmin,
         ...(match || {}),
@@ -185,8 +178,9 @@ function SettingsTab() {
         password: passwordData.newPassword,
       };
 
-      localStorage.setItem("adminUser", JSON.stringify(updatedUser));
-      localStorage.setItem("adminData", JSON.stringify(updatedUser));
+      if (updateAdminData) {
+        updateAdminData(updatedUser);
+      }
 
       toast.success("Password updated successfully");
       setPasswordData({

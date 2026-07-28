@@ -7,14 +7,10 @@ import "../../style/Admin/Sidebar.css";
 function Sidebar({ isOpen, isMobile, activeTab, setActiveTab, onClose, onToggle }) {
   const navigate = useNavigate();
   const { admin, logout } = useAuth();
-  const adminData = admin || JSON.parse(localStorage.getItem("adminData")) || {};
+  const adminData = admin || {};
 
   const handleLogout = () => {
     logout();
-    localStorage.removeItem("admin");
-    localStorage.removeItem("adminData");
-    localStorage.removeItem("token");
-    localStorage.removeItem("adminToken");
     navigate("/admin/login");
   };
 

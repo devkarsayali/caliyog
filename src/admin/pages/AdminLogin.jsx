@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
@@ -19,7 +19,13 @@ const SCREEN = {
 
 function AdminLogin() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { token, login } = useAuth();
+
+  useEffect(() => {
+    if (token) {
+      navigate("/admin-dashboard", { replace: true });
+    }
+  }, [token, navigate]);
 
   // ── Login state
   const [email, setEmail] = useState("");
