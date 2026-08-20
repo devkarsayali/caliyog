@@ -41,14 +41,14 @@ function About() {
           {about?.vision && <p>{about.vision}</p>}
 
           <div className="about-features">
-           <div className="feature">✓ Strength Training</div>
-<div className="feature">✓ Functional Training</div>
-<div className="feature">✓ Calisthenics</div>
-<div className="feature">✓ Yoga & Mobility</div>
-<div className="feature">✓ Cardiovascular Endurance</div>
-<div className="feature">✓ Weight Loss & Weight Gain Programs</div>
-<div className="feature">✓ Nutrition Guidance</div>
-<div className="feature">✓ All Aspects of Fitness Under One Room</div>
+            <div className="feature">✓ Strength Training</div>
+            <div className="feature">✓ Functional Training</div>
+            <div className="feature">✓ Calisthenics</div>
+            <div className="feature">✓ Yoga & Mobility</div>
+            <div className="feature">✓ Cardiovascular Endurance</div>
+            <div className="feature">✓ Weight Loss & Weight Gain Programs</div>
+            <div className="feature">✓ Nutrition Guidance</div>
+            <div className="feature">✓ All Aspects of Fitness Under One Room</div>
           </div>
         </div>
       </div>
