@@ -142,7 +142,7 @@ function Navbar({ onJoinClick }) {
             className={activeSection === "experts" ? "active" : ""}
             onClick={closeMenu}
           >
-            Experts
+            Coaches
           </a>
         </li>
 

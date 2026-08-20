@@ -27,7 +27,7 @@ function Home({ onJoinClick }) {
         </h1>
 
         <p className="home-subtitle">
-          Build Strength • Transform Body • Live Healthy
+          Build Strength • Transform Life • Live Healthy
         </p>
 
         <button

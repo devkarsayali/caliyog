@@ -23,7 +23,7 @@ function Experts() {
   return (
     <section className="experts-section" id="experts">
       <div className="experts-heading">
-        <h2>MEET OUR FITNESS EXPERTS</h2>
+        <h2>MEET OUR CERTIFIED COACHES</h2>
         <p>
           Learn from certified coaches, athletes, and fitness professionals
           dedicated to helping you achieve your fitness goals.

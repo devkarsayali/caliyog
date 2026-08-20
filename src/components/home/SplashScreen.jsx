@@ -24,7 +24,7 @@ function SplashScreen({ onComplete }) {
         </h1>
 
         <p className="splash-text">
-          Build Strength • Transform Body • Live Healthy
+          Build Strength • Transform Life • Live Healthy
         </p>
       </div>
     </div>

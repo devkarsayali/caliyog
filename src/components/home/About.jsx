@@ -41,12 +41,14 @@ function About() {
           {about?.vision && <p>{about.vision}</p>}
 
           <div className="about-features">
-            <div className="feature">✓ Strength Training</div>
-            <div className="feature">✓ Weight Loss Programs</div>
-            <div className="feature">✓ Functional Fitness</div>
-            <div className="feature">✓ Yoga & Mobility</div>
-            <div className="feature">✓ Calisthenics</div>
-            <div className="feature">✓ Nutrition Guidance</div>
+           <div className="feature">✓ Strength Training</div>
+<div className="feature">✓ Functional Training</div>
+<div className="feature">✓ Calisthenics</div>
+<div className="feature">✓ Yoga & Mobility</div>
+<div className="feature">✓ Cardiovascular Endurance</div>
+<div className="feature">✓ Weight Loss & Weight Gain Programs</div>
+<div className="feature">✓ Nutrition Guidance</div>
+<div className="feature">✓ All Aspects of Fitness Under One Room</div>
           </div>
         </div>
       </div>
@@ -99,17 +101,17 @@ function About() {
         </div>
 
         <div className="stat-card">
-          <h3>100+</h3>
+          <h3>500+</h3>
           <p>Transformations</p>
         </div>
 
         <div className="stat-card">
-          <h3>15+</h3>
+          <h3>25+</h3>
           <p>National Competitions</p>
         </div>
 
         <div className="stat-card">
-          <h3>20+</h3>
+          <h3>30+</h3>
           <p>Trophies Won</p>
         </div>
       </div>
